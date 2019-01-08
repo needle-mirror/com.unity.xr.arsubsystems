@@ -129,7 +129,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human body
         /// pose 2D.</exception>
         public NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(Allocator allocator)
-            => m_Provider.GetHumanBodyPose2DJoints(default(XRHumanBodyPose2DJoint), Screen.orientation, allocator);
+            => m_Provider.GetHumanBodyPose2DJoints(default(XRHumanBodyPose2DJoint), Screen.width, Screen.height,
+                                                   Screen.orientation, allocator);
 
         /// <summary>
         /// Create the implementation specific functionality provider.
@@ -258,6 +259,8 @@ namespace UnityEngine.XR.ARSubsystems
             /// Method to be implemented by the provider to get the human body pose 2D joints for the current frame.
             /// </summary>
             /// <param name="defaultHumanBodyPose2DJoint">The default value for the body pose 2D joint.</param>
+            /// <param name="screenWidth">The width of the screen, in pixels.</param>
+            /// <param name="screenHeight">The height of the screen, in pixels.</param>
             /// <param name="screenOrientation">The orientation of the device so that the joint positions may be
             /// adjusted as required.</param>
             /// <param name="allocator">The allocator to use for the returned array memory.</param>
@@ -271,6 +274,8 @@ namespace UnityEngine.XR.ARSubsystems
             /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human body
             /// pose 2D.</exception>
             public virtual NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(XRHumanBodyPose2DJoint defaultHumanBodyPose2DJoint,
+                                                                                        int screenWidth,
+                                                                                        int screenHeight,
                                                                                         ScreenOrientation screenOrientation,
                                                                                         Allocator allocator)
                 => throw new NotSupportedException("human body pose 2D is not supported by this implementation");
