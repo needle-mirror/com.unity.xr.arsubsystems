@@ -1,6 +1,9 @@
 using System;
 using Unity.Collections;
 
+#if !UNITY_2019_2_OR_NEWER
+using UnityEngine.Experimental;
+#endif
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -15,7 +18,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Whether the subsystem is currently running.
         /// </summary>
-        public override bool running { get { return m_Running; } }
+#if UNITY_2019_2_OR_NEWER        
+        public override bool running
+#else
+        public bool running
+#endif
+        { 
+            get { return m_Running; } 
+        }
 
         /// <summary>
         /// Implementing classes must set this value to reflect the running state of the subsystem
@@ -127,7 +137,7 @@ namespace UnityEngine.XR.ARSubsystems
 
             /// <summary>
             /// Performs a raycast from an arbitrary ray against the types
-            /// specified by <param ref="trackableTypeMask"/>. Results
+            /// specified by <paramref name="trackableTypeMask"/>. Results
             /// should be sorted by distance from the ray origin.
             /// </summary>
             /// <param name="defaultRaycastHit">The default raycast hit that should be used as a template when populating the returned <c>NativeArray</c>.</param>
@@ -145,7 +155,7 @@ namespace UnityEngine.XR.ARSubsystems
 
             /// <summary>
             /// Performs a raycast from the camera against the types
-            /// specified by <param ref="trackableTypeMask"/>. Results
+            /// specified by <paramref name="trackableTypeMask"/>. Results
             /// should be sorted by distance from the ray origin.
             /// </summary>
             /// <param name="defaultRaycastHit">The default raycast hit that should be used as a template when populating the returned <c>NativeArray</c>.</param>

@@ -1,5 +1,8 @@
 using System;
 
+#if !UNITY_2019_2_OR_NEWER
+using UnityEngine.Experimental;
+#endif
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>

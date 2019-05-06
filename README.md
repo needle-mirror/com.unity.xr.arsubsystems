@@ -1,8 +1,14 @@
-# XR Subsystems
+# AR Subsystems
 
-The purpose of this `com.unity.xr.subsystems` package is to provide definitions of all .
+The purpose of this `com.unity.xr.arsubsystems` package is to provide definitions of all subsystems that enable AR functionality.
 
-## Installing XR Subsystems
+Presently, this package defines the following XR subsystems:
+    EnvironmentProbeSubsystem
+    FaceSubsystem
+    ImageTrackingSubsystem
+    ObjectTrackingSubsystem
+
+## Installing AR Subsystems
 
 This package is normally not installed by a user, but rather as a dependency defined in other packages.
 
@@ -15,10 +21,12 @@ This package is normally not installed by a user, but rather as a dependency def
   ├── CHANGELOG.md
   ├── LICENSE.md
   ├── QAReport.md
-  ├── Runtime
-  │   ├── Unity.XR.Subsystems.asmdef
-  └── Documentation~
-      └── com.unity.xr.subsystems.md
+  └── Runtime
+      ├── Unity.XR.ARSubsystems.asmdef
+      ├── EnvironmentProbeSubsystem
+      ├── FaceSubsystem
+      ├── ImageTrackingSubsystem
+      └── ObjectTrackingSubsystem
 ```
 
 ## Package usage
@@ -35,4 +43,4 @@ This package is used as a dependency for other packages in two scenarios:
 ## Documentation
 
 * [Script API](Runtime/) <update?>
-* [Manual](Documentation~/com.unity.xr.subsystems.md)
+* [Manual](Documentation~/com.unity.xr.arsubsystems.md)

@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if !UNITY_2019_2_OR_NEWER
+using UnityEngine.Experimental;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -86,7 +90,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Gets the boundary polygon describing the plane.
         /// </summary>
         /// <param name="trackableId">The <see cref="TrackableId"/> associated with the plane of which to retrieve the boundary.</param>
-        /// <param name="allocator">An <c>Allocator</c> to use if <param ref="boundary"/> needs to be created. <c>Allocator.Temp</c> is not supported; use <c>Allocator.TempJob</c> if you need temporary memory.</param>
+        /// <param name="allocator">An <c>Allocator</c> to use if <paramref name="boundary"/> needs to be created. <c>Allocator.Temp</c> is not supported; use <c>Allocator.TempJob</c> if you need temporary memory.</param>
         /// <param name="boundary">The boundary will be stored here. If <c>boundary</c> is the same length as the new boundary,
         /// it is simply overwritten with the new data. Otherwise, it is disposed and recreated with the corect length.</param>
         public void GetBoundary(

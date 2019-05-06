@@ -131,6 +131,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The <see cref="TrackingState"/> associated with the camera.
         /// </summary>
+        /// <value>
+        /// The tracking state associated with the camera.
+        /// </value>
         public TrackingState trackingState
         {
             get { return m_TrackingState; }
@@ -139,8 +142,11 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// A native pointer associated with this frame. The data
-        /// pointed to by this pointer is implementation defined.
+        /// pointed to by this pointer is specific to provider implementation.
         /// </summary>
+        /// <value>
+        /// The native pointer associated with this frame.
+        /// </value>
         public IntPtr nativePtr
         {
             get { return m_NativePtr; }

@@ -1,5 +1,9 @@
 using System;
 
+#if !UNITY_2019_2_OR_NEWER
+using UnityEngine.Experimental;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -12,7 +16,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Whether the session is currently running.
         /// </summary>
-        public override bool running { get { return m_Running; } }
+#if UNITY_2019_2_OR_NEWER
+        public override bool running
+#else
+        public bool running
+#endif
+        { 
+            get { return m_Running; } 
+        }
 
         /// <summary>
         /// Implementing classes must set this value to reflect the running state of the subsystem

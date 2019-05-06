@@ -1,5 +1,9 @@
 using System;
 
+#if !UNITY_2019_2_OR_NEWER
+using UnityEngine.Experimental;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -68,6 +72,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsTimestamp { get; set; }
 
+        /// <summary>
+        /// Specifies if the current subsystem supports camera configurations.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports camera configurations. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsCameraConfigurations { get; set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem is allowed to provide camera images.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem is allowed to provide camera images. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsCameraImage { get; set; }
+
         public bool Equals(XRCameraSubsystemCinfo other)
         {
             return (id.Equals(other.id) && implementationType.Equals(other.implementationType)
@@ -75,7 +95,9 @@ namespace UnityEngine.XR.ARSubsystems
                     && supportsAverageColorTemperature.Equals(other.supportsAverageColorTemperature)
                     && supportsDisplayMatrix.Equals(other.supportsDisplayMatrix)
                     && supportsProjectionMatrix.Equals(other.supportsProjectionMatrix)
-                    && supportsTimestamp.Equals(other.supportsTimestamp));
+                    && supportsTimestamp.Equals(other.supportsTimestamp)
+                    && supportsCameraConfigurations.Equals(other.supportsCameraConfigurations)
+                    && supportsCameraImage.Equals(other.supportsCameraImage));
         }
 
         public override bool Equals(System.Object obj)
@@ -105,6 +127,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsDisplayMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsProjectionMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsTimestamp.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsCameraConfigurations.GetHashCode();
             }
             return hashCode;
         }
@@ -129,6 +152,8 @@ namespace UnityEngine.XR.ARSubsystems
             supportsDisplayMatrix = cameraSubsystemParams.supportsDisplayMatrix;
             supportsProjectionMatrix = cameraSubsystemParams.supportsProjectionMatrix;
             supportsTimestamp = cameraSubsystemParams.supportsTimestamp;
+            supportsCameraConfigurations = cameraSubsystemParams.supportsCameraConfigurations;
+            supportsCameraImage = cameraSubsystemParams.supportsCameraImage;
         }
 
         /// <summary>
@@ -170,6 +195,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if current subsystem is allowed to provide timestamp. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsTimestamp { get; private set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports camera configurations.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports camera configurations. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsCameraConfigurations { get; private set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem is allowed to provide camera images.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem is allowed to provide camera images. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsCameraImage { get; private set; }
 
         /// <summary>
         /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters validating that the

@@ -1,5 +1,9 @@
 using Unity.Collections;
 
+#if !UNITY_2019_2_OR_NEWER
+using UnityEngine.Experimental;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -14,7 +18,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// <c>true</c> if the Subsystem has been <c>Start</c>ed and is currently running.
         /// </summary>
-        public override bool running { get { return m_Running; } }
+#if UNITY_2019_2_OR_NEWER        
+        public override bool running
+#else
+        public bool running
+#endif
+        { 
+            get { return m_Running; }
+        }
 
         /// <summary>
         /// Implementing classes must set this value to reflect the running state of the subsystem
