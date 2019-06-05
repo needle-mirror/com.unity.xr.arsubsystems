@@ -56,6 +56,25 @@ namespace UnityEngine.XR.ARSubsystems
         bool m_AutomaticPlacement;
 
         /// <summary>
+        /// Specifies whether the environment textures should be returned as HDR textures.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the environment textures should be returned as HDR textures. Otherwise, <c>false</c>.
+        /// </value>
+        public bool environmentTextureHDR
+        {
+            get { return m_EnvironmentTextureHDR; }
+            set
+            {
+                if ((m_EnvironmentTextureHDR != value) && m_Provider.TrySetEnvironmentTextureHDREnabled(value))
+                {
+                    m_EnvironmentTextureHDR = value;
+                }
+            }
+        }
+        bool m_EnvironmentTextureHDR = true;
+
+        /// <summary>
         /// Use this to determine runtime support for environment probes as support may be device or OS version specific.
         /// </summary>
         public bool supported
@@ -203,6 +222,25 @@ namespace UnityEngine.XR.ARSubsystems
                 {
                     throw new NotSupportedException("automatic placement of environment probes is not supported by this implementation");
                 }
+            }
+
+            /// <summary>
+            /// Overridden by the provider implementation to set the state of HDR environment texture generation.
+            /// </summary>
+            /// <param name="value">Whether HDR environment texture generation is enabled (<c>true</c>) or disabled
+            /// (<c>false</c>).</param>
+            /// <returns>
+            /// Whether the HDR environment texture generation state was set.
+            /// </returns>
+            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support HDR
+            /// environment textures if the state is being enabled.</exception>
+            public virtual bool TrySetEnvironmentTextureHDREnabled(bool value)
+            {
+                if (value)
+                {
+                    throw new NotSupportedException("HDR environment textures are not supported by this implementation");
+                }
+                return false;
             }
 
             /// <summary>

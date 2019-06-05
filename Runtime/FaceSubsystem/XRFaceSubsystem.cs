@@ -59,6 +59,23 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
+        /// Get or set the maximum number of faces to track simultaneously.
+        /// </summary>
+        public int maximumFaceCount
+        {
+            get { return m_Provider.maximumFaceCount; }
+            set { m_Provider.maximumFaceCount = value; }
+        }
+
+        /// <summary>
+        /// Get the number of faces the subsystem is able to track simultaneously.
+        /// </summary>
+        public int supportedFaceCount
+        {
+            get { return m_Provider.supportedFaceCount; }
+        }
+
+        /// <summary>
         /// Returns <c>true</c> if face tracking is supported.
         /// </summary>
         public bool supported
@@ -188,6 +205,32 @@ namespace UnityEngine.XR.ARSubsystems
                 Allocator allocator)
             {
                 return default(TrackableChanges<XRFace>);
+            }
+
+            /// <summary>
+            /// Should return the maximum number of faces the subsystem is able to track simultaneously.
+            /// Defaults to 1.
+            /// </summary>
+            public virtual int supportedFaceCount
+            {
+                get { return 1; }
+            }
+
+            /// <summary>
+            /// Get or set the maximum number of faces the subsystem should attempt to track simultaneously.
+            /// Defaults to 1.
+            /// </summary>
+            public virtual int maximumFaceCount
+            {
+                get { return 1; }
+                set
+                {
+                    if (maximumFaceCount < 1)
+                        throw new ArgumentOutOfRangeException("value", "Must track at least one face. Call Stop() if you wish to stop face tracking.");
+
+                    if (maximumFaceCount > 1)
+                        throw new NotSupportedException("This subsystem does not support multiple faces.");
+                }
             }
         }
 

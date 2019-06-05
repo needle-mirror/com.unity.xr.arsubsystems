@@ -121,6 +121,19 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_Format == other.m_Format);
         }
 
+        /// <summary>
+        /// Reset the texture descriptor back to default values.
+        /// </summary>
+        public void Reset()
+        {
+            m_NativeTexture = IntPtr.Zero;
+            m_Width = 0;
+            m_Height = 0;
+            m_MipmapCount = 0;
+            m_Format = (TextureFormat)0;
+            m_PropertyNameId = 0;
+        }
+
         public bool Equals(XRTextureDescriptor other)
         {
             return

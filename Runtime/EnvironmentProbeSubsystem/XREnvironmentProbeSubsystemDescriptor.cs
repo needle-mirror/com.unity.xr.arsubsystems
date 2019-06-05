@@ -67,6 +67,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsEnvironmentTexture { get; set; }
 
+        /// <summary>
+        /// Whether the implementation supports generation of HDR environment textures.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the generation of HDR environment textures is supported. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsEnvironmentTextureHDR { get; set; }
+
         public bool Equals(XREnvironmentProbeSubsystemCinfo other)
         {
             return (id.Equals(other.id)
@@ -75,15 +83,13 @@ namespace UnityEngine.XR.ARSubsystems
                     && supportsRemovalOfManual.Equals(other.supportsRemovalOfManual)
                     && supportsAutomaticPlacement.Equals(other.supportsAutomaticPlacement)
                     && supportsRemovalOfAutomatic.Equals(other.supportsRemovalOfAutomatic)
-                    && supportsEnvironmentTexture.Equals(other.supportsEnvironmentTexture));
+                    && supportsEnvironmentTexture.Equals(other.supportsEnvironmentTexture)
+                    && supportsEnvironmentTextureHDR.Equals(other.supportsEnvironmentTextureHDR));
         }
 
         public override bool Equals(System.Object obj)
         {
-            return (!ReferenceEquals(obj, null)
-                    && (ReferenceEquals(this, obj)
-                        || ((obj is XREnvironmentProbeSubsystemCinfo)
-                            && Equals((XREnvironmentProbeSubsystemCinfo)obj))));
+            return ((obj is XREnvironmentProbeSubsystemCinfo) && Equals((XREnvironmentProbeSubsystemCinfo)obj));
         }
 
         public static bool operator ==(XREnvironmentProbeSubsystemCinfo lhs, XREnvironmentProbeSubsystemCinfo rhs)
@@ -108,6 +114,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsAutomaticPlacement.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsRemovalOfAutomatic.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsEnvironmentTexture.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsEnvironmentTextureHDR.GetHashCode();
             }
             return hashCode;
         }
@@ -132,6 +139,7 @@ namespace UnityEngine.XR.ARSubsystems
             supportsAutomaticPlacement = environmentProbeSubsystemCinfo.supportsAutomaticPlacement;
             supportsRemovalOfAutomatic = environmentProbeSubsystemCinfo.supportsRemovalOfAutomatic;
             supportsEnvironmentTexture = environmentProbeSubsystemCinfo.supportsEnvironmentTexture;
+            supportsEnvironmentTextureHDR = environmentProbeSubsystemCinfo.supportsEnvironmentTextureHDR;
         }
 
         /// <summary>
@@ -173,6 +181,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if the generation of environment textures is supported. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsEnvironmentTexture { get; private set; }
+
+        /// <summary>
+        /// Whether the implementation supports generation of HDR environment textures.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the generation of HDR environment textures is supported. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsEnvironmentTextureHDR { get; private set; }
 
         /// <summary>
         /// Creates a <c>XREnvironmentProbeSubsystemDescriptor</c> based on the given parameters validating that the

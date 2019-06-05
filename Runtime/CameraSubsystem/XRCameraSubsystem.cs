@@ -24,7 +24,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if this subsystem is running. Otherwise, <c>false</c>.
         /// </value>
-#if UNITY_2019_2_OR_NEWER        
+#if UNITY_2019_2_OR_NEWER
         public override bool running
 #else
         public bool running
@@ -183,11 +183,11 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The current camera configuration if it exists. Otherise, <c>null</c>.
             /// </value>
-            /// <exception name="NotSupportedException">Thrown when setting the current configuration if the
+            /// <exception cref="System.NotSupportedException">Thrown when setting the current configuration if the
             /// implementation does not support camera configurations.</exception>
-            /// <exception name="ArgumentException">Thrown when setting the current configuration if the given
+            /// <exception cref="System.ArgumentException">Thrown when setting the current configuration if the given
             /// configuration is not a valid, supported camera configuration.</exception>
-            /// <exception name="InvalidOperationException">Thrown when setting the current configuration if the
+            /// <exception cref="System.InvalidOperationException">Thrown when setting the current configuration if the
             /// implementation is unable to set the current camera configuration.</exception>
             public virtual XRCameraConfiguration? currentConfiguration
             {

@@ -21,8 +21,8 @@ namespace UnityEngine.XR.ARSubsystems
 #else
         public bool running
 #endif
-        { 
-            get { return m_Running; } 
+        {
+            get { return m_Running; }
         }
 
         /// <summary>
@@ -36,6 +36,14 @@ namespace UnityEngine.XR.ARSubsystems
         public IntPtr nativePtr
         {
             get { return m_Provider.nativePtr; }
+        }
+
+        /// <summary>
+        /// Returns a unique session identifier for this session.
+        /// </summary>
+        public Guid sessionId
+        {
+            get { return m_Provider.sessionId; }
         }
 
         /// <summary>
@@ -241,6 +249,14 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual TrackingState trackingState
             {
                 get { return TrackingState.None; }
+            }
+
+            /// <summary>
+            /// Get a unique identifier for this session
+            /// </summary>
+            public virtual Guid sessionId
+            {
+                get { return Guid.Empty; }
             }
         }
 

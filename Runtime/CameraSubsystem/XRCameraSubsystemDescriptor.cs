@@ -128,6 +128,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsProjectionMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsTimestamp.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsCameraConfigurations.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsCameraImage.GetHashCode();
             }
             return hashCode;
         }

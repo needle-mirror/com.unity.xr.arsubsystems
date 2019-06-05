@@ -45,6 +45,29 @@ namespace UnityEngine.XR.ARSubsystems
             m_Pose = pose;
             m_TrackingState = trackingState;
             m_NativePtr = nativePtr;
+            m_SessionId = Guid.Empty;
+        }
+
+        /// <summary>
+        /// Constructs the session relative data for reference point.
+        /// This is typically provided by an implementation of the <see cref="XRReferencePointSubsystem"/>
+        /// and not invoked directly.
+        /// </summary>
+        /// <param name="trackableId">The <see cref="TrackableId"/> associated with this reference point.</param>
+        /// <param name="pose">The <c>Pose</c>, in session space, of the reference point.</param>
+        /// <param name="trackingState">The <see cref="TrackingState"/> of the reference point.</param>
+        /// <param name="nativePtr">A native pointer associated with the reference point. The data pointed to by
+        /// this pointer is implementation-specific.</param>
+        /// <param name="sessionId">The session from which this reference point originated.</param>
+        public XRReferencePoint(
+            TrackableId trackableId,
+            Pose pose,
+            TrackingState trackingState,
+            IntPtr nativePtr,
+            Guid sessionId)
+        : this(trackableId, pose, trackingState, nativePtr)
+        {
+            m_SessionId = sessionId;
         }
 
         /// <summary>
@@ -80,6 +103,14 @@ namespace UnityEngine.XR.ARSubsystems
             get { return m_NativePtr; }
         }
 
+        /// <summary>
+        /// The id of the session from which this reference point originated.
+        /// </summary>
+        public Guid sessionId
+        {
+            get { return m_SessionId; }
+        }
+
         public override int GetHashCode()
         {
             unchecked
@@ -88,6 +119,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = hashCode * 486187739 + m_Pose.GetHashCode();
                 hashCode = hashCode * 486187739 + m_TrackingState.GetHashCode();
                 hashCode = hashCode * 486187739 + m_NativePtr.GetHashCode();
+                hashCode = hashCode * 486187739 + m_SessionId.GetHashCode();
                 return hashCode;
             }
         }
@@ -95,10 +127,12 @@ namespace UnityEngine.XR.ARSubsystems
         public bool Equals(XRReferencePoint other)
         {
             return
-                m_Id == other.m_Id &&
-                m_Pose == other.m_Pose &&
+                m_Id.Equals(other.m_Id) &&
+                m_Pose.Equals(other.m_Pose) &&
                 m_TrackingState == other.m_TrackingState &&
-                m_NativePtr == other.m_NativePtr;
+                m_NativePtr == other.m_NativePtr &&
+                m_SessionId.Equals(other.m_SessionId);
+
         }
 
         public override bool Equals(object obj)
@@ -126,5 +160,7 @@ namespace UnityEngine.XR.ARSubsystems
         TrackingState m_TrackingState;
 
         IntPtr m_NativePtr;
+
+        Guid m_SessionId;
     }
 }
