@@ -112,7 +112,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Destroys the session.
         /// </summary>
-        public override void Destroy()
+#if UNITY_2019_3_OR_NEWER
+        protected sealed override void OnDestroy()
+#else
+        public sealed override void Destroy()
+#endif
         {
             Stop();
             m_Provider.Destroy();

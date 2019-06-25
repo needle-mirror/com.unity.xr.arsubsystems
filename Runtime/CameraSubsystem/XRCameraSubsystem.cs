@@ -423,7 +423,7 @@ namespace UnityEngine.XR.ARSubsystems
             get { return m_FocusMode; }
             set
             {
-                if ((m_FocusMode != value) && m_Provider.TrySetFocusMode(value))
+                if (m_Provider.TrySetFocusMode(value))
                 {
                     m_FocusMode = value;
                 }
@@ -479,7 +479,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Destroy the camera subsystem.
         /// </summary>
+#if UNITY_2019_3_OR_NEWER
+        protected sealed override void OnDestroy()
+#else
         public sealed override void Destroy()
+#endif
         {
             Stop();
             m_Provider.Destroy();
