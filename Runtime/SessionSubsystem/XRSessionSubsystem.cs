@@ -152,6 +152,34 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
+        /// Gets the <see cref="NotTrackingReason"/> for the session.
+        /// </summary>
+        public NotTrackingReason notTrackingReason
+        {
+            get { return m_Provider.notTrackingReason; }
+        }
+
+        /// <summary>
+        /// Whether the AR session update is synchronized with the Unity frame rate.
+        /// If <c>true</c>, <see cref="Update"/> should block until the next AR frame is available.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/> is <c>False</c>.</exception>
+        public bool matchFrameRate
+        {
+            get { return m_Provider.matchFrameRate; }
+            set { m_Provider.matchFrameRate = value; }
+        }
+
+        /// <summary>
+        /// The native update rate of the AR Session.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/> is <c>False</c>.</exception>
+        public int frameRate
+        {
+            get { return m_Provider.frameRate; }
+        }
+
+        /// <summary>
         /// Implement this to provide this class with an interface to
         /// platform specific implementations.
         /// </summary>
@@ -241,6 +269,46 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual TrackingState trackingState
             {
                 get { return TrackingState.None; }
+            }
+
+            /// <summary>
+            /// Get the <see cref="NotTrackingReason"/> for the session.
+            /// </summary>
+            public virtual NotTrackingReason notTrackingReason
+            {
+                get { return NotTrackingReason.Unsupported; }
+            }
+
+            /// <summary>
+            /// Whether the AR session update is synchronized with the Unity frame rate.
+            /// If <c>true</c>, <see cref="Update"/> should block until the next AR frame is available.
+            /// Must be implemented if
+            /// <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/>
+            /// is <c>True</c>.
+            /// </summary>
+            public virtual bool matchFrameRate
+            {
+                get { return false; }
+                set
+                {
+                    if (value)
+                    {
+                        throw new NotSupportedException("Matching frame rate is not supported.");
+                    }
+                }
+            }
+
+            /// <summary>
+            /// The native update rate of the AR Session. Must be implemented if
+            /// <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/>
+            /// is <c>True</c>.
+            /// </summary>
+            public virtual int frameRate
+            {
+                get
+                {
+                    throw new NotSupportedException("Querying the frame rate is not supported by this session subsystem.");
+                }
             }
         }
 
