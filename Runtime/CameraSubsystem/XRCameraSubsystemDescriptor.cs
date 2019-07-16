@@ -88,6 +88,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsCameraImage { get; set; }
 
+        /// <summary>
+        /// Specifies if current subsystem is allowed to provide average intensity in lumens.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if current subsystem is allowed to provide average intensity in lumens. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsAverageIntensityInLumens { get; set; }
+
         public bool Equals(XRCameraSubsystemCinfo other)
         {
             return (id.Equals(other.id) && implementationType.Equals(other.implementationType)
@@ -97,7 +105,8 @@ namespace UnityEngine.XR.ARSubsystems
                     && supportsProjectionMatrix.Equals(other.supportsProjectionMatrix)
                     && supportsTimestamp.Equals(other.supportsTimestamp)
                     && supportsCameraConfigurations.Equals(other.supportsCameraConfigurations)
-                    && supportsCameraImage.Equals(other.supportsCameraImage));
+                    && supportsCameraImage.Equals(other.supportsCameraImage)
+                    && supportsAverageIntensityInLumens.Equals(other.supportsAverageIntensityInLumens));
         }
 
         public override bool Equals(System.Object obj)
@@ -129,6 +138,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsTimestamp.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsCameraConfigurations.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsCameraImage.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsAverageIntensityInLumens.GetHashCode();
             }
             return hashCode;
         }
@@ -155,6 +165,7 @@ namespace UnityEngine.XR.ARSubsystems
             supportsTimestamp = cameraSubsystemParams.supportsTimestamp;
             supportsCameraConfigurations = cameraSubsystemParams.supportsCameraConfigurations;
             supportsCameraImage = cameraSubsystemParams.supportsCameraImage;
+            supportsAverageIntensityInLumens = cameraSubsystemParams.supportsAverageIntensityInLumens;
         }
 
         /// <summary>
@@ -212,6 +223,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if the current subsystem is allowed to provide camera images. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsCameraImage { get; private set; }
+
+        /// <summary>
+        /// Specifies if current subsystem is allowed to provide average intensity in lumens.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if current subsystem is allowed to provide average intensity in lumens. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsAverageIntensityInLumens { get; private set; }
 
         /// <summary>
         /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters validating that the

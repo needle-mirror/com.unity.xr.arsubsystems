@@ -22,47 +22,44 @@ namespace UnityEngine.XR.ARSubsystems
         IProvider m_Provider;
 
         /// <summary>
-        /// Whether human body pose estimation is enabled.
+        /// Whether 2D human body pose estimation is enabled.
         /// </summary>
         /// <value>
-        /// <c>true</c> if human body pose estimation is enabled. Otherwise, <c>false</c>.
+        /// <c>true</c> if 2D human body pose estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        /// <remarks>
-        /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images to
-        /// be enabled. At this time, these features are mutually exclusive.
-        /// </remarks>
-        public bool humanBodyPoseEstimationEnabled
+        public bool humanBodyPose2DEstimationEnabled
         {
-            get { return m_HumanBodyPoseEstimationEnabled; }
+            get { return m_HumanBodyPose2DEstimationEnabled; }
             set
             {
-                if (value)
+                if ((m_HumanBodyPose2DEstimationEnabled != value)
+                    && m_Provider.TrySetHumanBodyPose2DEstimationEnabled(value))
                 {
-                    if (humanSegmentationStencilMode.Enabled())
-                    {
-                        Debug.LogWarning("Warning: Disabling human segmentation stencil mode because human body pose "
-                                         + "estimation and human segmentation stencil mode may not be both enabled "
-                                         + "simultaneously");
-                        humanSegmentationStencilMode = HumanSegmentationMode.Disabled;
-                    }
-
-                    if (humanSegmentationDepthMode.Enabled())
-                    {
-                        Debug.LogWarning("Warning: Disabling human segmentation depth mode because human body pose "
-                                         + "estimation and human segmentation depth mode may not be both enabled "
-                                         + "simultaneously");
-                        humanSegmentationDepthMode = HumanSegmentationMode.Disabled;
-                    }
-                }
-
-                if ((m_HumanBodyPoseEstimationEnabled != value)
-                    && m_Provider.TrySetHumanBodyPoseEstimationEnabled(value))
-                {
-                    m_HumanBodyPoseEstimationEnabled = value;
+                    m_HumanBodyPose2DEstimationEnabled = value;
                 }
             }
         }
-        bool m_HumanBodyPoseEstimationEnabled = false;
+        bool m_HumanBodyPose2DEstimationEnabled = false;
+
+        /// <summary>
+        /// Whether 3D human body pose estimation is enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if 3D human body pose estimation is enabled. Otherwise, <c>false</c>.
+        /// </value>
+        public bool humanBodyPose3DEstimationEnabled
+        {
+            get { return m_HumanBodyPose3DEstimationEnabled; }
+            set
+            {
+                if ((m_HumanBodyPose3DEstimationEnabled != value)
+                    && m_Provider.TrySetHumanBodyPose3DEstimationEnabled(value))
+                {
+                    m_HumanBodyPose3DEstimationEnabled = value;
+                }
+            }
+        }
+        bool m_HumanBodyPose3DEstimationEnabled = false;
 
         /// <summary>
         /// Specifies the human segmentation stencil mode.
@@ -70,10 +67,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The human segmentation stencil mode.
         /// </value>
-        /// <remarks>
-        /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images to
-        /// be enabled. At this time, these features are mutually exclusive.
-        /// </remarks>
         /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation stencil mode to
         /// enabled if the implementation does not support human segmentation.</exception>
         public HumanSegmentationMode humanSegmentationStencilMode
@@ -81,13 +74,6 @@ namespace UnityEngine.XR.ARSubsystems
             get { return m_HumanSegmentationStencilMode; }
             set
             {
-                if (value.Enabled() && humanBodyPoseEstimationEnabled)
-                {
-                    Debug.LogWarning("Warning: Disabling human body pose estimation because human body pose estimation "
-                                     + "and human segmentation stencil mode may not be both enabled simultaneously");
-                    humanBodyPoseEstimationEnabled = false;
-                }
-
                 if ((m_HumanSegmentationStencilMode != value)
                     && m_Provider.TrySetHumanSegmentationStencilMode(value))
                 {
@@ -103,10 +89,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The human segmentation depth mode.
         /// </value>
-        /// <remarks>
-        /// Current restrictions limit either human body pose estimation to be enabled or human segmentation images to
-        /// be enabled. At this time, these features are mutually exclusive.
-        /// </remarks>
         /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation depth mode to
         /// enabled if the implementation does not support human segmentation.</exception>
         public HumanSegmentationMode humanSegmentationDepthMode
@@ -114,13 +96,6 @@ namespace UnityEngine.XR.ARSubsystems
             get { return m_HumanSegmentationDepthMode; }
             set
             {
-                if (value.Enabled() && humanBodyPoseEstimationEnabled)
-                {
-                    Debug.LogWarning("Warning: Disabling human body pose estimation because human body pose estimation "
-                                     + "and human segmentation depth mode may not be both enabled simultaneously");
-                    humanBodyPoseEstimationEnabled = false;
-                }
-
                 if ((m_HumanSegmentationDepthMode != value)
                     && m_Provider.TrySetHumanSegmentationDepthMode(value))
                 {
@@ -289,21 +264,40 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Method to be implemented by the provider to sets whether human body pose estimation is enabled.
+            /// Method to be implemented by the provider to sets whether human body pose 2D estimation is enabled.
             /// </summary>
-            /// <param name="humanBodyPoseEstimationEnabled">Whether the human body pose estimation should be enabled.
-            /// </param>
+            /// <param name="enabled">Whether the human body pose 2D estimation should be enabled.</param>
             /// <returns>
-            /// <c>true</c> if the human body pose estimation is set to the given value. Otherwise, <c>false</c>.
+            /// <c>true</c> if the human body pose 2D estimation is set to the given value. Otherwise, <c>false</c>.
             /// </returns>
-            /// <exception cref="System.NotSupportedException">Thrown when setting the human body pose estimation to
-            /// <c>true if the implementation does not support human body pose estimation.</exception>
-            public virtual bool TrySetHumanBodyPoseEstimationEnabled(bool humanBodyPoseEstimationEnabled)
+            /// <exception cref="System.NotSupportedException">Thrown when setting the human body pose 2D estimation to
+            /// <c>true if the implementation does not support human body pose 2D estimation.</exception>
+            public virtual bool TrySetHumanBodyPose2DEstimationEnabled(bool enabled)
             {
-                if (humanBodyPoseEstimationEnabled)
+                if (enabled)
                 {
-                    throw new NotSupportedException("Setting human body pose estimation to enabled is not supported "
-                                                    + "by this implementation");
+                    throw new NotSupportedException("Setting human body pose 2D estimation to enabled is not "
+                                                    + "supported by this implementation");
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// Method to be implemented by the provider to sets whether human body pose 3D estimation is enabled.
+            /// </summary>
+            /// <param name="enabled">Whether the human body pose 3D estimation should be enabled.</param>
+            /// <returns>
+            /// <c>true</c> if the human body pose 3D estimation is set to the given value. Otherwise, <c>false</c>.
+            /// </returns>
+            /// <exception cref="System.NotSupportedException">Thrown when setting the human body pose 3D estimation to
+            /// <c>true if the implementation does not support human body pose 3D estimation.</exception>
+            public virtual bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
+            {
+                if (enabled)
+                {
+                    throw new NotSupportedException("Setting human body pose 3D estimation to enabled is not "
+                                                    + "supported by this implementation");
                 }
 
                 return false;

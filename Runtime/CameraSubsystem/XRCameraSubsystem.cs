@@ -423,7 +423,7 @@ namespace UnityEngine.XR.ARSubsystems
             get { return m_FocusMode; }
             set
             {
-                if ((m_FocusMode != value) && m_Provider.TrySetFocusMode(value))
+                if (m_Provider.TrySetFocusMode(value))
                 {
                     m_FocusMode = value;
                 }

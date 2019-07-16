@@ -48,6 +48,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         [Description("DisplayMatrix")]
         DisplayMatrix           = (1 << 5),
+
+        /// <summary>
+        /// The average intensity in lumens is included.
+        /// </summary>
+        [Description("AverageIntensityInLumens")]
+        AverageIntensityInLumens      = (1 << 6),
     }
 
     /// <summary>
@@ -166,6 +172,18 @@ namespace UnityEngine.XR.ARSubsystems
         XRCameraFrameProperties m_Properties;
 
         /// <summary>
+        /// The estimated intensity, in lumens, of the scene.
+        /// </summary>
+        /// <value>
+        /// The estimated intensity, in lumens, of the scene.
+        /// </value>
+        public float averageIntensityInLumens
+        {
+            get { return m_AverageIntensityInLumens; }
+        }
+        float m_AverageIntensityInLumens;
+
+        /// <summary>
         /// Whether the frame has a timestamp.
         /// </summary>
         /// <value>
@@ -229,6 +247,17 @@ namespace UnityEngine.XR.ARSubsystems
         public bool hasDisplayMatrix
         {
             get { return (m_Properties & XRCameraFrameProperties.DisplayMatrix) != 0; }
+        }
+
+        /// <summary>
+        /// Whether the frame has an average intensity in lumens.
+        /// </summary>
+        /// <value>
+        /// Whether the frame has an average intensity in lumens.
+        /// </value>
+        public bool hasAverageIntensityInLumens
+        {
+            get { return (m_Properties & XRCameraFrameProperties.AverageIntensityInLumens) != 0; }
         }
 
         /// <summary>
@@ -296,12 +325,26 @@ namespace UnityEngine.XR.ARSubsystems
             return hasDisplayMatrix;
         }
 
+        /// <summary>
+        /// Provides intensity, in lumens, for the environment.
+        /// </summary>
+        /// <param name="averageBrightness">An estimated average intensity, in lumens, for the environment.</param>
+        /// <returns>
+        /// <c>true</c> if average intensity was provided. Otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetAverageIntensityInLumens(out float averageIntensityInLumens)
+        {
+            averageIntensityInLumens = this.averageIntensityInLumens;
+            return hasAverageIntensityInLumens;
+        }
+
         public bool Equals(XRCameraFrame other)
         {
             return (m_TimestampNs.Equals(other.m_TimestampNs) && m_AverageBrightness.Equals(other.m_AverageBrightness)
                     && m_AverageColorTemperature.Equals(other.m_AverageColorTemperature)
                     && m_ProjectionMatrix.Equals(other.m_ProjectionMatrix)
                     && m_DisplayMatrix.Equals(other.m_DisplayMatrix)
+                    && m_AverageIntensityInLumens.Equals(other.m_AverageIntensityInLumens)
                     && m_Properties.Equals(other.m_Properties));
         }
 
@@ -331,6 +374,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_ColorCorrection.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_ProjectionMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_DisplayMatrix.GetHashCode();
+                hashCode = (hashCode * 486187739) + m_AverageIntensityInLumens.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_NativePtr.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_Properties.GetHashCode();
             }
@@ -349,6 +393,7 @@ namespace UnityEngine.XR.ARSubsystems
                                        m_AverageColorTemperature.ToString("0.000"),
                                        m_ColorCorrection.ToString(),
                                        m_ProjectionMatrix.ToString("0.000"), m_DisplayMatrix.ToString("0.000"),
+                                       m_AverageIntensityInLumens.ToString("0.000"),
                                        m_NativePtr.ToString("X16"));
 
             return stringBuilder.ToString();
