@@ -35,7 +35,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The subsystem can supply normals for a face mesh.
         /// </summary>
-        MeshNormals = 1 << 3
+        MeshNormals = 1 << 3,
+
+
+        /// <summary>
+        /// The subsystem can supply eye tracking data for a face.
+        /// </summary>
+        EyeTracking = 1 << 4
     }
 
     /// <summary>
@@ -133,6 +139,26 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
+
+        /// <summary>
+        /// Whether the subsystem supports eye tracking for each detected face.
+        /// </summary>
+        public bool supportsEyeTracking
+        {
+            get { return (m_Capabilities & FaceSubsystemCapabilities.EyeTracking) != 0; }
+            set
+            {
+                if (value)
+                {
+                    m_Capabilities |= FaceSubsystemCapabilities.EyeTracking;
+                }
+                else
+                {
+                    m_Capabilities &= FaceSubsystemCapabilities.EyeTracking;
+                }
+            }
+        }
+
         FaceSubsystemCapabilities m_Capabilities;
 
         //IEquatable boilerplate
@@ -193,6 +219,7 @@ namespace UnityEngine.XR.ARSubsystems
             supportsFaceMeshVerticesAndIndices = descriptorParams.supportsFaceMeshVerticesAndIndices;
             supportsFaceMeshUVs = descriptorParams.supportsFaceMeshUVs;
             supportsFaceMeshNormals = descriptorParams.supportsFaceMeshNormals;
+            supportsEyeTracking = descriptorParams.supportsEyeTracking;
         }
 
         /// <summary>
@@ -214,6 +241,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// Whether the subsystem supports normals for each face mesh.
         /// </summary>
         public bool supportsFaceMeshNormals { get; }
+
+        /// <summary>
+        /// Whether the subsystem supports eye tracking for each detected face.
+        /// </summary>
+        public bool supportsEyeTracking { get; }
 
         /// <summary>
         /// Creates a subsystem descriptor. Used to register an implementation of the <see cref="XRFaceSubsystem"/>.

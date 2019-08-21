@@ -41,6 +41,14 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsHumanBody3D { get; set; }
 
         /// <summary>
+        /// Specifies if the current subsystem supports 3D human body scale estimation.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports 3D human body scale estimation. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsHumanBody3DScaleEstimation { get; set; }
+
+        /// <summary>
         /// Specifies if the current subsystem is allowed to provide human stencil images.
         /// </summary>
         /// <value>
@@ -61,6 +69,7 @@ namespace UnityEngine.XR.ARSubsystems
             return (id.Equals(other.id) && implementationType.Equals(other.implementationType)
                     && supportsHumanBody2D.Equals(other.supportsHumanBody2D)
                     && supportsHumanBody3D.Equals(other.supportsHumanBody3D)
+                    && supportsHumanBody3DScaleEstimation.Equals(other.supportsHumanBody3DScaleEstimation)
                     && supportsHumanStencilImage.Equals(other.supportsHumanStencilImage)
                     && supportsHumanDepthImage.Equals(other.supportsHumanDepthImage));
         }
@@ -89,6 +98,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + implementationType.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody2D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3D.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsHumanBody3DScaleEstimation.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanStencilImage.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanDepthImage.GetHashCode();
             }
@@ -104,6 +114,7 @@ namespace UnityEngine.XR.ARSubsystems
             subsystemImplementationType = humanBodySubsystemCinfo.implementationType;
             supportsHumanBody2D = humanBodySubsystemCinfo.supportsHumanBody2D;
             supportsHumanBody3D = humanBodySubsystemCinfo.supportsHumanBody3D;
+            supportsHumanBody3DScaleEstimation = humanBodySubsystemCinfo.supportsHumanBody3DScaleEstimation;
             supportsHumanStencilImage = humanBodySubsystemCinfo.supportsHumanStencilImage;
             supportsHumanDepthImage = humanBodySubsystemCinfo.supportsHumanDepthImage;
         }
@@ -123,6 +134,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if the current subsystem supports 3D human body pose estimation. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsHumanBody3D { get; private set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports 3D human body scale estimation.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports 3D human body scale estimation. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsHumanBody3DScaleEstimation { get; private set; }
 
         /// <summary>
         /// Specifies if the current subsystem is allowed to provide human stencil images.

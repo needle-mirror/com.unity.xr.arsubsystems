@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 
 namespace UnityEngine.XR.ARSubsystems.Tests
@@ -20,7 +21,7 @@ namespace UnityEngine.XR.ARSubsystems.Tests
                 cameraFrame = default(XRCameraFrame);
                 return false;
             }
-            public override string shaderName { get { return null; } }
+            public override Material cameraMaterial { get { return null; } }
             public override bool TrySetFocusMode(CameraFocusMode cameraFocusMode) { return false; }
             public override bool TrySetLightEstimationMode(LightEstimationMode lightEstimationMode) { return false; }
             public override bool TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics) { cameraIntrinsics = default(XRCameraIntrinsics); return false; }
@@ -40,7 +41,7 @@ namespace UnityEngine.XR.ARSubsystems.Tests
         public void RunningStateTests()
         {
             XRCameraSubsystem subsystem = new XRCameraSubsystemImpl();
-            
+
             // Initial state is not running
             Assert.That(subsystem.running == false);
 

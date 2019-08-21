@@ -57,13 +57,13 @@ namespace UnityEngine.XR.ARSubsystems
         protected class IProvider
         {
             /// <summary>
-            /// Property to be implemented by the provder to get the shader name used by <c>XRCameraSubsystem</c> to
+            /// Property to be implemented by the provder to get the material used by <c>XRCameraSubsystem</c> to
             /// render the camera texture.
             /// </summary>
-            /// <value>
-            /// The name of the shader used to render the camera texture.
-            /// </value>
-            public virtual string shaderName
+            /// <returns>
+            /// The material to render the camera texture.
+            /// </returns>
+            public virtual Material cameraMaterial
             {
                 get { return null; }
             }
@@ -410,6 +410,35 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 throw new NotSupportedException("camera image conversion is not supported by this implementation");
             }
+
+            /// <summary>
+            /// Create the camera material from the given camera shader name.
+            /// </summary>
+            /// <param name="cameraShaderName">The name of the camera shader.</param>
+            /// <returns>
+            /// The created camera material shader.
+            /// </returns>
+            /// <exception cref="System.InvalidOperationException">Thrown if the shader cannot be found or if a
+            /// material cannot be created for the shader.</exception>
+            protected Material CreateCameraMaterial(string cameraShaderName)
+            {
+                var shader = Shader.Find(cameraShaderName);
+                if (shader == null)
+                {
+                    throw new InvalidOperationException($"Could not find shader named '{cameraShaderName}' required "
+                                                        + $"for video overlay on camera subsystem.");
+                }
+
+                Material material = new Material(shader);
+                if (material == null)
+                {
+                    throw new InvalidOperationException($"Could not create a material for shader named "
+                                                        + $"'{cameraShaderName}' required for video overlay on camera "
+                                                        + $"subsystem.");
+                }
+
+                return material;
+            }
         }
 
         /// <summary>
@@ -502,15 +531,12 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// The shader name used to render the camera texture.
+        /// Get the material used by <c>XRCameraSubsystem</c> to render the camera texture.
         /// </summary>
         /// <value>
-        /// The shader name used to render the camera texture.
+        /// The material to render the camera texture.
         /// </value>
-        public string shaderName
-        {
-            get { return m_Provider.shaderName; }
-        }
+        public Material cameraMaterial { get => m_Provider.cameraMaterial; }
 
         /// <summary>
         /// Returns the camera intrinsics information.

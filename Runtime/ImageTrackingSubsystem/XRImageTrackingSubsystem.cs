@@ -1,5 +1,8 @@
 using System;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs;
+using UnityEngine.Assertions;
 
 #if !UNITY_2019_2_OR_NEWER
 using UnityEngine.Experimental;
@@ -63,18 +66,22 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Get or set the reference image library. This is the set of images to look for in the scene.
+        /// Get or set the reference image library. This is the set of images to look for in the environment.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"/>Thrown if the subsystem has been started, and you attempt to set the image library to null.</exception>
+        /// <remarks>
+        /// A <see cref="RuntimeReferenceImageLibrary"/> is created at runtime and may be modifiable
+        /// (see <see cref="MutableRuntimeReferenceImageLibrary"/>). A <see cref="RuntimeReferenceImageLibrary"/>
+        /// may be created from an <see cref="XRReferenceImageLibrary"/> using
+        /// <see cref="CreateRuntimeLibrary(XRReferenceImageLibrary"/>.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">Thrown if the subsystem has been started, and you attempt to set the image library to null.</exception>
         /// <seealso cref="Start"/>
         /// <seealso cref="Stop"/>
         /// <seealso cref="XRReferenceImageLibrary"/>
-        public XRReferenceImageLibrary imageLibrary
+        /// <seealso cref="MutableRuntimeReferenceImageLibrary"/>
+        public RuntimeReferenceImageLibrary imageLibrary
         {
-            get
-            {
-                return m_ImageLibrary;
-            }
+            get => m_ImageLibrary;
             set
             {
                 if (m_ImageLibrary == value)
@@ -85,10 +92,30 @@ namespace UnityEngine.XR.ARSubsystems
 
                 m_ImageLibrary = value;
 
-                // If we are running, then we want to switch the current library
                 if (m_Running)
                     m_Provider.imageLibrary = m_ImageLibrary;
             }
+        }
+
+        /// <summary>
+        /// Creates a <see cref="RuntimeReferenceImageLibrary"/> from an existing <see cref="XRReferenceImageLibrary"/>
+        /// or an empty library if <paramref name="serializedLibrary"/> is <c>null</c>.
+        /// Use this to construct the runtime representation of an <see cref="XRReferenceImageLibrary"/>.
+        /// </summary>
+        /// <remarks>
+        /// If the subsystem supports runtime mutable libraries
+        /// (see <see cref="XRImageTrackingSubsystemDescriptor.supportsMutableLibrary"/>), then the returned
+        /// library will be a <see cref="MutableRuntimeReferenceImageLibrary"/>.
+        /// </remarks>
+        /// <param name="serializedLibrary">An existing <see cref="XRReferenceImageLibrary"/> created at edit time, or <c>null</c> to create an empty image library.</param>
+        /// <returns>A new <see cref="RuntimeReferenceImageLibrary"/> representing the deserialized version of <paramref name="serializedLibrary"/>
+        /// or an empty library if <paramref name="serializedLibrary"/> is <c>null</c>.</returns>
+        /// <seealso cref="RuntimeReferenceImageLibrary"/>
+        public RuntimeReferenceImageLibrary CreateRuntimeLibrary(XRReferenceImageLibrary serializedLibrary)
+        {
+            var library = m_Provider.CreateRuntimeLibrary(serializedLibrary);
+            Assert.IsFalse(ReferenceEquals(library, null));
+            return library;
         }
 
         /// <summary>
@@ -114,16 +141,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// </exception>
         public int maxNumberOfMovingImages
         {
-            set
-            {
-                m_Provider.maxNumberOfMovingImages = value;
-            }
+            set => m_Provider.maxNumberOfMovingImages = value;
         }
 
         /// <summary>
         /// Methods to implement by the implementing provider.
         /// </summary>
-        protected class IProvider
+        protected abstract class IProvider
         {
             /// <summary>
             /// Called when the subsystem is destroyed.
@@ -138,33 +162,37 @@ namespace UnityEngine.XR.ARSubsystems
             /// before copying in its own values. This guards against addtional fields added to the <see cref="XRTrackedImage"/> in the future.</param>
             /// <param name="allocator">The allocator to use for the returned data.</param>
             /// <returns>The set of changes (added, updated, removed) tracked images since the last call to this method.</returns>
-            public virtual TrackableChanges<XRTrackedImage> GetChanges(
+            public abstract TrackableChanges<XRTrackedImage> GetChanges(
                 XRTrackedImage defaultTrackedImage,
-                Allocator allocator)
-            {
-                return default(TrackableChanges<XRTrackedImage>);
-            }
+                Allocator allocator);
 
             /// <summary>
-            /// Set the <see cref="XRReferenceImageLibrary"/>. Setting this to <c>null</c> implies the subsystem should stop detecting or tracking images.
+            /// Sets the set of images to search for in the environment.
             /// </summary>
-            public virtual XRReferenceImageLibrary imageLibrary
-            {
-                set
-                {
-                    throw new NotSupportedException("This image tracking provider does not support image libraries.");
-                }
-            }
+            /// <remarks>
+            /// Setting this to <c>null</c> implies the subsystem should stop detecting and tracking images.
+            /// </remarks>
+            public abstract RuntimeReferenceImageLibrary imageLibrary { set; }
+
+            /// <summary>
+            /// Creates a <see cref="RuntimeReferenceImageLibrary"/> from an existing <see cref="XRReferenceImageLibrary"/>,
+            /// or an empty library if <paramref name="serializedLibrary"/> is <c>null</c>.
+            /// </summary>
+            /// <param name="serializedLibrary">A <see cref="XRReferenceImageLibrary"/> to deserialize.</param>
+            /// <returns>The runtime version of <paramref name="serializedLibrary"/> or an empty library if <paramref name="serializedLibrary"/> is <c>null</c>.</returns>
+            public abstract RuntimeReferenceImageLibrary CreateRuntimeLibrary(XRReferenceImageLibrary serializedLibrary);
 
             /// <summary>
             /// The maximum number of moving images to track in realtime.
             /// </summary>
+            /// <remarks>
+            /// Must be implemented if <see cref="XRImageTrackingSubsystemDescriptor.supportsMovingImages"/> is <c>true</c>;
+            /// otherwise, this property will never be set and need not be implemented.
+            /// </remarks>
+            /// <exception cref="System.NotSupportedException">Thrown if not overridden by the derived class.</exception>
             public virtual int maxNumberOfMovingImages
             {
-                set
-                {
-                    throw new NotSupportedException("This subsystem does not track moving images.");
-                }
+                set => throw new NotSupportedException("This subsystem does not track moving images.");
             }
         }
 
@@ -174,7 +202,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>An instance of the <see cref="IProvider"/> interface.</returns>
         protected abstract IProvider CreateProvider();
 
-        XRReferenceImageLibrary m_ImageLibrary;
+        RuntimeReferenceImageLibrary m_ImageLibrary;
 
         IProvider m_Provider;
 

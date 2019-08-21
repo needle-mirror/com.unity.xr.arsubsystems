@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,9 +15,10 @@ namespace UnityEngine.XR.ARSubsystems
     /// Image libraries are immutable at runtime. To create and manipulate
     /// an image library via Editor scripts, see the extension methods in
     /// <see cref="XRReferenceImageLibraryExtensions"/>.
+    /// If you need to mutate the library at runtime, see <see cref="MutableRuntimeReferenceImageLibrary"/>.
     /// </remarks>
     [CreateAssetMenu(fileName="ReferenceImageLibrary", menuName="XR/Reference Image Library", order=1001)]
-    public class XRReferenceImageLibrary : ScriptableObject
+    public class XRReferenceImageLibrary : ScriptableObject, IReferenceImageLibrary
     {
         /// <summary>
         /// The number of images in the library.

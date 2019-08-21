@@ -36,21 +36,51 @@ namespace UnityEngine.XR.ARSubsystems
             int length,
             Allocator allocator) where T : struct
         {
-            var array = new NativeArray<T>(length, allocator);
-
-            // Early out if array is zero, or iOS will crash in MemCpyReplicate.
-            if (length == 0)
-                return array;
-
-            var sizeOfT = UnsafeUtility.SizeOf<T>();
-            var addressOfT = UnsafeUtility.AddressOf(ref defaultT);
-
-            // Fill the array with copies of defaultT
-            UnsafeUtility.MemCpyReplicate(array.GetUnsafePtr(), addressOfT, sizeOfT, length);
+            var array = CreateArrayFilledWithValue(defaultT, length, allocator);
 
             // Then overwrite with the source data, which may have a different size
-            UnsafeUtility.MemCpyStride(array.GetUnsafePtr(), sizeOfT, source, sourceElementSize, sourceElementSize, length);
+            UnsafeUtility.MemCpyStride(
+                array.GetUnsafePtr(),
+                UnsafeUtility.SizeOf<T>(),
+                source,
+                sourceElementSize,
+                sourceElementSize, length);
 
+            return array;
+        }
+
+        /// <summary>
+        /// Fills <paramref name="array"/> with repeated copies of <paramref name="value"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the <c>NativeArray</c>. Must be a <c>struct</c>.</typeparam>
+        /// <param name="array">The array to fill.</param>
+        /// <param name="value">The value with which to fill the array.</param>
+        public static unsafe void FillArrayWithValue<T>(NativeArray<T> array, T value) where T : struct
+        {
+            // Early out if array is zero, or iOS will crash in MemCpyReplicate.
+            if (array.Length == 0)
+                return;
+
+            UnsafeUtility.MemCpyReplicate(
+                array.GetUnsafePtr(),
+                UnsafeUtility.AddressOf(ref value),
+                UnsafeUtility.SizeOf<T>(),
+                array.Length);
+        }
+
+        /// <summary>
+        /// Creates a new array allocated with <paramref name="allocator"/> initialized with <paramref name="length"/>
+        /// copies of <paramref name="value"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the <c>NativeArray</c> to create. Must be a <c>struct</c>.</typeparam>
+        /// <param name="value">The value with which to fill the array.</param>
+        /// <param name="length">The length of the array to create.</param>
+        /// <param name="allocator">The allocator with which to create the <c>NativeArray</c>.</param>
+        /// <returns>A new <c>NativeArray</c> initialized with copies of <paramref name="value"/>.</returns>
+        public static unsafe NativeArray<T> CreateArrayFilledWithValue<T>(T value, int length, Allocator allocator) where T : struct
+        {
+            var array = new NativeArray<T>(length, allocator, NativeArrayOptions.UninitializedMemory);
+            FillArrayWithValue(array, value);
             return array;
         }
     }

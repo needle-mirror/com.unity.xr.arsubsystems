@@ -40,7 +40,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="updatedCount">The number of updated trackables.</param>
         /// <param name="removedCount">The number of removed trackables.</param>
         /// <param name="allocator">
-        /// An allocator to use for each of 
+        /// An allocator to use for each of
         /// <see cref="added"/>, <see cref="updated"/>, and <see cref="removed"/> arrays.
         /// </param>
         public TrackableChanges(
@@ -51,6 +51,29 @@ namespace UnityEngine.XR.ARSubsystems
         {
             m_Added = new NativeArray<T>(addedCount, allocator);
             m_Updated = new NativeArray<T>(updatedCount, allocator);
+            m_Removed = new NativeArray<TrackableId>(removedCount, allocator);
+            isCreated = true;
+        }
+
+        /// <summary>
+        /// Constructor which creates all three arrays and fills the
+        /// <see cref="added"/> and <see cref="updated"/> arrays with repeated copies of
+        /// <paramref name="defaultValue"/>.
+        /// </summary>
+        /// <param name="addedCount">The number of added trackables.</param>
+        /// <param name="updatedCount">The number of updated trackables.</param>
+        /// <param name="removedCount">The number of removed trackables.</param>
+        /// <param name="allocator">The allocator to use for each of <see cref="added"/>, <see cref="updated"/>, and <see cref="removed"/> arrays.</param>
+        /// <param name="defaultValue">The value with which to fill the <see cref="added"/> and <see cref="updated"/> arrays.</param>
+        public TrackableChanges(
+            int addedCount,
+            int updatedCount,
+            int removedCount,
+            Allocator allocator,
+            T defaultValue)
+        {
+            m_Added = NativeCopyUtility.CreateArrayFilledWithValue(defaultValue, addedCount, allocator);
+            m_Updated = NativeCopyUtility.CreateArrayFilledWithValue(defaultValue, updatedCount, allocator);
             m_Removed = new NativeArray<TrackableId>(removedCount, allocator);
             isCreated = true;
         }
@@ -133,6 +156,8 @@ namespace UnityEngine.XR.ARSubsystems
                 m_Updated.Dispose();
                 m_Removed.Dispose();
             }
+
+            isCreated = false;
         }
 
         TrackableChanges(

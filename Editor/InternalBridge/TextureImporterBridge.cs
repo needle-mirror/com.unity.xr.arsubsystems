@@ -11,7 +11,7 @@ namespace UnityEditor.XR.ARSubsystems.InternalBridge
         /// <summary>
         /// Gets the original image dimensions. The texture import settings can affect the resulting
         /// texture size, for instance: rounding to a power of 2.
-        /// /// </summary>
+        /// </summary>
         /// <param name="textureImporter">The <c>TextureImporter</c> on which to operate.</param>
         /// <returns>The original dimensions of the imported image.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="textureImporter"/> is <c>null</c>.</exception>

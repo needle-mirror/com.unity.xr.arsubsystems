@@ -14,6 +14,9 @@ namespace UnityEngine.XR.ARSubsystems
         Pose m_Pose;
         TrackingState m_TrackingState;
         IntPtr m_NativePtr;
+        Pose m_LeftEyePose;
+        Pose m_RightEyePose;
+        Vector3 m_FixationPoint;
 
         /// <summary>
         /// Get a <see cref="XRFace"/> with reasonable default values.
@@ -23,6 +26,9 @@ namespace UnityEngine.XR.ARSubsystems
         {
             var face = default(XRFace);
             face.m_Pose = Pose.identity;
+            face.m_LeftEyePose = Pose.identity;
+            face.m_RightEyePose = Pose.identity;
+            face.m_FixationPoint = default;
             return face;
         }
 
@@ -63,6 +69,31 @@ namespace UnityEngine.XR.ARSubsystems
         {
             get { return m_NativePtr; }
         }
+        
+        /// <summary>
+        /// The pose of the left eye in relation to the face.
+        /// </summary>
+        public Pose leftEyePose
+        {
+            get { return m_LeftEyePose; }
+        }
+
+        /// <summary>
+        /// The pose of the right eye in relation to the face.
+        /// </summary>
+        public Pose rightEyePose
+        {
+            get { return m_RightEyePose; }
+        }
+
+        /// <summary>
+        /// The position of which the eyes are fixated in relation to the face.
+        /// </summary>
+        public Vector3 fixationPoint
+        {
+            get { return m_FixationPoint; }
+        }
+
 
         // IEquatable boilerplate
         public override bool Equals(object obj)
@@ -80,6 +111,9 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + pose.GetHashCode();
                 hashCode = (hashCode * 486187739) + ((int)trackingState).GetHashCode();
                 hashCode = (hashCode * 486187739) + nativePtr.GetHashCode();
+                hashCode = (hashCode * 486187739) + leftEyePose.GetHashCode();
+                hashCode = (hashCode * 486187739) + rightEyePose.GetHashCode();
+                hashCode = (hashCode * 486187739) + fixationPoint.GetHashCode();
                 return hashCode;
             }
         }
@@ -100,7 +134,10 @@ namespace UnityEngine.XR.ARSubsystems
                 trackableId.Equals(other.trackableId) &&
                 pose.Equals(other.pose) &&
                 (trackingState == other.trackingState) &&
-                (nativePtr == other.nativePtr);
+                (nativePtr == other.nativePtr) &&
+                (leftEyePose.Equals(other.leftEyePose)) &&
+                (rightEyePose.Equals(other.rightEyePose)) &&
+                (fixationPoint.Equals(other.fixationPoint));
         }
     };
 }
