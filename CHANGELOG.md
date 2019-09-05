@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.2] - 2019-09-05
+- Updated package version to 3.0.0-preview.2 for consistency with other AR-related packages.
+
 ## [3.0.0-preview.1] - 2019-08-21
 ### New
 - Add support for reference image libraries that are modifiable at runtime. For platforms that support it, this allows you to add new reference images at runtime.
