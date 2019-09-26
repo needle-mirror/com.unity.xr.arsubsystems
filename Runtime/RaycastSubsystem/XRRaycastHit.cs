@@ -12,19 +12,14 @@ namespace UnityEngine.XR.ARSubsystems
     [StructLayout(LayoutKind.Sequential)]
     public struct XRRaycastHit : IEquatable<XRRaycastHit>
     {
+        static readonly XRRaycastHit s_Default = new XRRaycastHit(
+            TrackableId.invalidId, Pose.identity, 0, TrackableType.None);
+
         /// <summary>
-        /// Creates a default-initialized raycast hit. This may be different
-        /// from a zero-initialized raycast hit.
+        /// A default-initialized raycast hit.
+        /// This may be different from a zero-initialized raycast hit.
         /// </summary>
-        /// <returns>A new <see cref="XRRaycastHit"/> with default values.</returns>
-        public static XRRaycastHit GetDefault()
-        {
-            return new XRRaycastHit(
-                TrackableId.invalidId,
-                Pose.identity,
-                0f,
-                TrackableType.None);
-        }
+        public static XRRaycastHit defaultValue => s_Default;
 
         /// <summary>
         /// The <see cref="TrackableId"/> of the trackable which was hit. This may be <see cref="TrackableId.invalidId"/>

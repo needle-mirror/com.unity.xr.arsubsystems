@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Unity.Collections;
-
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -19,10 +14,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Do not create this directly.
         /// Call <c>Create</c> on an <see cref="XREnvironmentProbeSubsystemDescriptor"/> obtained from the <c>SubsystemManager</c>.
         /// </summary>
-        public XREnvironmentProbeSubsystem()
-        {
-            m_Provider = CreateProvider();
-        }
+        public XREnvironmentProbeSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Specifies whether the AR session should automatically place environment probes in the scene.
@@ -45,7 +37,7 @@ namespace UnityEngine.XR.ARSubsystems
                 if (value && !SubsystemDescriptor.supportsAutomaticPlacement)
                     throw new NotSupportedException("subsystem does not support automatic placement of environment probes.");
 
-                if (m_AutomaticPlacement != value && m_Running)
+                if (m_AutomaticPlacement != value && running)
                 {
                     m_Provider.SetAutomaticPlacement(value);
                 }
@@ -75,57 +67,34 @@ namespace UnityEngine.XR.ARSubsystems
         bool m_EnvironmentTextureHDR = true;
 
         /// <summary>
-        /// Use this to determine runtime support for environment probes as support may be device or OS version specific.
-        /// </summary>
-        public bool supported
-        {
-            get { return m_Provider.supported; }
-        }
-
-        /// <summary>
         ///
         /// </summary>
         /// <param name="allocator"></param>
         /// <returns></returns>
         public override TrackableChanges<XREnvironmentProbe> GetChanges(Allocator allocator)
         {
-            return m_Provider.GetChanges(XREnvironmentProbe.GetDefault(), allocator);
+            return m_Provider.GetChanges(XREnvironmentProbe.defaultValue, allocator);
         }
 
         /// <summary>
         /// Starts the subsystem. If <see cref="automaticPlacement"/> is <c>true</c>, environment probes will be created automatically.
         /// </summary>
-        public override void Start()
+        protected sealed override void OnStart()
         {
-            if (!m_Running)
-            {
-                m_Provider.SetAutomaticPlacement(automaticPlacement);
-                m_Provider.Start();
-            }
-
-            m_Running = true;
+            m_Provider.SetAutomaticPlacement(automaticPlacement);
+            m_Provider.Start();
         }
 
         /// <summary>
         /// Stops the subsystem. This does not remove existing environment probes, but it stops automatically placing them, and manually placed probes will not be updated
-        /// until <see cref="Start"/> is called again.
+        /// until <see cref="OnStart"/> is called again.
         /// </summary>
-        public override void Stop()
-        {
-            if (m_Running)
-                m_Provider.Stop();
-
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Destroys the subsystem and any internal state.
         /// </summary>
-        public override void Destroy()
-        {
-            Stop();
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Tries to create an environment probe.
@@ -143,12 +112,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// environment probes.</exception>
         public bool TryAddEnvironmentProbe(Pose pose, Vector3 scale, Vector3 size, out XREnvironmentProbe environmentProbe)
         {
-            if (!m_Running)
+            if (!running)
             {
                 throw new InvalidOperationException("cannot add environment probes when environment probe system is not running");
             }
 
-            environmentProbe = XREnvironmentProbe.GetDefault();
+            environmentProbe = XREnvironmentProbe.defaultValue;
             return m_Provider.TryAddEnvironmentProbe(pose, scale, size, out environmentProbe);
         }
 
@@ -172,7 +141,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// type of environment probe.</exception>
         public bool RemoveEnvironmentProbe(TrackableId trackableId)
         {
-            if (!m_Running)
+            if (!running)
             {
                 throw new InvalidOperationException("cannot remove environment probes when environment probe system is not running");
             }
@@ -181,14 +150,14 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Must create an implementation of <see cref="IProvider"/>, the provider-specific implementation of this subsystem.
+        /// Must create an implementation of <see cref="Provider"/>, the provider-specific implementation of this subsystem.
         /// </summary>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// The class for providers to implement to support the <see cref="XREnvironmentProbeSubsystem"/>.
         /// </summary>
-        protected abstract class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Starts the subsystem. Will only be invoked if <see cref="running"/> is <c>false</c>.
@@ -289,13 +258,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="allocator">The allocator to use for the <c>NativeArray</c>s in the returned <see cref="TrackableChanges{T}"/>.</param>
             /// <returns>The environment probes which have been added, updated, and removed since the last call to this method.</returns>
             /// <seealso cref="NativeCopyUtility"/>
-            public abstract TrackableChanges<XREnvironmentProbe> GetChanges(XREnvironmentProbe defaultEnvironmentProbe,
-                                                                           Allocator allocator);
-
-            /// <summary>
-            /// Used to check for support at runtime. Should return <c>true</c> if environment probes are supported, or <c>false</c> otherwise.
-            /// </summary>
-            public abstract bool supported { get; }
+            public abstract TrackableChanges<XREnvironmentProbe> GetChanges(XREnvironmentProbe defaultEnvironmentProbe, Allocator allocator);
         }
 
         /// <summary>
@@ -330,6 +293,6 @@ namespace UnityEngine.XR.ARSubsystems
             return SubsystemRegistration.CreateDescriptor(environmentProbeSubsystemDescriptor);
         }
 
-        IProvider m_Provider;
+        Provider m_Provider;
     }
 }

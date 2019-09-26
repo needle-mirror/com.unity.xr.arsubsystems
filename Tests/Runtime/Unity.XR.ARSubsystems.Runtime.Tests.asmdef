@@ -1,6 +1,7 @@
 {
   "name": "Unity.XR.ARSubsystems.Runtime.Tests",
     "references": [
+        "Unity.Subsystem.Registration",
         "Unity.XR.ARSubsystems"
     ],
     "optionalUnityReferences": [

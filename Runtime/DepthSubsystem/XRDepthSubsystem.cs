@@ -1,10 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
-
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -20,48 +16,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a depth subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRDepthSubsystemDescriptor"/> instead.
         /// </summary>
-        protected XRDepthSubsystem()
-        {
-            m_Interface = GetInterface();
-            m_DefaultPointCloud = XRPointCloud.GetDefault();
-        }
+        protected XRDepthSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Start the depth subsystem, i.e., start collecting depth data.
         /// </summary>
-        public override void Start()
-        {
-           if (m_Running)
-                return;
-
-            m_Running = true;
-
-            m_Interface.Start();
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Destroy the depth subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            if (m_Running)
-                Stop();
-
-            m_Interface.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Stop the subsystem, i.e., stop collecting depth data.
         /// </summary>
-        public override void Stop()
-        {
-             if (!m_Running)
-                return;
-
-            m_Running = false;
-
-            m_Interface.Stop();
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Get the changes (added, updated, and removed) point clouds since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -73,18 +43,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<XRPointCloud> GetChanges(Allocator allocator)
         {
-            var changes = m_Interface.GetChanges(m_DefaultPointCloud, allocator);
+            var changes = m_Provider.GetChanges(XRPointCloud.defaultValue, allocator);
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            try
-            {
-                m_ValidationUtility.ValidateAndThrow(changes);
-            }
-            catch (Exception e)
-            {
-                changes.Dispose();
-                throw e;
-            }
+            m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
             return changes;
         }
@@ -109,37 +71,34 @@ namespace UnityEngine.XR.ARSubsystems
             if (allocator == Allocator.None)
                 throw new InvalidOperationException("Allocator.None is not a valid allocator.");
 
-            return m_Interface.GetPointCloudData(trackableId, allocator);
+            return m_Provider.GetPointCloudData(trackableId, allocator);
         }
 
         /// <summary>
-        /// Implement this and return an instance of the <see cref="IDepthApi"/>.
+        /// Implement this and return an instance of the <see cref="Provider"/>.
         /// </summary>
-        /// <returns>An implementation of the <see cref="IDepthApi"/>.</returns>
-        protected abstract IDepthApi GetInterface();
+        /// <returns>An implementation of the <see cref="Provider"/>.</returns>
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// The interface that each derived class must implement.
         /// </summary>
-        protected class IDepthApi
+        protected abstract class Provider
         {
             /// <summary>
             /// Called when the subsystem is started. Will not be called again until <see cref="Stop"/>.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() { }
 
             /// <summary>
             /// Called when the subsystem is stopped. Will not be called before <see cref="Start"/>.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Called when the subsystem is destroyed. <see cref="Stop"/> will be called first if the subsystem is running.
             /// </summary>
-            public virtual void Destroy()
-            { }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Get the changes (added, updated, and removed) planes since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -154,12 +113,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// since the last call to <see cref="GetChanges(Allocator)"/>. The changes should be allocated using
             /// <paramref name="allocator"/>.
             /// </returns>
-            public virtual TrackableChanges<XRPointCloud> GetChanges(
-                XRPointCloud defaultPointCloud,
-                Allocator allocator)
-            {
-                return default(TrackableChanges<XRPointCloud>);
-            }
+            public abstract TrackableChanges<XRPointCloud> GetChanges(XRPointCloud defaultPointCloud, Allocator allocator);
 
             /// <summary>
             /// Generate point cloud data (positions, confidence values, & identifiers)
@@ -171,17 +125,10 @@ namespace UnityEngine.XR.ARSubsystems
             /// A new <see cref="XRPointCloudData"/> with newly allocated <c>NativeArray</c>s using <paramref name="allocator"/>.
             /// The caller owns the memory and is responsible for calling <see cref="XRPointCloudData.Dispose"/> on it.
             /// </returns>
-            public virtual XRPointCloudData GetPointCloudData(
-                TrackableId trackableId,
-                Allocator allocator)
-            {
-                return default(XRPointCloudData);
-            }
+            public abstract XRPointCloudData GetPointCloudData(TrackableId trackableId, Allocator allocator);
         }
 
-        IDepthApi m_Interface;
-
-        XRPointCloud m_DefaultPointCloud;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRPointCloud> m_ValidationUtility =

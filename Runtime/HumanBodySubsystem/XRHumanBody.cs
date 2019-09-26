@@ -17,8 +17,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public TrackableId trackableId
         {
-            get { return m_TrackableId; }
-            private set { m_TrackableId = value; }
+            get => m_TrackableId;
+            private set => m_TrackableId = value;
         }
         TrackableId m_TrackableId;
 
@@ -30,8 +30,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public Pose pose
         {
-            get { return m_Pose; }
-            private set { m_Pose = value; }
+            get => m_Pose;
+            private set => m_Pose = value;
         }
         Pose m_Pose;
 
@@ -56,8 +56,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public TrackingState trackingState
         {
-            get { return m_TrackingState; }
-            private set { m_TrackingState = value; }
+            get => m_TrackingState;
+            private set => m_TrackingState = value;
         }
         TrackingState m_TrackingState;
 
@@ -69,8 +69,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public IntPtr nativePtr
         {
-            get { return m_NativePtr; }
-            private set { m_NativePtr = value; }
+            get => m_NativePtr;
+            private set => m_NativePtr = value;
         }
         IntPtr m_NativePtr;
 
@@ -80,41 +80,23 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>
         /// The default human body data.
         /// </returns>
-        internal static XRHumanBody GetDefault()
-        {
-            return new XRHumanBody
-            {
-                trackableId = TrackableId.invalidId,
-                pose = Pose.identity,
-                estimatedHeightScaleFactor = 1.0f,
-                trackingState = TrackingState.None,
-                nativePtr = IntPtr.Zero,
-            };
-        }
+        public static XRHumanBody defaultValue => s_Default;
 
-        public bool Equals(XRHumanBody other)
+        static readonly XRHumanBody s_Default = new XRHumanBody
         {
-            return m_TrackableId.Equals(other.m_TrackableId);
-        }
+            trackableId = TrackableId.invalidId,
+            pose = Pose.identity,
+            estimatedHeightScaleFactor = 1.0f,
+        };
 
-        public override bool Equals(System.Object obj)
-        {
-            return ((obj is XRHumanBody) && Equals((XRHumanBody)obj));
-        }
+        public bool Equals(XRHumanBody other) => m_TrackableId.Equals(other.m_TrackableId);
 
-        public static bool operator ==(XRHumanBody lhs, XRHumanBody rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public override bool Equals(System.Object obj) => ((obj is XRHumanBody) && Equals((XRHumanBody)obj));
 
-        public static bool operator !=(XRHumanBody lhs, XRHumanBody rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator ==(XRHumanBody lhs, XRHumanBody rhs) => lhs.Equals(rhs);
 
-        public override int GetHashCode()
-        {
-            return m_TrackableId.GetHashCode();
-        }
+        public static bool operator !=(XRHumanBody lhs, XRHumanBody rhs) => !lhs.Equals(rhs);
+
+        public override int GetHashCode() => m_TrackableId.GetHashCode();
     }
 }

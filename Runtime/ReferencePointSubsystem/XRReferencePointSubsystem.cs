@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -24,40 +21,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// to enumerate the available <see cref="XRReferencePointSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRReferencePointSubsystem()
-        {
-            m_Provider = CreateProvider();
-            m_DefaultReferencePoint = XRReferencePoint.GetDefault();
-        }
+        public XRReferencePointSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Starts the subsystem.
         /// </summary>
-        public override void Start()
-        {
-            if (!m_Running)
-                m_Provider.Start();
-            m_Running = true;
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Stops the subsystem.
         /// </summary>
-        public override void Stop()
-        {
-            if (m_Running)
-                m_Provider.Stop();
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            Stop();
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Get the changes (added, updated, & removed) reference points since the last call
@@ -67,10 +46,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>Changes since the last call to <see cref="GetChanges"/>.</returns>
         public override TrackableChanges<XRReferencePoint> GetChanges(Allocator allocator)
         {
-            if (!m_Running)
+            if (!running)
                 throw new InvalidOperationException("Can't call \"GetChanges\" without \"Start\"ing the reference-point subsystem!");
 
-            var changes = m_Provider.GetChanges(m_DefaultReferencePoint, allocator);
+            var changes = m_Provider.GetChanges(XRReferencePoint.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -114,25 +93,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// An interface to be implemented by providers of this subsystem.
         /// </summary>
-        protected class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Invoked when <c>Start</c> is called on the subsystem. This method is only called if the subsystem was not previously running.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() { }
 
             /// <summary>
             /// Invoked when <c>Stop</c> is called on the subsystem. This method is only called if the subsystem was previously running.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Called when <c>Destroy</c> is called on the subsystem.
             /// </summary>
-            public virtual void Destroy()
-            { }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Invoked to get the changes to reference points (added, updated, & removed) since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -143,12 +119,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// </param>
             /// <param name="allocator">An allocator to use for the <c>NativeArray</c>s in <see cref="TrackableChanges{T}"/>.</param>
             /// <returns>Changes since the last call to <see cref="GetChanges"/>.</returns>
-            public virtual TrackableChanges<XRReferencePoint> GetChanges(
-                XRReferencePoint defaultReferencePoint,
-                Allocator allocator)
-            {
-                return default(TrackableChanges<XRReferencePoint>);
-            }
+            public abstract TrackableChanges<XRReferencePoint> GetChanges(XRReferencePoint defaultReferencePoint, Allocator allocator);
 
             /// <summary>
             /// Should create a new reference point with the provide <paramref name="pose"/>.
@@ -186,21 +157,16 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="referencePointId">The id of an existing reference point to remove.</param>
             /// <returns>Should return <c>true</c> if the reference point was removed, otherwise <c>false</c>. If the reference
             /// point does not exist, return <c>false</c>.</returns>
-            public virtual bool TryRemoveReferencePoint(TrackableId referencePointId)
-            {
-                return false;
-            }
+            public virtual bool TryRemoveReferencePoint(TrackableId referencePointId) => false;
         }
 
         /// <summary>
         /// Should return an instance of <see cref="IProvider"/>.
         /// </summary>
         /// <returns>The interface to the implementation-specific provider.</returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
-        IProvider m_Provider;
-
-        XRReferencePoint m_DefaultReferencePoint;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRReferencePoint> m_ValidationUtility =

@@ -1,10 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
-
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -15,41 +11,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Do not call this directly. Call create on a valid <see cref="XRParticipantSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRParticipantSubsystem()
-        {
-            m_Provider = CreateProvider();
-        }
+        public XRParticipantSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Starts the participant subsystem.
         /// </summary>
-        public override void Start()
-        {
-            if (!m_Running)
-                m_Provider.Start();
-
-            m_Running = true;
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Stops the participant subsystem.
         /// </summary>
-        public override void Stop()
-        {
-            if (m_Running)
-                m_Provider.Stop();
-
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Destroys the participant subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            Stop();
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Get the changed (added, updated, and removed) participants since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -72,12 +49,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// Implement this to provide this class with an interface to platform specific implementations.
         /// </summary>
         /// <returns>An implementation specific provider.</returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// The API this subsystem uses to interop with different provider implementations.
         /// </summary>
-        protected abstract class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Invoked to start the participant subsystem.
@@ -117,7 +94,7 @@ namespace UnityEngine.XR.ARSubsystems
                 Allocator allocator);
         }
 
-        IProvider m_Provider;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRParticipant> m_ValidationUtility = new ValidationUtility<XRParticipant>();

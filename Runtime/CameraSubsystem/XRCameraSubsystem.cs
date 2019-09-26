@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
-
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -15,32 +11,15 @@ namespace UnityEngine.XR.ARSubsystems
     /// The <c>XRCameraSubsystem</c> links a Unity <c>Camera</c> to a device camera for video overlay (pass-thru
     /// rendering). It also allows developers to query for environmental light estimation, when available.
     /// </remarks>
-    public abstract class XRCameraSubsystem : Subsystem<XRCameraSubsystemDescriptor>
+    public abstract class XRCameraSubsystem : XRSubsystem<XRCameraSubsystemDescriptor>
     {
         /// <summary>
-        /// Indicates whether this subsystem is running (i.e., <see cref="Start"/>
-        /// has been called).
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this subsystem is running. Otherwise, <c>false</c>.
-        /// </value>
-#if UNITY_2019_2_OR_NEWER
-        public override bool running
-#else
-        public bool running
-#endif
-        {
-            get { return m_Running; }
-        }
-        bool m_Running;
-
-        /// <summary>
         /// The provider created by the implementation that contains the required camera functionality.
         /// </summary>
         /// <value>
         /// The provider created by the implementation that contains the required camera functionality.
         /// </value>
-        IProvider m_Provider;
+        Provider m_Provider;
 
         /// <summary>
         /// Construct the <c>XRCameraSubsystem</c>.
@@ -54,7 +33,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Interface for providing camera functionality for the implementation.
         /// </summary>
-        protected class IProvider
+        protected class Provider
         {
             /// <summary>
             /// Property to be implemented by the provder to get the material used by <c>XRCameraSubsystem</c> to
@@ -63,10 +42,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <returns>
             /// The material to render the camera texture.
             /// </returns>
-            public virtual Material cameraMaterial
-            {
-                get { return null; }
-            }
+            public virtual Material cameraMaterial => null;
 
             /// <summary>
             /// Property to be implemented by the provider to determine whether camera permission has been granted.
@@ -74,37 +50,28 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// <c>true</c> if camera permission has been granted. Otherwise, <c>false</c>.
             /// </value>
-            public virtual bool permissionGranted
-            {
-                get { return false; }
-            }
+            public virtual bool permissionGranted => false;
 
             /// <summary>
             /// Whether or not culling should be inverted during rendering. Some front-facing
             /// camera modes may require this.
             /// </summary>
-            public virtual bool invertCulling
-            {
-                get { return false; }
-            }
+            public virtual bool invertCulling => false;
 
             /// <summary>
             /// Method to be implemented by provider to start the camera for the subsystem.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() { }
 
             /// <summary>
             /// Method to be implemented by provider to stop the camera for the subsystem.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Method to be implemented by provider to destroy the camera for the subsystem.
             /// </summary>
-            public virtual void Destroy()
-            { }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Method to be implemented by provider to get the camera frame for the subsystem.
@@ -129,11 +96,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <returns>
             /// <c>true</c> if the method successfully set the focus mode for the camera. Otherwise, <c>false</c>.
             /// </returns>
-            public virtual bool TrySetFocusMode(
-                CameraFocusMode cameraFocusMode)
-            {
-                return false;
-            }
+            public virtual bool TrySetFocusMode(CameraFocusMode cameraFocusMode) => false;
 
             /// <summary>
             /// Method to be implemented by the provider to set the light estimation mode.
@@ -142,11 +105,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <returns>
             /// <c>true</c> if the method successfully set the light estimation mode. Otherwise, <c>false</c>.
             /// </returns>
-            public virtual bool TrySetLightEstimationMode(
-                LightEstimationMode lightEstimationMode)
-            {
-                return false;
-            }
+            public virtual bool TrySetLightEstimationMode(LightEstimationMode lightEstimationMode) => false;
 
             /// <summary>
             /// Method to be implemented by the provider to get the camera intrinisics information.
@@ -191,9 +150,8 @@ namespace UnityEngine.XR.ARSubsystems
             /// implementation is unable to set the current camera configuration.</exception>
             public virtual XRCameraConfiguration? currentConfiguration
             {
-                get { return null; }
-                set { throw new NotSupportedException("setting current camera configuration is not supported by this "
-                                                      + "implementation"); }
+                get => null;
+                set => throw new NotSupportedException("setting current camera configuration is not supported by this implementation");
             }
 
             /// <summary>
@@ -449,7 +407,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public CameraFocusMode focusMode
         {
-            get { return m_FocusMode; }
+            get => m_FocusMode;
             set
             {
                 if (m_Provider.TrySetFocusMode(value))
@@ -468,7 +426,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public LightEstimationMode lightEstimationMode
         {
-            get { return m_LightEstimationMode; }
+            get => m_LightEstimationMode;
             set
             {
                 if ((m_LightEstimationMode != value) && m_Provider.TrySetLightEstimationMode(value))
@@ -482,37 +440,17 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Start the camera subsystem.
         /// </summary>
-        public sealed override void Start()
-        {
-            if (!m_Running)
-            {
-                m_Provider.Start();
-            }
-
-            m_Running = true;
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Stop the camera subsystem.
         /// </summary>
-        public sealed override void Stop()
-        {
-            if (m_Running)
-            {
-                m_Provider.Stop();
-            }
-
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Destroy the camera subsystem.
         /// </summary>
-        public sealed override void Destroy()
-        {
-            Stop();
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Gets the <see cref="XRTextureDescriptor"/>s associated with the
@@ -536,7 +474,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The material to render the camera texture.
         /// </value>
-        public Material cameraMaterial { get => m_Provider.cameraMaterial; }
+        public Material cameraMaterial => m_Provider.cameraMaterial;
 
         /// <summary>
         /// Returns the camera intrinsics information.
@@ -578,7 +516,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// implementation is unable to set the current camera configuration.</exception>
         public virtual XRCameraConfiguration? currentConfiguration
         {
-            get { return m_Provider.currentConfiguration; }
+            get => m_Provider.currentConfiguration;
             set
             {
                 if (value == null)
@@ -594,10 +532,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Whether to invert the culling mode during rendering. Some front-facing
         /// camera modes may require this.
         /// </summary>
-        public bool invertCulling
-        {
-            get { return m_Provider.invertCulling; }
-        }
+        public bool invertCulling => m_Provider.invertCulling;
 
         /// <summary>
         /// Method for the implementation to create the camera functionality provider.
@@ -605,7 +540,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>
         /// The camera functionality provider.
         /// </returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// Get the latest frame from the provider.
@@ -620,7 +555,7 @@ namespace UnityEngine.XR.ARSubsystems
             XRCameraParams cameraParams,
             out XRCameraFrame frame)
         {
-            if (m_Running && m_Provider.TryGetFrame(cameraParams, out frame))
+            if (running && m_Provider.TryGetFrame(cameraParams, out frame))
             {
                 return true;
             }
@@ -635,10 +570,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if camera permission has been granted. Otherwise, <c>false</c>.
         /// </value>
-        public bool permissionGranted
-        {
-            get { return m_Provider.permissionGranted; }
-        }
+        public bool permissionGranted => m_Provider.permissionGranted;
 
         /// <summary>
         /// Attempt to get the latest camera image. This provides directly access to the raw pixel data, as well as
@@ -719,11 +651,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="nativeHandle">A unique identifier for this camera image.</param>
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
         /// </exception>
-        /// <seealso cref="IProvider.TryAcquireLatestImage"/>
-        internal void DisposeImage(int nativeHandle)
-        {
-            m_Provider.DisposeImage(nativeHandle);
-        }
+        /// <seealso cref="Provider.TryAcquireLatestImage"/>
+        internal void DisposeImage(int nativeHandle) => m_Provider.DisposeImage(nativeHandle);
 
         /// <summary>
         /// Dispose an existing async conversion request.
@@ -731,11 +660,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="requestId">A unique identifier for the request.</param>
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
         /// </exception>
-        /// <seealso cref="IProvider.ConvertAsync(int, XRCameraImageConversionParams)"/>
-        internal void DisposeAsyncRequest(int requestId)
-        {
-            m_Provider.DisposeAsyncRequest(requestId);
-        }
+        /// <seealso cref="Provider.ConvertAsync(int, XRCameraImageConversionParams)"/>
+        internal void DisposeAsyncRequest(int requestId) => m_Provider.DisposeAsyncRequest(requestId);
 
         /// <summary>
         /// Attempt to get information about an image plane from a native image by index.
@@ -748,7 +674,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
         /// </exception>
-        /// <seealso cref="IProvider.TryAcquireLatestImage"/>
+        /// <seealso cref="Provider.TryAcquireLatestImage"/>
         internal bool TryGetPlane(
             int nativeHandle,
             int planeIndex,
@@ -758,7 +684,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Determine whether a native image handle returned by <see cref="IProvider.TryAcquireLatestImage"/> is
+        /// Determine whether a native image handle returned by <see cref="Provider.TryAcquireLatestImage"/> is
         /// currently valid. An image may become invalid if it has been disposed.
         /// </summary>
         /// <remarks>
@@ -769,11 +695,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
         /// </exception>
         /// <seealso cref="DisposeImage"/>
-        internal bool NativeHandleValid(
-            int nativeHandle)
-        {
-            return m_Provider.NativeHandleValid(nativeHandle);
-        }
+        internal bool NativeHandleValid(int nativeHandle) => m_Provider.NativeHandleValid(nativeHandle);
 
         /// <summary>
         /// Get the number of bytes required to store an image with the given dimensions and <c>TextureFormat</c>.
@@ -901,7 +823,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The handle representing the camera image on the native level.
             /// </value>
-            public int nativeHandle { get { return m_NativeHandle; } }
+            public int nativeHandle => m_NativeHandle;
             int m_NativeHandle;
 
             /// <summary>
@@ -910,7 +832,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The dimensions of the camera image.
             /// </value>
-            public Vector2Int dimensions { get { return m_Dimensions; } }
+            public Vector2Int dimensions => m_Dimensions;
             Vector2Int m_Dimensions;
 
             /// <summary>
@@ -919,7 +841,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The number of video planes in the camera image.
             /// </value>
-            public int planeCount { get { return m_PlaneCount; } }
+            public int planeCount => m_PlaneCount;
             int m_PlaneCount;
 
             /// <summary>
@@ -928,7 +850,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The timestamp for when the camera image was captured.
             /// </value>
-            public double timestamp { get { return m_Timestamp; } }
+            public double timestamp => m_Timestamp;
             double m_Timestamp;
 
             /// <summary>
@@ -937,7 +859,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The format of the camera image.
             /// </value>
-            public CameraImageFormat format { get { return m_Format; } }
+            public CameraImageFormat format => m_Format;
             CameraImageFormat m_Format;
 
             /// <summary>
@@ -970,15 +892,9 @@ namespace UnityEngine.XR.ARSubsystems
                 return ReferenceEquals(this, obj) || ((obj is CameraImageCinfo) && Equals((CameraImageCinfo)obj));
             }
 
-            public static bool operator ==(CameraImageCinfo lhs, CameraImageCinfo rhs)
-            {
-                return lhs.Equals(rhs);
-            }
+            public static bool operator ==(CameraImageCinfo lhs, CameraImageCinfo rhs) => lhs.Equals(rhs);
 
-            public static bool operator !=(CameraImageCinfo lhs, CameraImageCinfo rhs)
-            {
-                return !(lhs == rhs);
-            }
+            public static bool operator !=(CameraImageCinfo lhs, CameraImageCinfo rhs) => !(lhs == rhs);
 
             public override int GetHashCode()
             {
@@ -1013,7 +929,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The pointer to the raw native image data.
             /// </value>
-            public IntPtr dataPtr { get { return m_DataPtr; } }
+            public IntPtr dataPtr => m_DataPtr;
             IntPtr m_DataPtr;
 
             /// <summary>
@@ -1022,7 +938,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The length of the native image data.
             /// </value>
-            public int dataLength { get { return m_DataLength; } }
+            public int dataLength => m_DataLength;
             int m_DataLength;
 
             /// <summary>
@@ -1031,7 +947,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The stride for iterating through the rows of the native image data.
             /// </value>
-            public int rowStride { get { return m_RowStride; } }
+            public int rowStride => m_RowStride;
             int m_RowStride;
 
             /// <summary>
@@ -1040,7 +956,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <value>
             /// The stride for iterating through the pixels of the native image data.
             /// </value>
-            public int pixelStride { get {return m_PixelStride; } }
+            public int pixelStride => m_PixelStride;
             int m_PixelStride;
 
             /// <summary>
@@ -1069,15 +985,9 @@ namespace UnityEngine.XR.ARSubsystems
                 return ReferenceEquals(this, obj) || ((obj is CameraImagePlaneCinfo) && Equals((CameraImagePlaneCinfo)obj));
             }
 
-            public static bool operator ==(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs)
-            {
-                return lhs.Equals(rhs);
-            }
+            public static bool operator ==(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs) => lhs.Equals(rhs);
 
-            public static bool operator !=(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs)
-            {
-                return !(lhs == rhs);
-            }
+            public static bool operator !=(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs) => !(lhs == rhs);
 
             public override int GetHashCode()
             {

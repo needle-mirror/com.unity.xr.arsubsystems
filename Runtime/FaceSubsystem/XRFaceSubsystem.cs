@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -19,69 +16,36 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a face subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRFaceSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRFaceSubsystem()
-        {
-            m_Provider = CreateProvider();
-            m_DefaultFace = XRFace.GetDefault();
-        }
+        public XRFaceSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Start the face subsystem, i.e., start tracking faces.
         /// </summary>
-        public override void Start()
-        {
-            if (!m_Running)
-                m_Provider.Start();
-
-            m_Running = true;
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Destroy the face subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            if (m_Running)
-                Stop();
-
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Stop the subsystem, i.e., stop tracking faces.
         /// </summary>
-        public override void Stop()
-        {
-            if (m_Running)
-                m_Provider.Stop();
-
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Get or set the maximum number of faces to track simultaneously.
         /// </summary>
         public int maximumFaceCount
         {
-            get { return m_Provider.maximumFaceCount; }
-            set { m_Provider.maximumFaceCount = value; }
+            get => m_Provider.maximumFaceCount;
+            set => m_Provider.maximumFaceCount = value;
         }
 
         /// <summary>
         /// Get the number of faces the subsystem is able to track simultaneously.
         /// </summary>
-        public int supportedFaceCount
-        {
-            get { return m_Provider.supportedFaceCount; }
-        }
-
-        /// <summary>
-        /// Returns <c>true</c> if face tracking is supported.
-        /// </summary>
-        public bool supported
-        {
-            get { return m_Provider.supported; }
-        }
+        public int supportedFaceCount => m_Provider.supportedFaceCount;
 
         /// <summary>
         /// Get the changes (added, updated, and removed) faces since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -93,7 +57,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<XRFace> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(m_DefaultFace, allocator);
+            var changes = m_Provider.GetChanges(XRFace.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -124,39 +88,27 @@ namespace UnityEngine.XR.ARSubsystems
         /// Creates an instance of an implementation-specific <see cref="IProvider"/>.
         /// </summary>
         /// <returns>An implementation of the <see cref="IProvider"/> class.</returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// Class to be implemented by an implementor of the <see cref="XRFaceSubsystem"/>.
         /// </summary>
-        protected class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Called by <see cref="XRFaceSubsystem.Start"/>. Only invoked if not already running.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() { }
 
             /// <summary>
             /// Called by <see cref="XRFaceSubsystem.Stop"/>. Only invoked if current running.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Called by <see cref="XRFaceSubsystem.Destroy"/> when the subsystem is destroyed.
             /// </summary>
-            public virtual void Destroy()
-            { }
-
-            /// <summary>
-            /// Called by <see cref="XRFaceSubsystem.supported"/>.
-            /// Return <c>true</c> if face tracking is supported on the current device.
-            /// </summary>
-            public virtual bool supported
-            {
-                get { return false; }
-            }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Get the mesh data associated with the face with <paramref name="faceId"/>. The <paramref name="faceMesh"/>
@@ -200,21 +152,13 @@ namespace UnityEngine.XR.ARSubsystems
             /// since the last call to <see cref="GetChanges(Allocator)"/>. The changes should be allocated using
             /// <paramref name="allocator"/>.
             /// </returns>
-            public virtual TrackableChanges<XRFace> GetChanges(
-                XRFace defaultFace,
-                Allocator allocator)
-            {
-                return default(TrackableChanges<XRFace>);
-            }
+            public abstract TrackableChanges<XRFace> GetChanges(XRFace defaultFace, Allocator allocator);
 
             /// <summary>
             /// Should return the maximum number of faces the subsystem is able to track simultaneously.
             /// Defaults to 1.
             /// </summary>
-            public virtual int supportedFaceCount
-            {
-                get { return 1; }
-            }
+            public virtual int supportedFaceCount => 1;
 
             /// <summary>
             /// Get or set the maximum number of faces the subsystem should attempt to track simultaneously.
@@ -222,7 +166,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public virtual int maximumFaceCount
             {
-                get { return 1; }
+                get => 1;
                 set
                 {
                     if (maximumFaceCount < 1)
@@ -234,9 +178,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        IProvider m_Provider;
-
-        XRFace m_DefaultFace;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRFace> m_ValidationUtility =

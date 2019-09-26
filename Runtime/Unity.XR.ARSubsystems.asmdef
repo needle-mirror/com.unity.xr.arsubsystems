@@ -1,14 +1,22 @@
 {
     "name": "Unity.XR.ARSubsystems",
     "references": [
-        "Unity.Subsystem.Registration"
+        "Unity.Subsystem.Registration",
+        "Unity.InputSystem"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "",
+            "define": "UNITY_INPUT_SYSTEM"
+        }
+    ],
+    "noEngineReferences": false
 }

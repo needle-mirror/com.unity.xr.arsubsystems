@@ -15,15 +15,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// different from the zero-initialized version, e.g., the <see cref="pose"/>
         /// is <c>Pose.identity</c> instead of zero-initialized.
         /// </summary>
-        /// <returns>A default <see cref="XRReferencePoint"/>.</returns>
-        public static XRReferencePoint GetDefault()
+        public static XRReferencePoint defaultValue => s_Default;
+
+        static readonly XRReferencePoint s_Default = new XRReferencePoint
         {
-            return new XRReferencePoint(
-                TrackableId.invalidId,
-                Pose.identity,
-                TrackingState.None,
-                IntPtr.Zero);
-        }
+            m_Id = TrackableId.invalidId,
+            m_Pose = Pose.identity,
+            m_SessionId = Guid.Empty
+        };
 
         /// <summary>
         /// Constructs the session relative data for reference point.
@@ -73,43 +72,28 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Get the <see cref="TrackableId"/> associated with this reference point.
         /// </summary>
-        public TrackableId trackableId
-        {
-            get { return m_Id; }
-        }
+        public TrackableId trackableId => m_Id;
 
         /// <summary>
         /// Get the <c>Pose</c>, in session space, for this reference point.
         /// </summary>
-        public Pose pose
-        {
-            get { return m_Pose; }
-        }
+        public Pose pose => m_Pose;
 
         /// <summary>
         /// Get the <see cref="TrackingState"/> of this reference point.
         /// </summary>
-        public TrackingState trackingState
-        {
-            get { return m_TrackingState; }
-        }
+        public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
         /// A native pointer associated with the reference point.
         /// The data pointed to by this pointer is implementation-specific.
         /// </summary>
-        public IntPtr nativePtr
-        {
-            get { return m_NativePtr; }
-        }
+        public IntPtr nativePtr => m_NativePtr;
 
         /// <summary>
         /// The id of the session from which this reference point originated.
         /// </summary>
-        public Guid sessionId
-        {
-            get { return m_SessionId; }
-        }
+        public Guid sessionId => m_SessionId;
 
         public override int GetHashCode()
         {
@@ -135,23 +119,11 @@ namespace UnityEngine.XR.ARSubsystems
 
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-                return false;
+        public override bool Equals(object obj) => obj is XRReferencePoint && Equals((XRReferencePoint)obj);
 
-            return Equals((XRReferencePoint)obj);
-        }
+        public static bool operator==(XRReferencePoint lhs, XRReferencePoint rhs) => lhs.Equals(rhs);
 
-        public static bool operator==(XRReferencePoint lhs, XRReferencePoint rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator!=(XRReferencePoint lhs, XRReferencePoint rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator!=(XRReferencePoint lhs, XRReferencePoint rhs) => !lhs.Equals(rhs);
 
         TrackableId m_Id;
 

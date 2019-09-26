@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -25,27 +22,25 @@ namespace UnityEngine.XR.ARSubsystems
         /// which contains the implementation for a specific <see cref="XRObjectTrackingSubsystem"/>.
         /// </summary>
         /// <returns>A new <see cref="IProvider"/> containing a concrete implementation of this API.</returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// The API concrete class must implement for an <see cref="XRObjectTrackingSubsystem"/>.
         /// </summary>
-        protected abstract class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Get the changes (added, updated, and removed) to <see cref="XRTrackedObject"/>s
             /// since the last call to this method. It is typically invoked once per frame.
             /// </summary>
             /// <param name="template">A 'template' <see cref="XRTrackedObject"/>. <see cref="XRTrackedObject"/>
-            /// may have fields added to it in the future; this template allows you to fill 
+            /// may have fields added to it in the future; this template allows you to fill
             /// the arrays of added, updated, and removed with default values before copying in
             /// data from your own memory buffer.
             /// <param name="allocator">The allocator to use for the added, updated, and removed arrays.</param>
             /// <returns>A new <see cref="TrackableChanges{T}"/> containing the changes since the last
             /// call to this method, allocated with <paramref name="allocator"/>.</returns>
-            public abstract TrackableChanges<XRTrackedObject> GetChanges(
-                XRTrackedObject template,
-                Allocator allocator);
+            public abstract TrackableChanges<XRTrackedObject> GetChanges(XRTrackedObject template, Allocator allocator);
 
             /// <summary>
             /// The library containing the reference objects for which to scan.
@@ -76,16 +71,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// Starts scanning for the reference objects in <see cref="library"/>.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="library"/> is <c>null</c>.</exception>
-        public override sealed void Start()
+        protected override sealed void OnStart()
         {
-            if (m_Running)
-                return;
-
             if (m_Library == null)
                 throw new InvalidOperationException("Cannot start object tracking without an object library.");
 
             m_Provider.library = m_Library;
-            m_Running = true;
         }
 
         /// <summary>
@@ -95,22 +86,19 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.ArgumentNullException">Thrown if you set the library to <c>null</c> while the subsystem is running.</exception>
         public XRReferenceObjectLibrary library
         {
-            get
-            {
-                return m_Library;
-            }
+            get => m_Library;
             set
             {
                 if (m_Library == value)
                     return;
 
-                if (m_Running && value == null)
+                if (running && value == null)
                     throw new ArgumentNullException("Cannot set library to null while subsystem is running.");
 
                 m_Library = value;
 
                 // If we are running, then we want to switch the current library
-                if (m_Running)
+                if (running)
                     m_Provider.library = m_Library;
             }
         }
@@ -118,23 +106,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        public override sealed void Destroy()
-        {
-            Stop();
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Stops scanning for objects.
         /// </summary>
-        public override sealed void Stop()
-        {
-            if (!m_Running)
-                return;
-
-            m_Provider.library = null;
-            m_Running = false;
-        }
+        protected override sealed void OnStop() => m_Provider.library = null;
 
         /// <summary>
         /// Get changes (added, updated, and removed) to <see cref="XRTrackedObject"/>s since
@@ -145,7 +122,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The caller owns the memory and is responsible for calling <c>Dispose</c> on it.</returns>
         public override sealed TrackableChanges<XRTrackedObject> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(XRTrackedObject.defaultTrackedObject, allocator);
+            var changes = m_Provider.GetChanges(XRTrackedObject.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -168,7 +145,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         XRReferenceObjectLibrary m_Library;
 
-        IProvider m_Provider;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRTrackedObject> m_ValidationUtility =

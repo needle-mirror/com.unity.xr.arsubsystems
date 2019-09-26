@@ -15,15 +15,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// different from the zero-initialized version, e.g., the <see cref="pose"/>
         /// is <c>Pose.identity</c> instead of zero-initialized.
         /// </summary>
-        /// <returns>A default <see cref="XRPointCloud"/>.</returns>
-        public static XRPointCloud GetDefault()
+        public static XRPointCloud defaultValue => s_Default;
+
+        static readonly XRPointCloud s_Default = new XRPointCloud
         {
-            return new XRPointCloud(
-                TrackableId.invalidId,
-                Pose.identity,
-                TrackingState.None,
-                IntPtr.Zero);
-        }
+            m_TrackableId = TrackableId.invalidId,
+            m_Pose = Pose.identity,
+        };
 
         /// <summary>
         /// Constructs a new <see cref="XRPointCloud"/>. This is a container
@@ -49,7 +47,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Get the <see cref="TrackableId"/> associated with this point cloud.
         /// </summary>
-        public TrackableId trackableId { get { return m_TrackableId; } }
+        public TrackableId trackableId => m_TrackableId;
 
         /// <summary>
         /// Get the <c>Pose</c> associated with this point cloud.
@@ -57,18 +55,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// Point cloud points are relative to this pose.
         /// </remarks>
-        public Pose pose
-        {
-            get { return m_Pose; }
-        }
+        public Pose pose => m_Pose;
 
         /// <summary>
         /// Get the <see cref="TrackingState"/> associated with this point cloud.
         /// </summary>
-        public TrackingState trackingState
-        {
-            get { return m_TrackingState; }
-        }
+        public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
         /// Get the native pointer associated with this point cloud.
@@ -76,10 +68,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// The data this pointer points to is implementation defined.
         /// </remarks>
-        public IntPtr nativePtr
-        {
-            get { return m_NativePtr; }
-        }
+        public IntPtr nativePtr => m_NativePtr;
 
         public override int GetHashCode()
         {
@@ -110,15 +99,9 @@ namespace UnityEngine.XR.ARSubsystems
             return Equals((XRPointCloud)obj);
         }
 
-        public static bool operator==(XRPointCloud lhs, XRPointCloud rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator==(XRPointCloud lhs, XRPointCloud rhs) => lhs.Equals(rhs);
 
-        public static bool operator!=(XRPointCloud lhs, XRPointCloud rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator!=(XRPointCloud lhs, XRPointCloud rhs) => !lhs.Equals(rhs);
 
         TrackableId m_TrackableId;
 

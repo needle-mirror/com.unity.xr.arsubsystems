@@ -1,28 +1,29 @@
-using UnityEngine.TestTools;
 using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.XR.ARSubsystems;
+using Unity.Collections;
 
 namespace UnityEngine.XR.ARSubsystems.Tests
 {
     public class XRPlaneSubsystemImpl : XRPlaneSubsystem
     {
-        protected override IProvider CreateProvider()
+        protected override Provider CreateProvider() => new TestProvider();
+
+        class TestProvider : Provider
         {
-            return new IProvider();
+            public override TrackableChanges<BoundedPlane> GetChanges(BoundedPlane defaultPlane, Allocator allocator)
+            {
+                return default;
+            }
         }
     }
 
     [TestFixture]
     public class XRPlaneSubsystemTestFixture
     {
-         [Test]
+        [Test]
         public void RunningStateTests()
         {
             XRPlaneSubsystem subsystem = new XRPlaneSubsystemImpl();
-            
+
             // Initial state is not running
             Assert.That(subsystem.running == false);
 

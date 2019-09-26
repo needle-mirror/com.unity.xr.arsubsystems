@@ -37,57 +37,39 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Generates a <see cref="XRTrackedImage"/> populated with default values.
         /// </summary>
-        /// <returns>A default <see cref="XRTrackedImage"/>.</returns>
-        public static XRTrackedImage GetDefault()
+        public static XRTrackedImage defaultValue => s_Default;
+
+        static readonly XRTrackedImage s_Default = new XRTrackedImage
         {
-            return new XRTrackedImage(
-                TrackableId.invalidId,
-                default(Guid),
-                Pose.identity,
-                default(Vector2),
-                TrackingState.None,
-                IntPtr.Zero);
-        }
+            m_Id = TrackableId.invalidId,
+            m_SourceImageId = Guid.Empty,
+            m_Pose = Pose.identity,
+        };
 
         /// <summary>
         /// The <see cref="TrackableId"/> associated with this tracked image.
         /// </summary>
-        public TrackableId trackableId
-        {
-            get { return m_Id; }
-        }
+        public TrackableId trackableId => m_Id;
 
         /// <summary>
         /// The <c>GUID</c> associated with the source image.
         /// </summary>
-        public Guid sourceImageId
-        {
-            get { return m_SourceImageId; }
-        }
+        public Guid sourceImageId => m_SourceImageId;
 
         /// <summary>
         /// The <c>Pose</c> associated with this tracked image.
         /// </summary>
-        public Pose pose
-        {
-            get { return m_Pose; }
-        }
+        public Pose pose => m_Pose;
 
         /// <summary>
         /// The size (i.e., dimensions) of this tracked image.
         /// </summary>
-        public Vector2 size
-        {
-            get { return m_Size; }
-        }
+        public Vector2 size => m_Size;
 
         /// <summary>
         /// The <see cref="TrackingState"/> associated with this tracked image.
         /// </summary>
-        public TrackingState trackingState
-        {
-            get { return m_TrackingState; }
-        }
+        public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
         /// A native pointer associated with this tracked image.
@@ -96,10 +78,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// valid at least until the next call to
         /// <see cref="XRImageTrackingSubsystem.GetChanges(Allocator)"/>.
         /// </summary>
-        public IntPtr nativePtr
-        {
-            get { return m_NativePtr; }
-        }
+        public IntPtr nativePtr => m_NativePtr;
 
         public override int GetHashCode()
         {
@@ -117,30 +96,18 @@ namespace UnityEngine.XR.ARSubsystems
         public bool Equals(XRTrackedImage other)
         {
             return
-                m_Id == other.m_Id &&
-                m_SourceImageId == other.m_SourceImageId &&
-                m_Pose == other.m_Pose &&
-                m_Size == other.m_Size &&
+                m_Id.Equals(other.m_Id) &&
+                m_SourceImageId.Equals(other.m_SourceImageId) &&
+                m_Pose.Equals(other.m_Pose) &&
+                m_Size.Equals(other.m_Size) &&
                 m_TrackingState == other.m_TrackingState;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-                return false;
+        public override bool Equals(object obj) => obj is XRTrackedImage && Equals((XRTrackedImage)obj);
 
-            return Equals((XRTrackedImage)obj);
-        }
+        public static bool operator==(XRTrackedImage lhs, XRTrackedImage rhs) => lhs.Equals(rhs);
 
-        public static bool operator==(XRTrackedImage lhs, XRTrackedImage rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator!=(XRTrackedImage lhs, XRTrackedImage rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator!=(XRTrackedImage lhs, XRTrackedImage rhs) => !lhs.Equals(rhs);
 
         TrackableId m_Id;
         Guid m_SourceImageId;

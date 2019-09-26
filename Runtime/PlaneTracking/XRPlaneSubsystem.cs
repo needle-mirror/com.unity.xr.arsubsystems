@@ -1,10 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
-
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -19,54 +15,29 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a plane subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRPlaneSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRPlaneSubsystem()
-        {
-            m_Provider = CreateProvider();
-            m_DefaultPlane = BoundedPlane.GetDefault();
-        }
+        public XRPlaneSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Start the plane subsystem, i.e., start tracking planes.
         /// </summary>
-        public override void Start()
-        {
-            if (!m_Running)
-                m_Provider.Start();
-
-            m_Running = true;
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Destroy the plane subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            if (m_Running)
-                Stop();
-
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Stop the subsystem, i.e., stop tracking planes.
         /// </summary>
-        public override void Stop()
-        {
-            if (m_Running)
-                m_Provider.Stop();
-
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Set <see cref="PlaneDetectionMode"/>, e.g., to enable different modes of detection.
         /// </summary>
         public PlaneDetectionMode planeDetectionMode
         {
-            set
-            {
-                m_Provider.planeDetectionMode = value;
-            }
+            set => m_Provider.planeDetectionMode = value;
         }
 
         /// <summary>
@@ -79,7 +50,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<BoundedPlane> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(m_DefaultPlane, allocator);
+            var changes = m_Provider.GetChanges(BoundedPlane.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -111,7 +82,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Concrete classes must implement this to provide the provider-specific implementation.
         /// </summary>
         /// <returns></returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// Creates or resizes the <paramref name="array"/> if necessary. If <paramref name="array"/>
@@ -144,25 +115,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The API that derived classes must implement.
         /// </summary>
-        protected class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Start the plane subsystem, i.e., start tracking planes.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() { }
 
             /// <summary>
             /// Stop the subsystem, i.e., stop tracking planes.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Destroy the plane subsystem. <see cref="Stop"/> is always called first.
             /// </summary>
-            public virtual void Destroy()
-            { }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Retrieves the boundary points of the plane with <paramref name="trackableId"/>.
@@ -194,12 +162,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// since the last call to <see cref="GetChanges(Allocator)"/>. The changes should be allocated using
             /// <paramref name="allocator"/>.
             /// </returns>
-            public virtual TrackableChanges<BoundedPlane> GetChanges(
-                BoundedPlane defaultPlane,
-                Allocator allocator)
-            {
-                return default(TrackableChanges<BoundedPlane>);
-            }
+            public abstract TrackableChanges<BoundedPlane> GetChanges(BoundedPlane defaultPlane, Allocator allocator);
 
             /// <summary>
             /// Set the <see cref="PlaneDetectionMode"/>.
@@ -210,9 +173,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        IProvider m_Provider;
-
-        BoundedPlane m_DefaultPlane;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<BoundedPlane> m_ValidationUtility =

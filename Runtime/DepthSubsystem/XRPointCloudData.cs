@@ -15,8 +15,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public NativeArray<Vector3> positions
         {
-            get { return m_Positions; }
-            set { m_Positions = value; }
+            get => m_Positions;
+            set => m_Positions = value;
         }
         NativeArray<Vector3> m_Positions;
 
@@ -27,8 +27,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public NativeArray<float> confidenceValues
         {
-            get { return m_ConfidenceValues; }
-            set { m_ConfidenceValues = value; }
+            get => m_ConfidenceValues;
+            set => m_ConfidenceValues = value;
         }
         NativeArray<float> m_ConfidenceValues;
 
@@ -44,8 +44,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         public NativeArray<ulong> identifiers
         {
-            get { return m_Identifiers; }
-            set { m_Identifiers = value; }
+            get => m_Identifiers;
+            set => m_Identifiers = value;
         }
         NativeArray<ulong> m_Identifiers;
 
@@ -73,13 +73,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is XRPointCloudData))
-                return false;
-
-            return Equals((XRPointCloudData)obj);
-        }
+        public override bool Equals(object obj) => obj is XRPointCloudData && Equals((XRPointCloudData)obj);
 
         public override string ToString()
         {
@@ -95,14 +89,8 @@ namespace UnityEngine.XR.ARSubsystems
                 m_Identifiers.Equals(other.m_Identifiers);
         }
 
-        public static bool operator ==(XRPointCloudData lhs, XRPointCloudData rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator ==(XRPointCloudData lhs, XRPointCloudData rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRPointCloudData lhs, XRPointCloudData rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator !=(XRPointCloudData lhs, XRPointCloudData rhs) => !lhs.Equals(rhs);
     }
 }

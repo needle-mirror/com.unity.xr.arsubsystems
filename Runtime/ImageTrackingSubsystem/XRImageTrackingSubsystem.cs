@@ -1,12 +1,6 @@
 using System;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.Jobs;
 using UnityEngine.Assertions;
-
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -21,49 +15,29 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRImageTrackingSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRImageTrackingSubsystem()
-        {
-            m_Provider = CreateProvider();
-        }
+        public XRImageTrackingSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Starts the subsystem, that is, start detecting images in the scene. <see cref="imageLibrary"/> must not be null.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="imageLibrary"/> is null.</exception>
-        public override void Start()
+        protected override void OnStart()
         {
-            if (m_Running)
-                return;
-
             if (m_ImageLibrary == null)
                 throw new InvalidOperationException("Cannot start image tracking without an image library.");
 
             m_Provider.imageLibrary = m_ImageLibrary;
-            m_Running = true;
         }
 
         /// <summary>
         /// Stops the subsystem, that is, stops detecting and tracking images.
         /// </summary>
-        public override void Stop()
-        {
-            if (!m_Running)
-                return;
-
-            m_Provider.imageLibrary = null;
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.imageLibrary = null;
 
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            if (m_Running)
-                Stop();
-
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Get or set the reference image library. This is the set of images to look for in the environment.
@@ -87,12 +61,12 @@ namespace UnityEngine.XR.ARSubsystems
                 if (m_ImageLibrary == value)
                     return;
 
-                if (m_Running && value == null)
+                if (running && value == null)
                     throw new ArgumentNullException("Cannot set imageLibrary to null while subsystem is running.");
 
                 m_ImageLibrary = value;
 
-                if (m_Running)
+                if (running)
                     m_Provider.imageLibrary = m_ImageLibrary;
             }
         }
@@ -125,7 +99,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>The set of tracked image changes (added, updated, removed) since the last call to this method.</returns>
         public override TrackableChanges<XRTrackedImage> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(XRTrackedImage.GetDefault(), allocator);
+            var changes = m_Provider.GetChanges(XRTrackedImage.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -147,7 +121,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Methods to implement by the implementing provider.
         /// </summary>
-        protected abstract class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Called when the subsystem is destroyed.
@@ -162,9 +136,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// before copying in its own values. This guards against addtional fields added to the <see cref="XRTrackedImage"/> in the future.</param>
             /// <param name="allocator">The allocator to use for the returned data.</param>
             /// <returns>The set of changes (added, updated, removed) tracked images since the last call to this method.</returns>
-            public abstract TrackableChanges<XRTrackedImage> GetChanges(
-                XRTrackedImage defaultTrackedImage,
-                Allocator allocator);
+            public abstract TrackableChanges<XRTrackedImage> GetChanges(XRTrackedImage defaultTrackedImage, Allocator allocator);
 
             /// <summary>
             /// Sets the set of images to search for in the environment.
@@ -197,14 +169,14 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Create an implementation of the <see cref="IProvider"/> class. This will only be called once.
+        /// Create an implementation of the <see cref="Provider"/> class. This will only be called once.
         /// </summary>
-        /// <returns>An instance of the <see cref="IProvider"/> interface.</returns>
-        protected abstract IProvider CreateProvider();
+        /// <returns>An instance of the <see cref="Provider"/> interface.</returns>
+        protected abstract Provider CreateProvider();
 
         RuntimeReferenceImageLibrary m_ImageLibrary;
 
-        IProvider m_Provider;
+        Provider m_Provider;
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRTrackedImage> m_ValidationUtility =

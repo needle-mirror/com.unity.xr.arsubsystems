@@ -1,17 +1,15 @@
-using UnityEngine.TestTools;
 using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.XR.ARSubsystems;
+using Unity.Collections;
 
 namespace UnityEngine.XR.ARSubsystems.Tests
 {
     public class XRReferencePointSubsystemImpl : XRReferencePointSubsystem
     {
-        protected override IProvider CreateProvider()
+        protected override Provider CreateProvider() => new TestProvider();
+
+        class TestProvider : Provider
         {
-            return new IProvider();
+            public override TrackableChanges<XRReferencePoint> GetChanges(XRReferencePoint defaultReferencePoint, Allocator allocator) => default;
         }
     }
 
@@ -22,7 +20,7 @@ namespace UnityEngine.XR.ARSubsystems.Tests
         public void RunningStateTests()
         {
             XRReferencePointSubsystem subsystem = new XRReferencePointSubsystemImpl();
-            
+
             // Initial state is not running
             Assert.That(subsystem.running == false);
 

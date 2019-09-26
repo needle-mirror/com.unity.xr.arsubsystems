@@ -1,3 +1,5 @@
+using System;
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -24,5 +26,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// The <see cref="TrackingState"/> associated with this trackable.
         /// </summary>
         TrackingState trackingState { get; }
+
+        /// <summary>
+        /// The native pointer associated with this trackable.
+        /// </summary>
+        IntPtr nativePtr { get; }
     }
 }

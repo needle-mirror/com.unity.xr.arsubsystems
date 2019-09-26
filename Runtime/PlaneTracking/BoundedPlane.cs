@@ -10,15 +10,7 @@ namespace UnityEngine.XR.ARSubsystems
     [StructLayout(LayoutKind.Sequential)]
     public struct BoundedPlane : ITrackable, IEquatable<BoundedPlane>
     {
-        /// <summary>
-        /// Gets a default-initialized <see cref="BoundedPlane"/>. This may be
-        /// different from the zero-initialized version, e.g., the <see cref="pose"/>
-        /// is <c>Pose.identity</c> instead of zero-initialized.
-        /// </summary>
-        /// <returns>A default <see cref="BoundedPlane"/>.</returns>
-        public static BoundedPlane GetDefault()
-        {
-            return new BoundedPlane(
+        static readonly BoundedPlane s_Default = new BoundedPlane(
                 TrackableId.invalidId,
                 TrackableId.invalidId,
                 Pose.identity,
@@ -27,7 +19,13 @@ namespace UnityEngine.XR.ARSubsystems
                 PlaneAlignment.None,
                 TrackingState.None,
                 IntPtr.Zero);
-        }
+
+        /// <summary>
+        /// Gets a default-initialized <see cref="BoundedPlane"/>. This may be
+        /// different from the zero-initialized version, e.g., the <see cref="pose"/>
+        /// is <c>Pose.identity</c> instead of zero-initialized.
+        /// </summary>
+        public static BoundedPlane defaultValue => s_Default;
 
         /// <summary>
         /// Constructs a new <see cref="BoundedPlane"/>. This is just a data container
@@ -68,7 +66,7 @@ namespace UnityEngine.XR.ARSubsystems
         public TrackableId trackableId { get { return m_TrackableId; } }
 
         /// <summary>
-        /// The <see cref="TrackableId"/> associated with the plane which subsumed this one. Will be <see cref="TrackableId.invalidId"/> 
+        /// The <see cref="TrackableId"/> associated with the plane which subsumed this one. Will be <see cref="TrackableId.invalidId"/>
         /// if this plane has not been subsumed.
         /// </summary>
         public TrackableId subsumedById { get { return m_SubsumedById; } }

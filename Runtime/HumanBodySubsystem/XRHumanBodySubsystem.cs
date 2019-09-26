@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Unity.Collections;
-
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -19,7 +14,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The implementation specific provider of human body functionality.
         /// </value>
-        IProvider m_Provider;
+        Provider m_Provider;
 
         /// <summary>
         /// Whether 2D human body pose estimation is enabled.
@@ -29,7 +24,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool humanBodyPose2DEstimationEnabled
         {
-            get { return m_HumanBodyPose2DEstimationEnabled; }
+            get => m_HumanBodyPose2DEstimationEnabled;
             set
             {
                 if ((m_HumanBodyPose2DEstimationEnabled != value)
@@ -49,7 +44,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool humanBodyPose3DEstimationEnabled
         {
-            get { return m_HumanBodyPose3DEstimationEnabled; }
+            get => m_HumanBodyPose3DEstimationEnabled;
             set
             {
                 if ((m_HumanBodyPose3DEstimationEnabled != value)
@@ -69,7 +64,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool humanBodyPose3DScaleEstimationEnabled
         {
-            get { return m_HumanBodyPose3DScaleEstimationEnabled; }
+            get => m_HumanBodyPose3DScaleEstimationEnabled;
             set
             {
                 if ((m_HumanBodyPose3DScaleEstimationEnabled != value)
@@ -91,7 +86,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// enabled if the implementation does not support human segmentation.</exception>
         public HumanSegmentationMode humanSegmentationStencilMode
         {
-            get { return m_HumanSegmentationStencilMode; }
+            get => m_HumanSegmentationStencilMode;
             set
             {
                 if ((m_HumanSegmentationStencilMode != value)
@@ -113,7 +108,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// enabled if the implementation does not support human segmentation.</exception>
         public HumanSegmentationMode humanSegmentationDepthMode
         {
-            get { return m_HumanSegmentationDepthMode; }
+            get => m_HumanSegmentationDepthMode;
             set
             {
                 if ((m_HumanSegmentationDepthMode != value)
@@ -128,43 +123,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Construct the subsystem by creating the functionality provider.
         /// </summary>
-        public XRHumanBodySubsystem()
-        {
-            m_Provider = CreateProvider();
-        }
+        public XRHumanBodySubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Start the subsystem by starting the provider.
         /// </summary>
-        public override void Start()
-        {
-            if (!m_Running)
-            {
-                m_Provider.Start();
-                m_Running = true;
-            }
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Stop the subsystem by stopping the provider.
         /// </summary>
-        public override void Stop()
-        {
-            if (m_Running)
-            {
-                m_Provider.Stop();
-                m_Running = false;
-            }
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Destroy the subsystem by desstroying the provider.
         /// </summary>
-        public override void Destroy()
-        {
-            Stop();
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Query the provider for the trackable changes.
@@ -175,7 +149,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<XRHumanBody> GetChanges(Allocator allocator)
         {
-            return m_Provider.GetChanges(XRHumanBody.GetDefault(), allocator);
+            return m_Provider.GetChanges(XRHumanBody.defaultValue, allocator);
         }
 
         /// <summary>
@@ -243,7 +217,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>
         /// The implementation specific functionality provider.
         /// </returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// Register the descriptor for the human body subsystem implementation.
@@ -260,28 +234,22 @@ namespace UnityEngine.XR.ARSubsystems
             return SubsystemRegistration.CreateDescriptor(humanBodySubsystemDescriptor);
         }
 
-        protected abstract class IProvider
+        protected abstract class Provider
         {
             /// <summary>
             /// Method to be implemented by the provider to start the functionality.
             /// </summary>
-            public virtual void Start()
-            {
-            }
+            public virtual void Start() { }
 
             /// <summary>
             /// Method to be implemented by the provider to stop the functionality.
             /// </summary>
-            public virtual void Stop()
-            {
-            }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Method to be implemented by the provider to destroy itself and release any resources.
             /// </summary>
-            public virtual void Destroy()
-            {
-            }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Method to be implemented by the provider to sets whether human body pose 2D estimation is enabled.
@@ -395,10 +363,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// </returns>
             /// <exception cref="System.NotSupportedException">Thrown for platforms not supporting human body pose
             /// estimation.</exception>
-            public virtual TrackableChanges<XRHumanBody> GetChanges(XRHumanBody defaultHumanBody, Allocator allocator)
-            {
-                throw new NotSupportedException("Body pose estimation not supported by this implementation.");
-            }
+            public abstract TrackableChanges<XRHumanBody> GetChanges(XRHumanBody defaultHumanBody, Allocator allocator);
 
             /// <summary>
             /// Method to be implemented by the provider to get the skeleton joints for the requested trackable identifier.

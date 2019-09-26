@@ -19,34 +19,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// A <see cref="XRTrackedObject"/> with appropriate default values.
         /// </summary>
-        public static XRTrackedObject defaultTrackedObject
-        {
-            get { return k_Default; }
-        }
+        public static XRTrackedObject defaultValue => s_Default;
 
         /// <summary>
         /// The <see cref="TrackableId"/> associated with this tracked object.
         /// </summary>
-        public TrackableId trackableId
-        {
-            get { return m_TrackableId; }
-        }
+        public TrackableId trackableId => m_TrackableId;
 
         /// <summary>
         /// The <c>Pose</c> associated with this tracked object.
         /// </summary>
-        public Pose pose
-        {
-            get { return m_Pose; }
-        }
+        public Pose pose => m_Pose;
 
         /// <summary>
         /// The <see cref="TrackingState"/> associated with this tracked object.
         /// </summary>
-        public TrackingState trackingState
-        {
-            get { return m_TrackingState; }
-        }
+        public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
         /// A native pointer associated with this tracked object.
@@ -57,18 +45,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <see cref="XRObjectTrackingSubsystem.GetChanges(Unity.Collections.Allocator)"/>
         /// (typically once per frame).
         /// </remarks>
-        public IntPtr nativePtr
-        {
-            get { return m_NativePtr; }
-        }
+        public IntPtr nativePtr => m_NativePtr;
 
         /// <summary>
         /// The <c>Guid</c> associated with the source <see cref="XRReferenceObject"/>.
         /// </summary>
-        public Guid referenceObjectGuid
-        {
-            get { return m_ReferenceObjectGuid; }
-        }
+        public Guid referenceObjectGuid => m_ReferenceObjectGuid;
 
         /// <summary>
         /// Constructs a <see cref="XRTrackedObject"/>
@@ -94,32 +76,15 @@ namespace UnityEngine.XR.ARSubsystems
             m_ReferenceObjectGuid = referenceObjectGuid;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-                return false;
-            return obj is XRTrackedObject && Equals((XRTrackedObject) obj);
-        }
+        public override bool Equals(object obj) => obj is XRTrackedObject && Equals((XRTrackedObject) obj);
 
-        public override int GetHashCode()
-        {
-            return m_TrackableId.GetHashCode();
-        }
+        public override int GetHashCode() => m_TrackableId.GetHashCode();
 
-        public static bool operator ==(XRTrackedObject lhs, XRTrackedObject rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator ==(XRTrackedObject lhs, XRTrackedObject rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRTrackedObject lhs, XRTrackedObject rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator !=(XRTrackedObject lhs, XRTrackedObject rhs) => !lhs.Equals(rhs);
 
-        public bool Equals(XRTrackedObject other)
-        {
-            return m_TrackableId.Equals(other.m_TrackableId);
-        }
+        public bool Equals(XRTrackedObject other) => m_TrackableId.Equals(other.m_TrackableId);
 
         TrackableId m_TrackableId;
 
@@ -131,11 +96,11 @@ namespace UnityEngine.XR.ARSubsystems
 
         Guid m_ReferenceObjectGuid;
 
-        static readonly XRTrackedObject k_Default = new XRTrackedObject(
-                TrackableId.invalidId,
-                Pose.identity,
-                TrackingState.None,
-                IntPtr.Zero,
-                default(Guid));
+        static readonly XRTrackedObject s_Default = new XRTrackedObject
+        {
+            m_TrackableId = TrackableId.invalidId,
+            m_Pose = Pose.identity,
+            m_ReferenceObjectGuid = Guid.Empty,
+        };
     }
 }

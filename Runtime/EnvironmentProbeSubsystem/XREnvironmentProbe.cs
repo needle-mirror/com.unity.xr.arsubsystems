@@ -12,15 +12,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Creates an <see cref="XREnvironmentProbe"/> populated with default values.
         /// </summary>
-        /// <returns>A default environment probe.</returns>
-        public static XREnvironmentProbe GetDefault()
+        public static XREnvironmentProbe defaultValue => s_Default;
+
+        static readonly XREnvironmentProbe s_Default = new XREnvironmentProbe
         {
-            return new XREnvironmentProbe
-            {
-                trackableId = TrackableId.invalidId,
-                pose = Pose.identity
-            };
-        }
+            trackableId = TrackableId.invalidId,
+            pose = Pose.identity
+        };
 
         /// <summary>
         /// Uniquely identifies each environment probe in an AR session.
@@ -30,8 +28,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public TrackableId trackableId
         {
-            get { return m_TrackableId; }
-            private set { m_TrackableId = value; }
+            get => m_TrackableId;
+            private set => m_TrackableId = value;
         }
         TrackableId m_TrackableId;
 
@@ -43,8 +41,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public Vector3 scale
         {
-            get { return m_Scale; }
-            private set { m_Scale = value; }
+            get => m_Scale;
+            private set => m_Scale = value;
         }
         Vector3 m_Scale;
 
@@ -56,8 +54,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public Pose pose
         {
-            get { return m_Pose; }
-            private set { m_Pose = value; }
+            get => m_Pose;
+            private set => m_Pose = value;
         }
         Pose m_Pose;
 
@@ -73,8 +71,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         public Vector3 size
         {
-            get { return m_Size; }
-            private set { m_Size = value; }
+            get => m_Size;
+            private set => m_Size = value;
         }
         Vector3 m_Size;
 
@@ -92,8 +90,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         public XRTextureDescriptor textureDescriptor
         {
-            get { return m_TextureDescriptor; }
-            private set { m_TextureDescriptor = value; }
+            get => m_TextureDescriptor;
+            private set => m_TextureDescriptor = value;
         }
         XRTextureDescriptor m_TextureDescriptor;
 
@@ -102,8 +100,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public TrackingState trackingState
         {
-            get { return m_TrackingState; }
-            private set { m_TrackingState = value; }
+            get => m_TrackingState;
+            private set => m_TrackingState = value;
         }
         TrackingState m_TrackingState;
 
@@ -115,8 +113,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public IntPtr nativePtr
         {
-            get { return m_NativePtr; }
-            private set { m_NativePtr = value; }
+            get => m_NativePtr;
+            private set => m_NativePtr = value;
         }
         IntPtr m_NativePtr;
 
@@ -133,25 +131,13 @@ namespace UnityEngine.XR.ARSubsystems
                         || ((obj is XREnvironmentProbe) && Equals((XREnvironmentProbe)obj))));
         }
 
-        public static bool operator ==(XREnvironmentProbe lhs, XREnvironmentProbe rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator ==(XREnvironmentProbe lhs, XREnvironmentProbe rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XREnvironmentProbe lhs, XREnvironmentProbe rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static bool operator !=(XREnvironmentProbe lhs, XREnvironmentProbe rhs) => !(lhs == rhs);
 
-        public override int GetHashCode()
-        {
-            return m_TrackableId.GetHashCode();
-        }
+        public override int GetHashCode() => m_TrackableId.GetHashCode();
 
-        public override string ToString()
-        {
-            return ToString("0.000");
-        }
+        public override string ToString() => ToString("0.000");
 
         public string ToString(string floatingPointformat)
         {

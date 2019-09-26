@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
 
-#if !UNITY_2019_2_OR_NEWER
-using UnityEngine.Experimental;
-#endif
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -13,68 +10,29 @@ namespace UnityEngine.XR.ARSubsystems
     /// This abstract class should be implemented by an XR provider and instantiated using the <c>SubsystemManager</c>
     /// to enumerate the available <see cref="XRRaycastSubsystemDescriptor"/>s.
     /// </remarks>
-    public abstract class XRRaycastSubsystem : Subsystem<XRRaycastSubsystemDescriptor>
+    public abstract class XRRaycastSubsystem : XRSubsystem<XRRaycastSubsystemDescriptor>
     {
-        /// <summary>
-        /// Whether the subsystem is currently running.
-        /// </summary>
-#if UNITY_2019_2_OR_NEWER        
-        public override bool running
-#else
-        public bool running
-#endif
-        { 
-            get { return m_Running; } 
-        }
-
-        /// <summary>
-        /// Implementing classes must set this value to reflect the running state of the subsystem
-        /// </summary>
-        protected bool m_Running;
-
         /// <summary>
         /// Constructor. Do not invoke directly; use the <c>SubsystemManager</c>
         /// to enumerate the available <see cref="XRRaycastSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRRaycastSubsystem()
-        {
-            m_Provider = CreateProvider();
-            m_DefaultRaycastHit = XRRaycastHit.GetDefault();
-        }
+        public XRRaycastSubsystem() => m_Provider = CreateProvider();
 
         /// <summary>
         /// Starts the subsystem.
         /// </summary>
-        public override void Start()
-        {
-            if (!m_Running)
-                m_Provider.Start();
-
-            m_Running = true;
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Stops the subsystem.
         /// </summary>
-        public override void Stop()
-        {
-             if (m_Running)
-                m_Provider.Stop();
-
-            m_Running = false;
-        }
+        protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        public override void Destroy()
-        {
-            if (m_Running)
-                Stop();
-
-            m_Provider.Destroy();
-        }
+        protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
         /// Casts <paramref name="ray"/> against trackables specified with <paramref name="trackableTypeMask"/>.
@@ -88,7 +46,7 @@ namespace UnityEngine.XR.ARSubsystems
             TrackableType trackableTypeMask,
             Allocator allocator)
         {
-            return m_Provider.Raycast(m_DefaultRaycastHit, ray, trackableTypeMask, allocator);
+            return m_Provider.Raycast(XRRaycastHit.defaultValue, ray, trackableTypeMask, allocator);
         }
 
         /// <summary>
@@ -103,37 +61,34 @@ namespace UnityEngine.XR.ARSubsystems
             TrackableType trackableTypeMask,
             Allocator allocator)
         {
-            return m_Provider.Raycast(m_DefaultRaycastHit, screenPoint, trackableTypeMask, allocator);
+            return m_Provider.Raycast(XRRaycastHit.defaultValue, screenPoint, trackableTypeMask, allocator);
         }
 
         /// <summary>
-        /// Should return an instance of <see cref="IProvider"/>.
+        /// Should return an instance of <see cref="Provider"/>.
         /// </summary>
         /// <returns>The interface to the implementation-specific provider.</returns>
-        protected abstract IProvider CreateProvider();
+        protected abstract Provider CreateProvider();
 
         /// <summary>
         /// An interface to be implemented by providers of this subsystem.
         /// </summary>
-        protected class IProvider
+        protected class Provider
         {
             /// <summary>
             /// Called when the subsystem is started. Will not be called again until <see cref="Stop"/>.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() { }
 
             /// <summary>
             /// Called when the subsystem is stopped. Will not be called before <see cref="Start"/>.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() { }
 
             /// <summary>
             /// Called when the subsystem is destroyed. <see cref="Stop"/> will be called first if the subsystem is running.
             /// </summary>
-            public virtual void Destroy()
-            { }
+            public virtual void Destroy() { }
 
             /// <summary>
             /// Performs a raycast from an arbitrary ray against the types
@@ -172,8 +127,6 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        IProvider m_Provider;
-
-        XRRaycastHit m_DefaultRaycastHit;
+        Provider m_Provider;
     }
 }

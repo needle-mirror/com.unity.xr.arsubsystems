@@ -19,21 +19,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// A string name for this reference object.
         /// </summary>
-        public string name
-        {
-            get { return m_Name; }
-        }
+        public string name => m_Name;
 
         /// <summary>
         /// A <c>Guid</c> unique to this reference object.
         /// </summary>
-        public Guid guid
-        {
-            get
-            {
-                return GuidUtil.Compose(m_GuidLow, m_GuidHigh);
-            }
-        }
+        public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
         /// <summary>
         /// Finds an <see cref="XRReferenceObjectEntry"/> by type.
@@ -41,10 +32,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <typeparam name="T">The specific type of <see cref="XRReferenceObjectEntry"/> to find.</typeparam>
         /// <returns>The provider-specific <see cref="XRReferenceObjectEntry"/> if found, otherwise <c>null</c>.</returns>
         /// <seealso cref="FindEntry(Type)"/>
-        public T FindEntry<T>() where T : XRReferenceObjectEntry
-        {
-            return FindEntry(typeof(T)) as T;
-        }
+        public T FindEntry<T>() where T : XRReferenceObjectEntry => FindEntry(typeof(T)) as T;
 
         /// <summary>
         /// Finds an <see cref="XRReferenceObjectEntry"/> by type.
@@ -88,23 +76,11 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is XRReferenceObject))
-                return false;
+        public override bool Equals(object obj) => obj is XRReferenceObject && Equals((XRReferenceObject)obj);
 
-            return Equals((XRReferenceObject)obj);
-        }
+        public static bool operator ==(XRReferenceObject lhs, XRReferenceObject rhs) => lhs.Equals(rhs);
 
-        public static bool operator ==(XRReferenceObject lhs, XRReferenceObject rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(XRReferenceObject lhs, XRReferenceObject rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator !=(XRReferenceObject lhs, XRReferenceObject rhs) => !lhs.Equals(rhs);
 
 #pragma warning disable CS0649
         [SerializeField]

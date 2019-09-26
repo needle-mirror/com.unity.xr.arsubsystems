@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.3] - 2019-09-26
+### New
+- Added an input device layout for the [Input System](https://github.com/Unity-Technologies/InputSystem), for use by individual providers.
+
+### Breaking Changes
+- Updated the interface for all subsystems to apply a consistent pattern across all subsystems. This affects subsystem implementations (such as ARCore and ARKit) but should not affect consumers of those subsystems.
+- Removed `supported` property on the `XRFaceSubsystem`. Providers (such as ARKit) are expected not to register themselves if they are not supported.
+- Removed `supported` property on the `XREnvironmentProbeSubsystem`. Providers (such as ARKit) are expected not to register themselves if they are not supported.
+
 ## [3.0.0-preview.2] - 2019-09-05
 - Updated package version to 3.0.0-preview.2 for consistency with other AR-related packages.
 
