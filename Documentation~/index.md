@@ -1,6 +1,6 @@
 # About AR Subsystems
 
-A [subsystem](https://docs.unity3d.com/ScriptReference/Experimental.Subsystem.html) is a platform-agnostic interface for surfacing different types of functionality and data. The AR-related subsystems are defined in this package and use the namespace `UnityEngine.XR.ARSubsystems`. This package only provides the interface for various subsystems. Implementations for these subsystems (called "providers") can typically be found in another package or plugin.
+A [subsystem](https://docs.unity3d.com/ScriptReference/Subsystem.html) is a platform-agnostic interface for surfacing different types of functionality and data. The AR-related subsystems are defined in this package and use the namespace `UnityEngine.XR.ARSubsystems`. This package only provides the interface for various subsystems. Implementations for these subsystems (called "providers") can typically be found in another package or plugin.
 
 This package provides interfaces for the following subsystems:
 

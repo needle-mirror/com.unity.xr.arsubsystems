@@ -44,10 +44,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            return ((obj is XRCameraImagePlane) && Equals((XRCameraImagePlane)obj));
-        }
+        public override bool Equals(object obj) => ((obj is XRCameraImagePlane) && Equals((XRCameraImagePlane)obj));
 
         public bool Equals(XRCameraImagePlane other)
         {
@@ -57,20 +54,10 @@ namespace UnityEngine.XR.ARSubsystems
                 (pixelStride == other.pixelStride);
         }
 
-        public static bool operator ==(XRCameraImagePlane lhs, XRCameraImagePlane rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator ==(XRCameraImagePlane lhs, XRCameraImagePlane rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRCameraImagePlane lhs, XRCameraImagePlane rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator !=(XRCameraImagePlane lhs, XRCameraImagePlane rhs) => !lhs.Equals(rhs);
 
-        public override string ToString()
-        {
-            return string.Format("(Data: {0}, Row Stride: {1}, Pixel Stride: {2})",
-                data.ToString(), rowStride, pixelStride);
-        }
+        public override string ToString() => $"({data.Length} bytes, Row Stride: {rowStride}, Pixel Stride: {pixelStride})";
     }
 }

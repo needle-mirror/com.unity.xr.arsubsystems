@@ -90,13 +90,13 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Method to be implemented by the provider to set the focus mode for the camera.
+            /// Property to be implemented by the provider to get or set the focus mode for the camera.
             /// </summary>
-            /// <param name="cameraFocusMode">The focus mode to set for the camera.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully set the focus mode for the camera. Otherwise, <c>false</c>.
-            /// </returns>
-            public virtual bool TrySetFocusMode(CameraFocusMode cameraFocusMode) => false;
+            public virtual CameraFocusMode cameraFocusMode
+            {
+                get => CameraFocusMode.Fixed;
+                set { }
+            }
 
             /// <summary>
             /// Method to be implemented by the provider to set the light estimation mode.
@@ -400,23 +400,16 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Specifies the focus mode for the camera.
+        /// Get or set the focus mode for the camera.
         /// </summary>
         /// <value>
         /// The focus mode for the camera.
         /// </value>
         public CameraFocusMode focusMode
         {
-            get => m_FocusMode;
-            set
-            {
-                if (m_Provider.TrySetFocusMode(value))
-                {
-                    m_FocusMode = value;
-                }
-            }
+            get => m_Provider.cameraFocusMode;
+            set => m_Provider.cameraFocusMode = value;
         }
-        CameraFocusMode m_FocusMode = CameraFocusMode.Fixed;
 
         /// <summary>
         /// Specifies the light estimation mode.

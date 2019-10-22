@@ -28,6 +28,11 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsBoundaryVertices { get; private set; }
 
         /// <summary>
+        /// <c>true</c> if the current subsystem supports plane classification. Otherwise, <c>false</c>.
+        /// </summary>
+        public bool supportsClassification { get; private set; }
+
+        /// <summary>
         /// Constructor info used to register a descriptor.
         /// </summary>
         public struct Cinfo : IEquatable<Cinfo>
@@ -62,6 +67,11 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public bool supportsBoundaryVertices { get; set; }
 
+            /// <summary>
+            /// <c>true</c> if the subsystem supports boundary vertices for its planes.
+            /// </summary>
+            public bool supportsClassification { get; set; }
+
             public bool Equals(Cinfo other)
             {
                 return
@@ -70,6 +80,7 @@ namespace UnityEngine.XR.ARSubsystems
                     (supportsHorizontalPlaneDetection == other.supportsHorizontalPlaneDetection) &&
                     (supportsVerticalPlaneDetection == other.supportsVerticalPlaneDetection) &&
                     (supportsArbitraryPlaneDetection == other.supportsArbitraryPlaneDetection) &&
+                    (supportsClassification == other.supportsClassification) &&
                     (supportsBoundaryVertices == other.supportsBoundaryVertices);
             }
 
@@ -91,6 +102,7 @@ namespace UnityEngine.XR.ARSubsystems
                     hashCode = (hashCode * 486187739) + supportsVerticalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsArbitraryPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsBoundaryVertices.GetHashCode();
+                    hashCode = (hashCode * 486187739) + supportsClassification.GetHashCode();
                     return hashCode;
                 }
             }
@@ -124,6 +136,7 @@ namespace UnityEngine.XR.ARSubsystems
             supportsVerticalPlaneDetection = cinfo.supportsVerticalPlaneDetection;
             supportsArbitraryPlaneDetection = cinfo.supportsArbitraryPlaneDetection;
             supportsBoundaryVertices = cinfo.supportsBoundaryVertices;
+            supportsClassification = cinfo.supportsClassification;
         }
     }
 }

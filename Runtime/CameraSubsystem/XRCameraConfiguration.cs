@@ -26,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The width, in pixels, of the camera resolution
         /// </value>
-        public int width { get { return m_Resolution.x; } }
+        public int width => m_Resolution.x;
 
         /// <summary>
         /// The height of the camera resolution
@@ -34,7 +34,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The height, in pixels, of the camera resolution
         /// </value>
-        public int height { get { return m_Resolution.y; } }
+        public int height => m_Resolution.y;
 
         /// <summary>
         /// The camera resolution.
@@ -42,7 +42,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The camera resolution in pixels.
         /// </value>
-        public Vector2Int resolution { get { return m_Resolution; } }
+        public Vector2Int resolution => m_Resolution;
 
         /// <summary>
         /// The framerate, if this camera configuration specifies one.
@@ -53,13 +53,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// On some platforms, different resolutions may affect the available framerate.
         /// </remarks>
-        public int? framerate
-        {
-            get
-            {
-                return (m_Framerate > 0) ? new int?(m_Framerate) : new int?();
-            }
-        }
+        public int? framerate => (m_Framerate > 0) ? new int?(m_Framerate) : new int?();
 
         /// <summary>
         /// Constructs a camera configuration with a framerate.
@@ -91,13 +85,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Converts the configuration to a string, suitable for debug logging.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            if (framerate.HasValue)
-                return string.Format("{0}x{1} at {2} Hz", width, height, framerate.Value);
-            else
-                return string.Format("{0}x{1}", width, height);
-        }
+        public override string ToString() => $"{width}x{height}" + (framerate.HasValue ? $" at {framerate.Value} Hz" : "");
 
         public override int GetHashCode()
         {
@@ -108,24 +96,9 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public override bool Equals(System.Object obj)
-        {
-            return ((obj is XRCameraConfiguration) && Equals((XRCameraConfiguration)obj));
-        }
-
-        public bool Equals(XRCameraConfiguration other)
-        {
-            return (m_Resolution == other.m_Resolution) && (framerate == other.framerate);
-        }
-
-        public static bool operator ==(XRCameraConfiguration lhs, XRCameraConfiguration rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(XRCameraConfiguration lhs, XRCameraConfiguration rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public override bool Equals(System.Object obj) => ((obj is XRCameraConfiguration) && Equals((XRCameraConfiguration)obj));
+        public bool Equals(XRCameraConfiguration other) => (m_Resolution == other.m_Resolution) && (framerate == other.framerate);
+        public static bool operator ==(XRCameraConfiguration lhs, XRCameraConfiguration rhs) => lhs.Equals(rhs);
+        public static bool operator !=(XRCameraConfiguration lhs, XRCameraConfiguration rhs) => !lhs.Equals(rhs);
     }
 }

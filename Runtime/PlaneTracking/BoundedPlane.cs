@@ -18,7 +18,8 @@ namespace UnityEngine.XR.ARSubsystems
                 Vector2.zero,
                 PlaneAlignment.None,
                 TrackingState.None,
-                IntPtr.Zero);
+                IntPtr.Zero,
+                PlaneClassification.None);
 
         /// <summary>
         /// Gets a default-initialized <see cref="BoundedPlane"/>. This may be
@@ -32,14 +33,15 @@ namespace UnityEngine.XR.ARSubsystems
         /// for a plane's session relative data. These are typically created by
         /// <see cref="XRPlaneSubsystem.GetChanges(Unity.Collections.Allocator)"/>.
         /// </summary>
-        /// <param name="trackableId">The <see cref="TrackableId"/> associated with the point cloud.</param>
+        /// <param name="trackableId">The <see cref="TrackableId"/> associated with the plane.</param>
         /// <param name="subsumedBy">The plane which subsumed this one. Use <see cref="TrackableId.invalidId"/> if it has not been subsumed.</param>
-        /// <param name="pose">The <c>Pose</c> associated with the point cloud.</param>
+        /// <param name="pose">The <c>Pose</c> associated with the plane.</param>
         /// <param name="center">The center, in plane-space (relative to <paramref name="pose"/>) of the plane.</param>
-        /// <param name="size">The dimensions associated with the point cloud.</param>
-        /// <param name="alignment">The <see cref="PlaneAlignment"/> associated with the point cloud.</param>
-        /// <param name="trackingState">The <see cref="TrackingState"/> associated with the point cloud.</param>
-        /// <param name="nativePtr">The native pointer associated with the point cloud.</param>
+        /// <param name="size">The dimensions associated with the plane.</param>
+        /// <param name="alignment">The <see cref="PlaneAlignment"/> associated with the plane.</param>
+        /// <param name="trackingState">The <see cref="TrackingState"/> associated with the plane.</param>
+        /// <param name="nativePtr">The native pointer associated with the plane.</param>
+        /// <param name="classification">The <see cref="PlaneClassification"/> associated with the plane.</param>
         public BoundedPlane(
             TrackableId trackableId,
             TrackableId subsumedBy,
@@ -48,7 +50,8 @@ namespace UnityEngine.XR.ARSubsystems
             Vector2 size,
             PlaneAlignment alignment,
             TrackingState trackingState,
-            IntPtr nativePtr)
+            IntPtr nativePtr,
+            PlaneClassification classification)
         {
             m_TrackableId = trackableId;
             m_SubsumedById = subsumedBy;
@@ -58,6 +61,7 @@ namespace UnityEngine.XR.ARSubsystems
             m_Alignment = alignment;
             m_TrackingState = trackingState;
             m_NativePtr = nativePtr;
+            m_Classification = classification;
         }
 
         /// <summary>
@@ -108,6 +112,11 @@ namespace UnityEngine.XR.ARSubsystems
         public IntPtr nativePtr { get { return m_NativePtr; } }
 
         /// <summary>
+        /// The <see cref="PlaneClassification"/> of the plane.
+        /// </summary>
+        public PlaneClassification classification => m_Classification;
+
+        /// <summary>
         /// The width of the plane in meters.
         /// </summary>
         public float width { get { return m_Size.x; } }
@@ -156,13 +165,14 @@ namespace UnityEngine.XR.ARSubsystems
         public override string ToString()
         {
             return string.Format(
-                "Plane:\n\ttrackableId: {0}\n\tsubsumedById: {1}\n\tpose: {2}\n\tcenter: {3}\n\tsize: {4}\n\talignment: {5}\n\ttrackingState: {6}\n\tnativePtr: {7:X16}",
+                "Plane:\n\ttrackableId: {0}\n\tsubsumedById: {1}\n\tpose: {2}\n\tcenter: {3}\n\tsize: {4}\n\talignment: {5}\n\tclassification: {6}\n\ttrackingState: {7}\n\tnativePtr: {8:X16}",
                 trackableId,
                 subsumedById,
                 pose,
                 center,
                 size,
                 alignment,
+                classification,
                 trackingState,
                 nativePtr.ToInt64());
         }
@@ -183,6 +193,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_Center.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_Size.GetHashCode();
                 hashCode = (hashCode * 486187739) + ((int)m_Alignment).GetHashCode();
+                hashCode = (hashCode * 486187739) + ((int)m_Classification).GetHashCode();
                 hashCode = (hashCode * 486187739) + ((int)m_TrackingState).GetHashCode();
                 hashCode = (hashCode * 486187739) + m_NativePtr.GetHashCode();
                 return hashCode;
@@ -208,6 +219,7 @@ namespace UnityEngine.XR.ARSubsystems
                 m_Center.Equals(other.m_Center) &&
                 m_Size.Equals(other.m_Size) &&
                 (m_Alignment == other.m_Alignment) &&
+                (m_Classification == other.m_Classification) &&
                 (m_TrackingState == other.m_TrackingState) &&
                 (m_NativePtr == other.m_NativePtr);
         }
@@ -227,5 +239,7 @@ namespace UnityEngine.XR.ARSubsystems
         TrackingState m_TrackingState;
 
         IntPtr m_NativePtr;
+
+        PlaneClassification m_Classification;
     }
 }

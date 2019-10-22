@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-preview.4] - 2019-10-22
+### New
+- Change `TrySetFocusMode` to a property called `focusMode`, enabling providers to implement a getter as well as a setter.
+- Added `classification` on `BoundedPlane` which provides
+contextual information such as `Floor`, `Wall`, `Ceiling`.
+
+### Fixes
+- [`XRCameraImagePlane.ToString()`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/api/UnityEngine.XR.ARSubsystems.XRCameraImagePlane.html#UnityEngine_XR_ARSubsystems_XRCameraImagePlane_ToString) invoked `NativeArray.ToString()` to build its string, which produced a string with a lot of irrelevant information. Now, it just displays the length of the array, row stride, and pixel stride of the plane.
+
 ## [3.0.0-preview.3] - 2019-09-26
 ### New
 - Added an input device layout for the [Input System](https://github.com/Unity-Technologies/InputSystem), for use by individual providers.

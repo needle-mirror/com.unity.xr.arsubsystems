@@ -92,17 +92,25 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsAverageIntensityInLumens { get; set; }
 
+        /// <summary>
+        /// Specifies whether the subsystem supports setting the camera's focus mode.
+        /// </summary>
+        public bool supportsFocusModes { get; set; }
+
         public bool Equals(XRCameraSubsystemCinfo other)
         {
-            return (id.Equals(other.id) && implementationType.Equals(other.implementationType)
-                    && supportsAverageBrightness.Equals(other.supportsAverageBrightness)
-                    && supportsAverageColorTemperature.Equals(other.supportsAverageColorTemperature)
-                    && supportsDisplayMatrix.Equals(other.supportsDisplayMatrix)
-                    && supportsProjectionMatrix.Equals(other.supportsProjectionMatrix)
-                    && supportsTimestamp.Equals(other.supportsTimestamp)
-                    && supportsCameraConfigurations.Equals(other.supportsCameraConfigurations)
-                    && supportsCameraImage.Equals(other.supportsCameraImage)
-                    && supportsAverageIntensityInLumens.Equals(other.supportsAverageIntensityInLumens));
+            return
+                   (id == other.id)
+                && (implementationType == other.implementationType)
+                && supportsAverageBrightness.Equals(other.supportsAverageBrightness)
+                && supportsAverageColorTemperature.Equals(other.supportsAverageColorTemperature)
+                && supportsDisplayMatrix.Equals(other.supportsDisplayMatrix)
+                && supportsProjectionMatrix.Equals(other.supportsProjectionMatrix)
+                && supportsTimestamp.Equals(other.supportsTimestamp)
+                && supportsCameraConfigurations.Equals(other.supportsCameraConfigurations)
+                && supportsCameraImage.Equals(other.supportsCameraImage)
+                && supportsAverageIntensityInLumens.Equals(other.supportsAverageIntensityInLumens)
+                && supportsFocusModes.Equals(other.supportsFocusModes);
         }
 
         public override bool Equals(System.Object obj)
@@ -125,8 +133,8 @@ namespace UnityEngine.XR.ARSubsystems
             int hashCode = 486187739;
             unchecked
             {
-                hashCode = (hashCode * 486187739) + id.GetHashCode();
-                hashCode = (hashCode * 486187739) + implementationType.GetHashCode();
+                hashCode = (hashCode * 486187739) + (ReferenceEquals(id, null) ? 0 : id.GetHashCode());
+                hashCode = (hashCode * 486187739) + (ReferenceEquals(implementationType, null) ? 0 : implementationType.GetHashCode());
                 hashCode = (hashCode * 486187739) + supportsAverageBrightness.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageColorTemperature.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsDisplayMatrix.GetHashCode();
@@ -135,6 +143,7 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsCameraConfigurations.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsCameraImage.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageIntensityInLumens.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsFocusModes.GetHashCode();
             }
             return hashCode;
         }
@@ -162,6 +171,7 @@ namespace UnityEngine.XR.ARSubsystems
             supportsCameraConfigurations = cameraSubsystemParams.supportsCameraConfigurations;
             supportsCameraImage = cameraSubsystemParams.supportsCameraImage;
             supportsAverageIntensityInLumens = cameraSubsystemParams.supportsAverageIntensityInLumens;
+            supportsFocusModes = cameraSubsystemParams.supportsFocusModes;
         }
 
         /// <summary>
@@ -227,6 +237,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if current subsystem is allowed to provide average intensity in lumens. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageIntensityInLumens { get; private set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports setting the camera's focus mode.
+        /// </summary>
+        public bool supportsFocusModes { get; private set; }
 
         /// <summary>
         /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters validating that the
