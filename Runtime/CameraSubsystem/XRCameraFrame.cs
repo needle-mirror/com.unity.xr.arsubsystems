@@ -54,6 +54,18 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         [Description("AverageIntensityInLumens")]
         AverageIntensityInLumens      = (1 << 6),
+
+        /// <summary>
+        /// The camera exposure duration is included.
+        /// </summary>
+        [Description("ExposureDuration")]
+        ExposureDuration = (1 << 7),
+        
+        /// <summary>
+        /// The camera exposure offset is included.
+        /// </summary>
+        [Description("ExposureOffset")]
+        ExposureOffset = (1 << 8),
     }
 
     /// <summary>
@@ -184,6 +196,30 @@ namespace UnityEngine.XR.ARSubsystems
         float m_AverageIntensityInLumens;
 
         /// <summary>
+        /// The camera exposure duration, in seconds with sub-millisecond precision, of the scene.
+        /// </summary>
+        /// <value>
+        /// The camera exposure duration, in seconds with sub-millisecond precision, of the scene.
+        /// </value>
+        public double exposureDuration
+        {
+            get => m_ExposureDuration;
+        }
+        double m_ExposureDuration;
+
+        /// <summary>
+        /// The camera exposure offset of the scene for lighting scaling
+        /// </summary>
+        /// <value>
+        /// The camera exposure offset of the scene for lighting scaling
+        /// </value>
+        public float exposureOffset
+        {
+            get => m_ExposureOffset;
+        }
+        float m_ExposureOffset;
+
+        /// <summary>
         /// Whether the frame has a timestamp.
         /// </summary>
         /// <value>
@@ -258,6 +294,28 @@ namespace UnityEngine.XR.ARSubsystems
         public bool hasAverageIntensityInLumens
         {
             get { return (m_Properties & XRCameraFrameProperties.AverageIntensityInLumens) != 0; }
+        }
+
+        /// <summary>
+        /// Whether the frame has an exposure duration in seconds with sub-millisecond precision.
+        /// </summary>
+        /// <value>
+        /// Whether the frame has an exposure duration in seconds with sub-millisecond precision.
+        /// </value>
+        public bool hasExposureDuration
+        {
+            get => (m_Properties & XRCameraFrameProperties.ExposureDuration) != 0;
+        }
+
+        /// <summary>
+        /// Whether the frame has an exposure offset for scaling lighting.
+        /// </summary>
+        /// <value>
+        /// Whether the frame has an exposure offset for scaling lighting.
+        /// </value>
+        public bool hasExposureOffset
+        {
+            get => (m_Properties & XRCameraFrameProperties.ExposureOffset) != 0;
         }
 
         /// <summary>
@@ -338,6 +396,11 @@ namespace UnityEngine.XR.ARSubsystems
             return hasAverageIntensityInLumens;
         }
 
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRCameraFrame"/> to compare against.</param>
+        /// <returns><c>true</c> if the <see cref="XRCameraFrame"/> represents the same object.</returns>
         public bool Equals(XRCameraFrame other)
         {
             return (m_TimestampNs.Equals(other.m_TimestampNs) && m_AverageBrightness.Equals(other.m_AverageBrightness)
@@ -345,24 +408,49 @@ namespace UnityEngine.XR.ARSubsystems
                     && m_ProjectionMatrix.Equals(other.m_ProjectionMatrix)
                     && m_DisplayMatrix.Equals(other.m_DisplayMatrix)
                     && m_AverageIntensityInLumens.Equals(other.m_AverageIntensityInLumens)
+                    && m_ExposureDuration.Equals(other.m_ExposureDuration)
+                    && m_ExposureOffset.Equals(other.m_ExposureOffset)
                     && m_Properties.Equals(other.m_Properties));
         }
 
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="obj">An <c>object</c> to compare against.</param>
+        /// <returns><c>true</c> if <paramref name="obj"/> is an <see cref="XRCameraFrame"/> and
+        /// <see cref="Equals(XRCameraFrame)"/> is also <c>true</c>. Otherwise, <c>false</c>.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRCameraFrame) && Equals((XRCameraFrame)obj));
         }
 
+
+        /// <summary>
+        /// Compares <paramref name="lhs"/> and <paramref name="rhs"/> for equality using <see cref="Equals(XRCameraFrame)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand-side <see cref="XRCameraFrame"/> of the comparison.</param>
+        /// <param name="rhs">The right-hand-side <see cref="XRCameraFrame"/> of the comparison.</param>
+        /// <returns><c>true</c> if <paramref name="lhs"/> compares equal to <paramref name="rhs"/>, <c>false</c> otherwise.</returns>
         public static bool operator ==(XRCameraFrame lhs, XRCameraFrame rhs)
         {
             return lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Compares <paramref name="lhs"/> and <paramref name="rhs"/> for inequality using <see cref="Equals(XRCameraFrame)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand-side <see cref="XRCameraFrame"/> of the comparison.</param>
+        /// <param name="rhs">The right-hand-side <see cref="XRCameraFrame"/> of the comparison.</param>
+        /// <returns><c>false</c> if <paramref name="lhs"/> compares equal to <paramref name="rhs"/>, <c>true</c> otherwise.</returns>
         public static bool operator !=(XRCameraFrame lhs, XRCameraFrame rhs)
         {
             return !lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Generates a hash code suitable for use in <c>HashSet</c> and <c>Dictionary</c>.
+        /// </summary>
+        /// <returns>A hash of the <see cref="XRCameraFrame"/>.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
@@ -375,6 +463,8 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_ProjectionMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_DisplayMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_AverageIntensityInLumens.GetHashCode();
+                hashCode = (hashCode * 486187739) + m_ExposureDuration.GetHashCode();
+                hashCode = (hashCode * 486187739) + m_ExposureOffset.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_NativePtr.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_Properties.GetHashCode();
             }

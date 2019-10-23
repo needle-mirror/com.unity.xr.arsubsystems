@@ -62,6 +62,26 @@ namespace UnityEngine.XR.ARSubsystems
         bool m_HumanBodyPose3DEstimationEnabled = false;
 
         /// <summary>
+        /// Whether 3D human body scale estimation is enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if 3D human body scale estimation is enabled. Otherwise, <c>false</c>.
+        /// </value>
+        public bool humanBodyPose3DScaleEstimationEnabled
+        {
+            get { return m_HumanBodyPose3DScaleEstimationEnabled; }
+            set
+            {
+                if ((m_HumanBodyPose3DScaleEstimationEnabled != value)
+                    && m_Provider.TrySetHumanBodyPose3DScaleEstimationEnabled(value))
+                {
+                    m_HumanBodyPose3DScaleEstimationEnabled = value;
+                }
+            }
+        }
+        bool m_HumanBodyPose3DScaleEstimationEnabled = false;
+
+        /// <summary>
         /// Specifies the human segmentation stencil mode.
         /// </summary>
         /// <value>
@@ -140,7 +160,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Destroy the subsystem by desstroying the provider.
         /// </summary>
-        public override void Destroy()
+#if UNITY_2019_3_OR_NEWER
+        protected sealed override void OnDestroy()
+#else
+        public sealed override void Destroy()
+#endif
         {
             Stop();
             m_Provider.Destroy();
@@ -291,12 +315,32 @@ namespace UnityEngine.XR.ARSubsystems
             /// <c>true</c> if the human body pose 3D estimation is set to the given value. Otherwise, <c>false</c>.
             /// </returns>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human body pose 3D estimation to
-            /// <c>true if the implementation does not support human body pose 3D estimation.</exception>
+            /// <c>true</c> if the implementation does not support human body pose 3D estimation.</exception>
             public virtual bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
             {
                 if (enabled)
                 {
                     throw new NotSupportedException("Setting human body pose 3D estimation to enabled is not "
+                                                    + "supported by this implementation");
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// Method to be implemented by the provider to sets whether 3D human body scale estimation is enabled.
+            /// </summary>
+            /// <param name="enabled">Whether the 3D human body scale estimation should be enabled.</param>
+            /// <returns>
+            /// <c>true</c> if the 3D human body scale estimation is set to the given value. Otherwise, <c>false</c>.
+            /// </returns>
+            /// <exception cref="System.NotSupportedException">Thrown when setting the 3D human body scale estimation to
+            /// <c>true</c> if the implementation does not support 3D human body scale estimation.</exception>
+            public virtual bool TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled)
+            {
+                if (enabled)
+                {
+                    throw new NotSupportedException("Setting 3D human body scale estimation to enabled is not "
                                                     + "supported by this implementation");
                 }
 

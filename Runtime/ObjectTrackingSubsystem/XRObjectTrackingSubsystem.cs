@@ -118,7 +118,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        public override sealed void Destroy()
+#if UNITY_2019_3_OR_NEWER
+        protected sealed override void OnDestroy()
+#else
+        public sealed override void Destroy()
+#endif
         {
             Stop();
             m_Provider.Destroy();

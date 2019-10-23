@@ -17,65 +17,55 @@ namespace UnityEngine.XR.ARSubsystems
     [Serializable]
     public struct XRReferenceImage : IEquatable<XRReferenceImage>
     {
-        /// <summary>
-        /// The <c>Guid</c> associated with this image. The guid is the same as the
-        /// source <c>Texture2D</c>'s guid in the <c>AssetDatabase</c>.
-        /// </summary>
-        public Guid guid
+        public XRReferenceImage(
+            SerializableGuid guid, SerializableGuid textureGuid,
+            Vector2? size, string name, Texture2D texture)
         {
-            get { return m_SerializedGuid.guid; }
+            m_SerializedGuid = guid;
+            m_SerializedTextureGuid = textureGuid;
+            m_SpecifySize = size.HasValue;
+            m_Size = size.HasValue ? size.Value : Vector2.zero;
+            m_Name = name;
+            m_Texture = texture;
         }
 
         /// <summary>
+        /// The <c>Guid</c> associated with this image.
+        /// </summary>
+        public Guid guid => m_SerializedGuid.guid;
+
+        /// <summary>
         /// The <c>Guid</c> of the source texture as it appeared in the
-        /// <a href="https://docs.unity3d.com/ScriptReference/AssetDatabase.html">AssetDatabase</a>
+        /// [AssetDatabase](https://docs.unity3d.com/ScriptReference/AssetDatabase.html)
         /// in the Editor.
         /// </summary>
-        public Guid textureGuid
-        {
-            get { return m_SerializedTextureGuid.guid; }
-        }
+        public Guid textureGuid => m_SerializedTextureGuid.guid;
 
         /// <summary>
         /// Must be set to true for <see cref="size"/> to be used.
         /// </summary>
-        public bool specifySize
-        {
-            get { return m_SpecifySize; }
-        }
+        public bool specifySize => m_SpecifySize;
 
         /// <summary>
         /// The size of the image, in meters. This can improve image detection,
         /// and may be required by some platforms.
         /// </summary>
-        public Vector2 size
-        {
-            get { return m_Size; }
-        }
+        public Vector2 size => m_Size;
 
         /// <summary>
         /// The width of the image, in meters.
         /// </summary>
-        public float width
-        {
-            get { return m_Size.x; }
-        }
+        public float width => m_Size.x;
 
         /// <summary>
         /// The height of the image, in meters.
         /// </summary>
-        public float height
-        {
-            get { return m_Size.y; }
-        }
+        public float height => m_Size.y;
 
         /// <summary>
         /// A name associated with this reference image.
         /// </summary>
-        public string name
-        {
-            get { return m_Name; }
-        }
+        public string name => m_Name;
 
         /// <summary>
         /// The source texture which this reference image represents.
@@ -84,50 +74,20 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetTexture</c>
         /// for more details.
         /// </summary>
-        public Texture2D texture
-        {
-            get { return m_Texture; }
-        }
+        public Texture2D texture => m_Texture;
 
         /// <summary>
         /// Provides a string representation suitable for debug logging.
         /// </summary>
         /// <returns>A string representation of the reference image.</returns>
-        public override string ToString()
-        {
-            return string.Format("GUID: '{0}', Size: '{1}'specified ('{2}'')", guid, m_SpecifySize ? "" : "NOT ", m_Size);
-        }
+        public override string ToString() =>
+            $"GUID: '{guid}', Texture GUID: '{textureGuid}` Size: {(m_SpecifySize ? "" : "NOT ")} specified {m_Size}";
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return guid.GetHashCode();
-            }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is XRReferenceImage))
-                return false;
-
-            return Equals((XRReferenceImage)obj);
-        }
-
-        public bool Equals(XRReferenceImage other)
-        {
-            return guid.Equals(other.guid);
-        }
-
-        public static bool operator ==(XRReferenceImage lhs, XRReferenceImage rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(XRReferenceImage lhs, XRReferenceImage rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public override int GetHashCode() => guid.GetHashCode();
+        public override bool Equals(object obj) => (obj is XRReferenceImage) && Equals((XRReferenceImage)obj);
+        public bool Equals(XRReferenceImage other) => guid.Equals(other.guid);
+        public static bool operator ==(XRReferenceImage lhs, XRReferenceImage rhs) => lhs.Equals(rhs);
+        public static bool operator !=(XRReferenceImage lhs, XRReferenceImage rhs) => !lhs.Equals(rhs);
 
 #pragma warning disable CS0649
         [SerializeField]

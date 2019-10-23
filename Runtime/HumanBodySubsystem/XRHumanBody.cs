@@ -36,6 +36,19 @@ namespace UnityEngine.XR.ARSubsystems
         Pose m_Pose;
 
         /// <summary>
+        /// The scale factor that relates the implementation's default body height to the estimated height.
+        /// </summary>
+        /// <value>
+        /// The scale factor that relates the implementation's default body height to the estimated height.
+        /// </value>
+        public float estimatedHeightScaleFactor
+        {
+            get => m_EstimatedHeightScaleFactor;
+            private set => m_EstimatedHeightScaleFactor = value;
+        }
+        float m_EstimatedHeightScaleFactor;
+
+        /// <summary>
         /// The tracking state for the human body.
         /// </summary>
         /// <value>
@@ -73,6 +86,7 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 trackableId = TrackableId.invalidId,
                 pose = Pose.identity,
+                estimatedHeightScaleFactor = 1.0f,
                 trackingState = TrackingState.None,
                 nativePtr = IntPtr.Zero,
             };

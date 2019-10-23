@@ -21,16 +21,17 @@ namespace UnityEngine.XR.ARSubsystems
             m_GuidHigh = guidHigh;
         }
 
+        static readonly SerializableGuid k_Empty = new SerializableGuid(0, 0);
+
+        /// <summary>
+        /// Used to represent <c>System.Guid.Empty</c>, e.g., a GUID whose value is all zeros.
+        /// </summary>
+        public static SerializableGuid empty => k_Empty;
+
         /// <summary>
         /// Reconstructs the <c>Guid</c> from the serialized data.
         /// </summary>
-        public Guid guid
-        {
-            get
-            {
-                return GuidUtil.Compose(m_GuidLow, m_GuidHigh);
-            }
-        }
+        public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
         public override int GetHashCode()
         {
@@ -55,10 +56,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// for more details.
         /// </summary>
         /// <returns>A string representation of the <c>Guid</c>.</returns>
-        public override string ToString()
-        {
-            return guid.ToString();
-        }
+        public override string ToString() => guid.ToString();
 
         /// <summary>
         /// Generates a string representation of the <c>Guid</c>. Same as <see cref="guid"/><c>.ToString(format)</c>.
@@ -67,10 +65,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// See <a href="https://docs.microsoft.com/en-us/dotnet/api/system.guid.tostring?view=netframework-4.7.2#System_Guid_ToString_System_String_">Microsoft's documentation</a>
         /// for more details.</param>
         /// <returns>A string representation of the <c>Guid</c>.</returns>
-        public string ToString(string format)
-        {
-            return guid.ToString(format);
-        }
+        public string ToString(string format) => guid.ToString(format);
 
         /// <summary>
         /// Generates a string representation of the <c>Guid</c>. Same as <see cref="guid"/><c>.ToString(format, provider)</c>.
@@ -80,10 +75,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// for more details.</param>
         /// <param name="provider">An object that supplies culture-specific formatting information.</param>
         /// <returns>A string representation of the <c>Guid</c>.</returns>
-        public string ToString(string format, IFormatProvider provider)
-        {
-            return guid.ToString(format, provider);
-        }
+        public string ToString(string format, IFormatProvider provider) => guid.ToString(format, provider);
 
         public bool Equals(SerializableGuid other)
         {
@@ -92,15 +84,9 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_GuidHigh == other.m_GuidHigh);
         }
 
-        public static bool operator ==(SerializableGuid lhs, SerializableGuid rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        public static bool operator ==(SerializableGuid lhs, SerializableGuid rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(SerializableGuid lhs, SerializableGuid rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        public static bool operator !=(SerializableGuid lhs, SerializableGuid rhs) => !lhs.Equals(rhs);
 
         [SerializeField]
         ulong m_GuidLow;

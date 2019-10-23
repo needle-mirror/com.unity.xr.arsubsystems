@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0-preview.6] - 2019-10-23
+### New
+- Add support for eye tracking.
+- Added an [XRParticipantSubsystem](../manual/participant-subsystem.html) which can track users in a multi-user collaborative session.
+- Add support for exposure duration
+- Add support for exposure offset
+- Add support for height scale estimatation for the 3D human body subsystem.
+- Add support for reference image libraries that are modifiable at runtime. For platforms that support it, this allows you to add new reference images at runtime.
+
 ## [2.2.0-preview.3] - 2019-07-16
 ### New
 - Add support for `NotTrackingReason`.
