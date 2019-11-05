@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2019-11-05
+- 2020.1 verified release
+
+### Breaking changes
+- Renaming the concept of `Reference Points` to `Anchors`. The Unity script updater should convert any references to `XRReferencePointSubsystem`, `XRReferencePoint`, and `XRReferencePointSubsystemDescriptor` the next time the project is loaded into the Editor.
+
 ## [3.0.0-preview.4] - 2019-10-22
 ### New
 - Change `TrySetFocusMode` to a property called `focusMode`, enabling providers to implement a getter as well as a setter.

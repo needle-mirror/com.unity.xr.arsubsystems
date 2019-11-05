@@ -9,7 +9,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <typeparam name="T">The <see cref="ITrackable"/> managed by the subsystem.</typeparam>
     /// <seealso cref="XRDepthSubsystem"/>
     /// <seealso cref="XRPlaneSubsystem"/>
-    /// <seealso cref="XRReferencePointSubsystem"/>
+    /// <seealso cref="XRAnchorSubsystem"/>
     public class ValidationUtility<T>
         where T : struct, ITrackable
     {

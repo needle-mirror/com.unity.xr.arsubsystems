@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Describes session relative data for a reference point.
+    /// Describes session relative data for an anchor.
     /// </summary>
-    /// <seealso cref="XRReferencePointSubsystem"/>
+    /// <seealso cref="XRAnchorSubsystem"/>
     [StructLayout(LayoutKind.Sequential)]
-    public struct XRReferencePoint : ITrackable, IEquatable<XRReferencePoint>
+    public struct XRAnchor : ITrackable, IEquatable<XRAnchor>
     {
         /// <summary>
-        /// Gets a default-initialized <see cref="XRReferencePoint"/>. This may be
+        /// Gets a default-initialized <see cref="XRAnchor"/>. This may be
         /// different from the zero-initialized version, e.g., the <see cref="pose"/>
         /// is <c>Pose.identity</c> instead of zero-initialized.
         /// </summary>
-        public static XRReferencePoint defaultValue => s_Default;
+        public static XRAnchor defaultValue => s_Default;
 
-        static readonly XRReferencePoint s_Default = new XRReferencePoint
+        static readonly XRAnchor s_Default = new XRAnchor
         {
             m_Id = TrackableId.invalidId,
             m_Pose = Pose.identity,
@@ -25,16 +25,16 @@ namespace UnityEngine.XR.ARSubsystems
         };
 
         /// <summary>
-        /// Constructs the session relative data for reference point.
-        /// This is typically provided by an implementation of the <see cref="XRReferencePointSubsystem"/>
+        /// Constructs the session relative data for an anchor.
+        /// This is typically provided by an implementation of the <see cref="XRAnchorSubsystem"/>
         /// and not invoked directly.
         /// </summary>
-        /// <param name="trackableId">The <see cref="TrackableId"/> associated with this reference point.</param>
-        /// <param name="pose">The <c>Pose</c>, in session space, of the reference point.</param>
-        /// <param name="trackingState">The <see cref="TrackingState"/> of the reference point.</param>
-        /// <param name="nativePtr">A native pointer associated with the reference point. The data pointed to by
+        /// <param name="trackableId">The <see cref="TrackableId"/> associated with this anchor.</param>
+        /// <param name="pose">The <c>Pose</c>, in session space, of the anchor.</param>
+        /// <param name="trackingState">The <see cref="TrackingState"/> of the anchor.</param>
+        /// <param name="nativePtr">A native pointer associated with the anchor. The data pointed to by
         /// this pointer is implementation-specific.</param>
-        public XRReferencePoint(
+        public XRAnchor(
             TrackableId trackableId,
             Pose pose,
             TrackingState trackingState,
@@ -48,17 +48,17 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Constructs the session relative data for reference point.
-        /// This is typically provided by an implementation of the <see cref="XRReferencePointSubsystem"/>
+        /// Constructs the session relative data for anchor.
+        /// This is typically provided by an implementation of the <see cref="XRAnchorSubsystem"/>
         /// and not invoked directly.
         /// </summary>
-        /// <param name="trackableId">The <see cref="TrackableId"/> associated with this reference point.</param>
-        /// <param name="pose">The <c>Pose</c>, in session space, of the reference point.</param>
-        /// <param name="trackingState">The <see cref="TrackingState"/> of the reference point.</param>
-        /// <param name="nativePtr">A native pointer associated with the reference point. The data pointed to by
+        /// <param name="trackableId">The <see cref="TrackableId"/> associated with this anchor.</param>
+        /// <param name="pose">The <c>Pose</c>, in session space, of the anchor.</param>
+        /// <param name="trackingState">The <see cref="TrackingState"/> of the anchor.</param>
+        /// <param name="nativePtr">A native pointer associated with the anchor. The data pointed to by
         /// this pointer is implementation-specific.</param>
-        /// <param name="sessionId">The session from which this reference point originated.</param>
-        public XRReferencePoint(
+        /// <param name="sessionId">The session from which this anchor originated.</param>
+        public XRAnchor(
             TrackableId trackableId,
             Pose pose,
             TrackingState trackingState,
@@ -70,28 +70,28 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Get the <see cref="TrackableId"/> associated with this reference point.
+        /// Get the <see cref="TrackableId"/> associated with this anchor.
         /// </summary>
         public TrackableId trackableId => m_Id;
 
         /// <summary>
-        /// Get the <c>Pose</c>, in session space, for this reference point.
+        /// Get the <c>Pose</c>, in session space, for this anchor.
         /// </summary>
         public Pose pose => m_Pose;
 
         /// <summary>
-        /// Get the <see cref="TrackingState"/> of this reference point.
+        /// Get the <see cref="TrackingState"/> of this anchor.
         /// </summary>
         public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
-        /// A native pointer associated with the reference point.
+        /// A native pointer associated with the anchor.
         /// The data pointed to by this pointer is implementation-specific.
         /// </summary>
         public IntPtr nativePtr => m_NativePtr;
 
         /// <summary>
-        /// The id of the session from which this reference point originated.
+        /// The id of the session from which this anchor originated.
         /// </summary>
         public Guid sessionId => m_SessionId;
 
@@ -108,7 +108,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public bool Equals(XRReferencePoint other)
+        public bool Equals(XRAnchor other)
         {
             return
                 m_Id.Equals(other.m_Id) &&
@@ -119,11 +119,11 @@ namespace UnityEngine.XR.ARSubsystems
 
         }
 
-        public override bool Equals(object obj) => obj is XRReferencePoint && Equals((XRReferencePoint)obj);
+        public override bool Equals(object obj) => obj is XRAnchor && Equals((XRAnchor)obj);
 
-        public static bool operator==(XRReferencePoint lhs, XRReferencePoint rhs) => lhs.Equals(rhs);
+        public static bool operator==(XRAnchor lhs, XRAnchor rhs) => lhs.Equals(rhs);
 
-        public static bool operator!=(XRReferencePoint lhs, XRReferencePoint rhs) => !lhs.Equals(rhs);
+        public static bool operator!=(XRAnchor lhs, XRAnchor rhs) => !lhs.Equals(rhs);
 
         TrackableId m_Id;
 

@@ -104,7 +104,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Get the changes (added, updated, and removed) planes since the last call to <see cref="GetChanges(Allocator)"/>.
             /// </summary>
             /// <param name="defaultPointCloud">
-            /// The default reference point. This should be used to initialize the returned <c>NativeArray</c>s for backwards compatibility.
+            /// The default point cloud. This should be used to initialize the returned <c>NativeArray</c>s for backwards compatibility.
             /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, T, int, Allocator)"/>.
             /// </param>
             /// <param name="allocator">An <c>Allocator</c> to use when allocating the returned <c>NativeArray</c>s.</param>

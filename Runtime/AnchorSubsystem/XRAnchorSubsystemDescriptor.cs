@@ -3,12 +3,12 @@ using System;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Describes the capabilities of an <see cref="XRReferencePointSubsystem"/>.
+    /// Describes the capabilities of an <see cref="XRAnchorSubsystem"/>.
     /// </summary>
-    public class XRReferencePointSubsystemDescriptor : SubsystemDescriptor<XRReferencePointSubsystem>
+    public class XRAnchorSubsystemDescriptor : SubsystemDescriptor<XRAnchorSubsystem>
     {
         /// <summary>
-        /// <c>true</c> if the subsystem supports attachments, i.e., the ability to attach a reference point to a trackable.
+        /// <c>true</c> if the subsystem supports attachments, i.e., the ability to attach an anchor to a trackable.
         /// </summary>
         public bool supportsTrackableAttachments { get; private set; }
 
@@ -28,7 +28,7 @@ namespace UnityEngine.XR.ARSubsystems
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
-            /// <c>true</c> if the subsystem supports attachments, i.e., the ability to attach a reference point to a trackable.
+            /// <c>true</c> if the subsystem supports attachments, i.e., the ability to attach an anchor to a trackable.
             /// </summary>
             public bool supportsTrackableAttachments { get; set; }
 
@@ -74,10 +74,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="cinfo">Constructor info describing the descriptor to create.</param>
         public static void Create(Cinfo cinfo)
         {
-            SubsystemRegistration.CreateDescriptor(new XRReferencePointSubsystemDescriptor(cinfo));
+            SubsystemRegistration.CreateDescriptor(new XRAnchorSubsystemDescriptor(cinfo));
         }
 
-        XRReferencePointSubsystemDescriptor(Cinfo cinfo)
+        XRAnchorSubsystemDescriptor(Cinfo cinfo)
         {
             id = cinfo.id;
             subsystemImplementationType = cinfo.subsystemImplementationType;
