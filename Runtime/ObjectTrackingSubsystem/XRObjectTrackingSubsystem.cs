@@ -36,7 +36,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="template">A 'template' <see cref="XRTrackedObject"/>. <see cref="XRTrackedObject"/>
             /// may have fields added to it in the future; this template allows you to fill
             /// the arrays of added, updated, and removed with default values before copying in
-            /// data from your own memory buffer.
+            /// data from your own memory buffer.</param>
             /// <param name="allocator">The allocator to use for the added, updated, and removed arrays.</param>
             /// <returns>A new <see cref="TrackableChanges{T}"/> containing the changes since the last
             /// call to this method, allocated with <paramref name="allocator"/>.</returns>

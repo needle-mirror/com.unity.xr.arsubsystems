@@ -22,7 +22,7 @@ Use this section to describe:
   * ✅ Plane Detection - Able to track vertical and horizonal planes.
   * ✅ ARParticles - Particles fall from correct position and orient correctly when rotating camera.
   * ✅ Navigational Meshing - User is able to trace planes and use simple plane asset to recoginize where it is able to travel.
-  * ✅ Reference Point Testing - User can place Pose and Plane reference points on planes.
+  * ✅ Anchor Testing - User can place Pose and Plane anchors on planes.
   * ✅ AR Video Player - Video is rendered correctly inside of a plane created by user.
 
 ARFoundation with ARsubsystems is stable and all test scenes worked as expected.

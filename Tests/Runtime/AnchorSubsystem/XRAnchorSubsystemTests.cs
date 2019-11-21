@@ -3,23 +3,23 @@ using Unity.Collections;
 
 namespace UnityEngine.XR.ARSubsystems.Tests
 {
-    public class XRReferencePointSubsystemImpl : XRReferencePointSubsystem
+    public class XRAnchorSubsystemImpl : XRAnchorSubsystem
     {
         protected override Provider CreateProvider() => new TestProvider();
 
         class TestProvider : Provider
         {
-            public override TrackableChanges<XRReferencePoint> GetChanges(XRReferencePoint defaultReferencePoint, Allocator allocator) => default;
+            public override TrackableChanges<XRAnchor> GetChanges(XRAnchor defaultAnchor, Allocator allocator) => default;
         }
     }
 
     [TestFixture]
-    public class XRReferencePointSubsystemTestFixture
+    public class XRAnchorSubsystemTestFixture
     {
         [Test]
         public void RunningStateTests()
         {
-            XRReferencePointSubsystem subsystem = new XRReferencePointSubsystemImpl();
+            XRAnchorSubsystem subsystem = new XRAnchorSubsystemImpl();
 
             // Initial state is not running
             Assert.That(subsystem.running == false);

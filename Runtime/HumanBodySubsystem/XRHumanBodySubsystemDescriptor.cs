@@ -44,30 +44,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsHumanBody3DScaleEstimation { get; set; }
 
-        /// <summary>
-        /// Specifies if the current subsystem is allowed to provide human stencil images.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the current subsystem is allowed to provide human stencil images. Otherwise, <c>false</c>.
-        /// </value>
-        public bool supportsHumanStencilImage { get; set; }
-
-        /// <summary>
-        /// Specifies if the current subsystem is allowed to provide human depth images.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the current subsystem is allowed to provide human depth images. Otherwise, <c>false</c>.
-        /// </value>
-        public bool supportsHumanDepthImage { get; set; }
-
         public bool Equals(XRHumanBodySubsystemCinfo other)
         {
             return (id.Equals(other.id) && implementationType.Equals(other.implementationType)
                     && supportsHumanBody2D.Equals(other.supportsHumanBody2D)
                     && supportsHumanBody3D.Equals(other.supportsHumanBody3D)
-                    && supportsHumanBody3DScaleEstimation.Equals(other.supportsHumanBody3DScaleEstimation)
-                    && supportsHumanStencilImage.Equals(other.supportsHumanStencilImage)
-                    && supportsHumanDepthImage.Equals(other.supportsHumanDepthImage));
+                    && supportsHumanBody3DScaleEstimation.Equals(other.supportsHumanBody3DScaleEstimation));
         }
 
         public override bool Equals(System.Object obj)
@@ -95,8 +77,6 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsHumanBody2D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3DScaleEstimation.GetHashCode();
-                hashCode = (hashCode * 486187739) + supportsHumanStencilImage.GetHashCode();
-                hashCode = (hashCode * 486187739) + supportsHumanDepthImage.GetHashCode();
             }
             return hashCode;
         }
@@ -111,8 +91,6 @@ namespace UnityEngine.XR.ARSubsystems
             supportsHumanBody2D = humanBodySubsystemCinfo.supportsHumanBody2D;
             supportsHumanBody3D = humanBodySubsystemCinfo.supportsHumanBody3D;
             supportsHumanBody3DScaleEstimation = humanBodySubsystemCinfo.supportsHumanBody3DScaleEstimation;
-            supportsHumanStencilImage = humanBodySubsystemCinfo.supportsHumanStencilImage;
-            supportsHumanDepthImage = humanBodySubsystemCinfo.supportsHumanDepthImage;
         }
 
         /// <summary>
@@ -138,22 +116,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if the current subsystem supports 3D human body scale estimation. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsHumanBody3DScaleEstimation { get; private set; }
-
-        /// <summary>
-        /// Specifies if the current subsystem is allowed to provide human stencil images.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the current subsystem is allowed to provide human stencil images. Otherwise, <c>false</c>.
-        /// </value>
-        public bool supportsHumanStencilImage { get; private set; }
-
-        /// <summary>
-        /// Specifies if the current subsystem is allowed to provide human depth images.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the current subsystem is allowed to provide human depth images. Otherwise, <c>false</c>.
-        /// </value>
-        public bool supportsHumanDepthImage { get; private set; }
 
         internal static XRHumanBodySubsystemDescriptor Create(XRHumanBodySubsystemCinfo humanBodySubsystemCinfo)
         {
