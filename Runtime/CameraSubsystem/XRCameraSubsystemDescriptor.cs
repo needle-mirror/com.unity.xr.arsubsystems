@@ -93,6 +93,26 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsAverageIntensityInLumens { get; set; }
 
         /// <summary>
+        /// Specifies whether the subsystem supports ambient intensity light estimation while face tracking.
+        /// </summary>
+        public bool supportsFaceTrackingAmbientIntensityLightEstimation { get; set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports HDR light estimation while face tracking.
+        /// </summary>
+        public bool supportsFaceTrackingHDRLightEstimation { get; set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports ambient intensity light estimation while world tracking.
+        /// </summary>
+        public bool supportsWorldTrackingAmbientIntensityLightEstimation { get; set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports HDR light estimation while world tracking.
+        /// </summary>
+        public bool supportsWorldTrackingHDRLightEstimation { get; set; }
+
+        /// <summary>
         /// Specifies whether the subsystem supports setting the camera's focus mode.
         /// </summary>
         public bool supportsFocusModes { get; set; }
@@ -242,6 +262,26 @@ namespace UnityEngine.XR.ARSubsystems
         /// Specifies whether the subsystem supports setting the camera's focus mode.
         /// </summary>
         public bool supportsFocusModes { get; private set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports ambient intensity light estimation while face tracking.
+        /// </summary>
+        public bool supportsFaceTrackingAmbientIntensityLightEstimation { get; private set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports HDR light estimation while face tracking.
+        /// </summary>
+        public bool supportsFaceTrackingHDRLightEstimation { get; private set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports ambient intensity light estimation while world tracking.
+        /// </summary>
+        public bool supportsWorldTrackingAmbientIntensityLightEstimation { get; private set; }
+
+        /// <summary>
+        /// Specifies whether the subsystem supports HDR light estimation while world tracking.
+        /// </summary>
+        public bool supportsWorldTrackingHDRLightEstimation { get; private set; }
 
         /// <summary>
         /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters validating that the

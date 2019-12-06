@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-preview.2] - 2019-12-06
+### New
+- Added support for HDR light estimation mode to `XRCameraSubsystem` and `XRCameraFrame`.
+- Added additional field to `XRCameraConfiguration` to expose a handle used to get the native configuration.  This handle is platform specific in it's implementation.
+- Added script updater support for facilitating the rename of Reference Points to Anchors
+
+### Fixes
+- Updated documentation links to point to the 3.1 version of the documentation.
+
 ## [3.1.0-preview.1] - 2019-11-21
 ### Breaking changes
 - Renaming the concept of `Reference Points` to `Anchors`. The Unity script updater should convert any references to `XRReferencePointSubsystem`, `XRReferencePoint`, and `XRReferencePointSubsystemDescriptor` the next time the project is loaded into the Editor.
@@ -18,7 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 contextual information such as `Floor`, `Wall`, `Ceiling`.
 
 ### Fixes
-- [`XRCameraImagePlane.ToString()`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.0/api/UnityEngine.XR.ARSubsystems.XRCameraImagePlane.html#UnityEngine_XR_ARSubsystems_XRCameraImagePlane_ToString) invoked `NativeArray.ToString()` to build its string, which produced a string with a lot of irrelevant information. Now, it just displays the length of the array, row stride, and pixel stride of the plane.
+- [`XRCameraImagePlane.ToString()`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@3.1/api/UnityEngine.XR.ARSubsystems.XRCameraImagePlane.html#UnityEngine_XR_ARSubsystems_XRCameraImagePlane_ToString) invoked `NativeArray.ToString()` to build its string, which produced a string with a lot of irrelevant information. Now, it just displays the length of the array, row stride, and pixel stride of the plane.
 
 ## [3.0.0-preview.3] - 2019-09-26
 ### New

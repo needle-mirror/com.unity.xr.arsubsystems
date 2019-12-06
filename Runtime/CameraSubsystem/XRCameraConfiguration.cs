@@ -20,6 +20,8 @@ namespace UnityEngine.XR.ARSubsystems
 
         int m_Framerate;
 
+        IntPtr m_NativeConfigurationHandle;
+
         /// <summary>
         /// The width of the camera resolution
         /// </summary>
@@ -56,17 +58,25 @@ namespace UnityEngine.XR.ARSubsystems
         public int? framerate => (m_Framerate > 0) ? new int?(m_Framerate) : new int?();
 
         /// <summary>
+        /// The platform-dependent handle that contains information required to acquire 
+        /// the native camera configuration.
+        /// </summary>
+        public IntPtr nativeConfigurationHandle => m_NativeConfigurationHandle;
+
+        /// <summary>
         /// Constructs a camera configuration with a framerate.
         /// </summary>
+        /// <param name="handle">The platform specific native handle that can be used to get the native configuration.</param>
         /// <param name="resolution">The resolution of the camera image.</param>
         /// <param name="framerate">The camera framerate. Throws <c>ArgumentOutOfRangeException</c>
         /// if <paramref name="framerate"/> is less than or equal to zero.</param>
-        internal XRCameraConfiguration(Vector2Int resolution, int framerate)
+        public XRCameraConfiguration(IntPtr handle, Vector2Int resolution, int framerate)
         {
             if (framerate <= 0)
                 throw new ArgumentOutOfRangeException(
                     string.Format("{0} is not a valid framerate; it must be greater than zero.", framerate));
 
+            m_NativeConfigurationHandle = handle;
             m_Resolution = resolution;
             m_Framerate = framerate;
         }
@@ -74,9 +84,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a camera configuration without a framerate.
         /// </summary>
+        /// <param name="handle">The platform specific native handle that can be used to get the native configuration.</param>
         /// <param name="resolution">The resolution of the camera image.</param>
-        internal XRCameraConfiguration(Vector2Int resolution)
+        public XRCameraConfiguration(IntPtr handle, Vector2Int resolution)
         {
+            m_NativeConfigurationHandle = handle;
             m_Resolution = resolution;
             m_Framerate = 0;
         }
@@ -85,13 +97,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// Converts the configuration to a string, suitable for debug logging.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"{width}x{height}" + (framerate.HasValue ? $" at {framerate.Value} Hz" : "");
+        public override string ToString() => $"Native Config Handle<{m_NativeConfigurationHandle}>: {width}x{height}" + (framerate.HasValue ? $" at {framerate.Value} Hz" : "");
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hash = m_Resolution.GetHashCode();
+                var hash = m_NativeConfigurationHandle.GetHashCode();
+                hash = hash * 486187739 + m_Resolution.GetHashCode();
                 return hash * 486187739 + framerate.GetHashCode();
             }
         }
