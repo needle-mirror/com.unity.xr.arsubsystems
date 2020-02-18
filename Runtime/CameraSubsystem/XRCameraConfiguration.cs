@@ -105,12 +105,13 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 var hash = m_NativeConfigurationHandle.GetHashCode();
                 hash = hash * 486187739 + m_Resolution.GetHashCode();
-                return hash * 486187739 + framerate.GetHashCode();
+                hash = hash * 486187739 + framerate.GetHashCode();
+                return hash;
             }
         }
 
         public override bool Equals(System.Object obj) => ((obj is XRCameraConfiguration) && Equals((XRCameraConfiguration)obj));
-        public bool Equals(XRCameraConfiguration other) => (m_Resolution == other.m_Resolution) && (framerate == other.framerate);
+        public bool Equals(XRCameraConfiguration other) => (m_Resolution == other.m_Resolution) && (framerate == other.framerate) && (m_NativeConfigurationHandle == other.m_NativeConfigurationHandle);
         public static bool operator ==(XRCameraConfiguration lhs, XRCameraConfiguration rhs) => lhs.Equals(rhs);
         public static bool operator !=(XRCameraConfiguration lhs, XRCameraConfiguration rhs) => !lhs.Equals(rhs);
     }
