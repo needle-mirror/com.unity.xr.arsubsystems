@@ -62,6 +62,10 @@ namespace UnityEngine.XR.ARSubsystems
                 m_Identifiers.Dispose();
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -73,14 +77,29 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRPointCloudData"/> and
+        /// <see cref="Equals(XRPointCloudData)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => obj is XRPointCloudData && Equals((XRPointCloudData)obj);
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRPointCloudData"/>.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRPointCloudData"/>.</returns>
         public override string ToString()
         {
             return string.Format("XRPointCloudData: {0} positions {1} confidence values {2} identifiers",
                 m_Positions.Length, m_ConfidenceValues.Length, m_Identifiers.Length);
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRPointCloudData"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRPointCloudData"/>, otherwise false.</returns>
         public bool Equals(XRPointCloudData other)
         {
             return
@@ -89,8 +108,20 @@ namespace UnityEngine.XR.ARSubsystems
                 m_Identifiers.Equals(other.m_Identifiers);
         }
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRPointClofaceudData)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRPointCloudData lhs, XRPointCloudData rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRPointCloudData)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRPointCloudData lhs, XRPointCloudData rhs) => !lhs.Equals(rhs);
     }
 }

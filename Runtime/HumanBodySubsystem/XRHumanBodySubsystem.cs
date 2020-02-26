@@ -17,24 +17,36 @@ namespace UnityEngine.XR.ARSubsystems
         Provider m_Provider;
 
         /// <summary>
+        /// Whether 2D human body pose estimation is requested.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if 2D human body pose estimation is requested. Otherwise, <c>false</c>.
+        /// </value>
+        public bool pose2DRequested
+        {
+            get => m_Provider.pose2DRequested;
+            set => m_Provider.pose2DRequested = value;
+        }
+
+        /// <summary>
         /// Whether 2D human body pose estimation is enabled.
         /// </summary>
         /// <value>
         /// <c>true</c> if 2D human body pose estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        public bool humanBodyPose2DEstimationEnabled
+        public bool pose2DEnabled => m_Provider.pose2DEnabled;
+
+        /// <summary>
+        /// Whether 3D human body pose estimation is requested.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if 3D human body pose estimation is requested. Otherwise, <c>false</c>.
+        /// </value>
+        public bool pose3DRequested
         {
-            get => m_HumanBodyPose2DEstimationEnabled;
-            set
-            {
-                if ((m_HumanBodyPose2DEstimationEnabled != value)
-                    && m_Provider.TrySetHumanBodyPose2DEstimationEnabled(value))
-                {
-                    m_HumanBodyPose2DEstimationEnabled = value;
-                }
-            }
+            get => m_Provider.pose3DRequested;
+            set => m_Provider.pose3DRequested = value;
         }
-        bool m_HumanBodyPose2DEstimationEnabled = false;
 
         /// <summary>
         /// Whether 3D human body pose estimation is enabled.
@@ -42,19 +54,19 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if 3D human body pose estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        public bool humanBodyPose3DEstimationEnabled
+        public bool pose3DEnabled => m_Provider.pose3DEnabled;
+
+        /// <summary>
+        /// Whether 3D human body scale estimation is requested.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if 3D human body scale estimation is requested. Otherwise, <c>false</c>.
+        /// </value>
+        public bool pose3DScaleEstimationRequested
         {
-            get => m_HumanBodyPose3DEstimationEnabled;
-            set
-            {
-                if ((m_HumanBodyPose3DEstimationEnabled != value)
-                    && m_Provider.TrySetHumanBodyPose3DEstimationEnabled(value))
-                {
-                    m_HumanBodyPose3DEstimationEnabled = value;
-                }
-            }
+            get => m_Provider.pose3DScaleEstimationRequested;
+            set => m_Provider.pose3DScaleEstimationRequested = value;
         }
-        bool m_HumanBodyPose3DEstimationEnabled = false;
 
         /// <summary>
         /// Whether 3D human body scale estimation is enabled.
@@ -62,19 +74,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if 3D human body scale estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        public bool humanBodyPose3DScaleEstimationEnabled
-        {
-            get => m_HumanBodyPose3DScaleEstimationEnabled;
-            set
-            {
-                if ((m_HumanBodyPose3DScaleEstimationEnabled != value)
-                    && m_Provider.TrySetHumanBodyPose3DScaleEstimationEnabled(value))
-                {
-                    m_HumanBodyPose3DScaleEstimationEnabled = value;
-                }
-            }
-        }
-        bool m_HumanBodyPose3DScaleEstimationEnabled = false;
+        public bool pose3DScaleEstimationEnabled => m_Provider.pose3DScaleEstimationEnabled;
 
         /// <summary>
         /// Construct the subsystem by creating the functionality provider.
@@ -155,6 +155,9 @@ namespace UnityEngine.XR.ARSubsystems
             return SubsystemRegistration.CreateDescriptor(humanBodySubsystemDescriptor);
         }
 
+        /// <summary>
+        /// The provider which will service the <see cref="XRHumanBodySubsystem"/>.
+        /// </summary>
         protected abstract class Provider
         {
             /// <summary>
@@ -173,64 +176,82 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual void Destroy() { }
 
             /// <summary>
-            /// Method to be implemented by the provider to sets whether human body pose 2D estimation is enabled.
+            /// Property to be implemented by the provider to sets whether human body pose 2D estimation is requested.
             /// </summary>
-            /// <param name="enabled">Whether the human body pose 2D estimation should be enabled.</param>
             /// <returns>
-            /// <c>true</c> if the human body pose 2D estimation is set to the given value. Otherwise, <c>false</c>.
+            /// <c>true</c> if human body pose 2D estimation has been requested. Otherwise, <c>false</c>.
             /// </returns>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human body pose 2D estimation to
             /// <c>true</c> if the implementation does not support human body pose 2D estimation.</exception>
-            public virtual bool TrySetHumanBodyPose2DEstimationEnabled(bool enabled)
+            public virtual bool pose2DRequested
             {
-                if (enabled)
+                get => false;
+                set
                 {
-                    throw new NotSupportedException("Setting human body pose 2D estimation to enabled is not "
-                                                    + "supported by this implementation");
+                    if (value)
+                    {
+                        throw new NotSupportedException("Setting human body pose 2D estimation to enabled is not "
+                                                        + "supported by this implementation");
+                    }
                 }
-
-                return false;
             }
 
             /// <summary>
-            /// Method to be implemented by the provider to sets whether human body pose 3D estimation is enabled.
+            /// Property to be implemented by the provider to get whether human body pose 2D estimation is enabled.
             /// </summary>
-            /// <param name="enabled">Whether the human body pose 3D estimation should be enabled.</param>
+            public virtual bool pose2DEnabled => false;
+
+            /// <summary>
+            /// Property to be implemented by the provider to sets whether human body pose 3D estimation is requested.
+            /// </summary>
             /// <returns>
-            /// <c>true</c> if the human body pose 3D estimation is set to the given value. Otherwise, <c>false</c>.
+            /// <c>true</c> if the human body pose 3D estimation has been requested. Otherwise, <c>false</c>.
             /// </returns>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human body pose 3D estimation to
             /// <c>true</c> if the implementation does not support human body pose 3D estimation.</exception>
-            public virtual bool TrySetHumanBodyPose3DEstimationEnabled(bool enabled)
+            public virtual bool pose3DRequested
             {
-                if (enabled)
+                get => false;
+                set
                 {
-                    throw new NotSupportedException("Setting human body pose 3D estimation to enabled is not "
-                                                    + "supported by this implementation");
+                    if (value)
+                    {
+                        throw new NotSupportedException("Setting human body pose 3D estimation to enabled is not "
+                                                        + "supported by this implementation");
+                    }
                 }
-
-                return false;
             }
 
             /// <summary>
-            /// Method to be implemented by the provider to sets whether 3D human body scale estimation is enabled.
+            /// Method to be implemented by the provider to get whether human body pose 3D estimation is enabled.
             /// </summary>
-            /// <param name="enabled">Whether the 3D human body scale estimation should be enabled.</param>
+            public virtual bool pose3DEnabled => false;
+
+            /// <summary>
+            /// Property to be implemented by the provider to get or set whether 3D human body scale estimation is requested.
+            /// </summary>
             /// <returns>
             /// <c>true</c> if the 3D human body scale estimation is set to the given value. Otherwise, <c>false</c>.
             /// </returns>
             /// <exception cref="System.NotSupportedException">Thrown when setting the 3D human body scale estimation to
             /// <c>true</c> if the implementation does not support 3D human body scale estimation.</exception>
-            public virtual bool TrySetHumanBodyPose3DScaleEstimationEnabled(bool enabled)
+            public virtual bool pose3DScaleEstimationRequested
             {
-                if (enabled)
+                get => false;
+                set
                 {
-                    throw new NotSupportedException("Setting 3D human body scale estimation to enabled is not "
-                                                    + "supported by this implementation");
+                    if (value)
+                    {
+                        throw new NotSupportedException("Setting 3D human body scale estimation to enabled is not "
+                                                        + "supported by this implementation");
+                    }
                 }
-
-                return false;
             }
+
+            /// <summary>
+            /// Property to be implemented by the provider to get whether 3D human body scale estimation is enabled.
+            /// </summary>
+            public virtual bool pose3DScaleEstimationEnabled => false;
 
             /// <summary>
             /// Method to be implemented by the provider to query for the set of human body changes.

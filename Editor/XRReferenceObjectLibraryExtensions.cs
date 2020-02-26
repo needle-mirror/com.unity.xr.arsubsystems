@@ -79,7 +79,8 @@ namespace UnityEditor.XR.ARSubsystems
         /// </remarks>
         /// <param name="library">The <c>XRReferenceObjectLibrary</c> being extended.</param>
         /// <param name="index">The index of the <c>XRReferenceObject</c> to modify.</param>
-        /// <param name="entry"></param>
+        /// <param name="type">The type of the <see cref="XRReferenceObjectEntry"/> being set.</param>
+        /// <param name="entry">The entry to use for the given <paramref name="type"/>.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="library"/> is null.</exception>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="type"/> is null.</exception>
         /// <exception cref="System.IndexOutOfRangeException">Thrown if <paramref name="index"/> is not between 0 and <c>library.count - 1</c>.</exception>

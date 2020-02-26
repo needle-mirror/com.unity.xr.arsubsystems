@@ -15,7 +15,7 @@ namespace UnityEditor.XR.ARSubsystems
     public static class XRReferenceImageLibraryExtensions
     {
         /// <summary>
-        /// Creates an empty <c>XRReferenceImage<c/> and adds it to the library. The new
+        /// Creates an empty <c>XRReferenceImage</c> and adds it to the library. The new
         /// reference image is inserted at the end of the list of reference images.
         /// </summary>
         /// <param name="library">The <see cref="XRReferenceImageLibrary"/> being extended.</param>
@@ -52,7 +52,7 @@ namespace UnityEditor.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Sets the <c>XRReferenceImage.specifySize</c> value on the <c><c>XRReferenceImage</c> at <paramref name="index"/>.
+        /// Sets the <c>XRReferenceImage.specifySize</c> value on the <c>XRReferenceImage</c> at <paramref name="index"/>.
         /// This value is read-only in the Player; it can only be modified in the Editor.
         /// </summary>
         /// <param name="library">The <c>XRReferenceImageLibrary</c> being extended.</param>
@@ -70,7 +70,7 @@ namespace UnityEditor.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Sets the <c>XRReferenceImage.size</c> value on the <c><c>XRReferenceImage</c> at <paramref name="index"/>.
+        /// Sets the <c>XRReferenceImage.size</c> value on the <c>XRReferenceImage</c> at <paramref name="index"/>.
         /// This value is read-only in the Player; it can only be modified in the Editor.
         /// </summary>
         /// <param name="library">The <c>XRReferenceImageLibrary</c> being extended.</param>
@@ -88,7 +88,7 @@ namespace UnityEditor.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Sets the <c>XRReferenceImage.name</c> value on the <c><c>XRReferenceImage</c> at <paramref name="index"/>.
+        /// Sets the <c>XRReferenceImage.name</c> value on the <c>XRReferenceImage</c> at <paramref name="index"/>.
         /// This value is read-only in the Player; it can only be modified in the Editor.
         /// </summary>
         /// <param name="library">The <c>XRReferenceImageLibrary</c> being extended.</param>

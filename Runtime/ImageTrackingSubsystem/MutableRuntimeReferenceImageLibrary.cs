@@ -25,13 +25,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="imageBytes">The raw image bytes in <paramref name="format"/>. Assume the bytes will be valid until the job completes.</param>
         /// <param name="sizeInPixels">The width and height of the image, in pixels.</param>
-        /// <param name="format">The format of <paramref name="imageBytes"/>. The format has already been validated with <see cref="IsTextureFormatSupported(TextureFormat)"/>.<param>
+        /// <param name="format">The format of <paramref name="imageBytes"/>. The format has already been validated with <see cref="IsTextureFormatSupported(TextureFormat)"/>.</param>
         /// <param name="referenceImage">The <see cref="XRReferenceImage"/> data associated with the image to add to the library.
         /// This includes information like physical dimensions, associated <c>Texture2D</c> (optional), and string name.</param>
         /// <param name="inputDeps">Input dependencies for the add image job.</param>
         /// <returns>A [JobHandle](https://docs.unity3d.com/ScriptReference/Unity.Jobs.JobHandle.html) which can be used
         /// to chain together multiple tasks or to query for completion.</returns>
-        /// <seealso cref="ScheduleAddImageJob(NativeSlice<byte>, Vector2Int, TextureFormat, XRReferenceImage, JobHandle)"/>
+        /// <seealso cref="ScheduleAddImageJob(NativeSlice{byte}, Vector2Int, TextureFormat, XRReferenceImage, JobHandle)"/>
         protected abstract JobHandle ScheduleAddImageJobImpl(
             NativeSlice<byte> imageBytes,
             Vector2Int sizeInPixels,

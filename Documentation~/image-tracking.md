@@ -1,41 +1,34 @@
-# XR Image Tracking Subsystem
+# XR image tracking subsystem
 
-The image tracking subsystem attempts to detect two dimensional images in the environment that have previously been stored in a library of reference images.
+The image tracking subsystem attempts to detect two-dimensional images in the environment that match images stored in a reference images library.
 
 ## Terminology
-**Reference Image**
 
-A reference image is an image that the `XRImageTrackingSubsystem` will attempt to find in the real world. Detected images will be associated with the reference image used to detect them. Each detected image has a pose in the world.
+|**Term**|**Description**|
+|--------|---------------|
+|**Reference image**|A reference image is an image that the `XRImageTrackingSubsystem` attempts to find in the real world. The subsystem associates detected images with the reference image used to detect them. Each detected image has a pose in the world.|
+|**Reference image library**|A set of reference images. When you start an image tracking subsystem, you must first provide it with a library of reference images so it knows what to search for.|
+|**Provider**|The image tracking subsystem is an interface which is implemented in other packages. Each implementation is called a "provider". For example, you might have a different provider package for each AR platform.|
 
-**Reference Image Library**
+## Creating a reference image library
 
-A set of reference images. When you start an image tracking subsystem, you will first need to provide it with a library of reference images so that it knows what to search for.
+You create reference image libraries in the Unity Editor. From Unity's main menu, go to **Assets &gt; Create &gt; XR &gt; Reference Image Library**.
 
-**Provider**
+This creates a new reference image library Asset in your Project. To add images, select this Asset, then click **Add Image** and complete the fields that appear:
 
-The image tracking subsystem is an interface which is implemented in other packages. Each implementation is called a "provider". You might have a different provider package for each AR platform, for example.
+![Editing a reference image library](images/create-reference-image-library.gif "Editing a reference image library")
 
-## Creating a Reference Image Library
+You can specify the following information:
 
-In the Unity Editor, create a Reference Image Library, then fill it with reference images. In the Editor, click *Assets > Create > XR > Reference Image Library*:
-
-![alt text](images/assets-menu-reference-image-library.png "Create Reference Image Library")
-
-This creates a new reference image library asset in your project. Select it, and start adding reference images by clicking "Add Image" and populating the resulting fields:
-
-![alt text](images/create-reference-image-library.gif "Edit Reference Image Library")
-
-Reference images have a name, optional size, and can optionally keep the texture at runtime.
-
-|Field|Meaning|
+|**Field**|**Description**|
 |------|-------|
-|Name|A string name which will be available at runtime. This name is not used by the subsystem, but it can be useful for identifying which reference image has been detected. There is no check for name collisions.|
-|Specify Size|If enabled, you can specify the physical size you expect the image to have in the real world. Some providers require this field to be set, while it is optional on others. Refer to your provider's documentation for more details. If specified, the dimensions must be greater than zero. Editing one dimensions (e.g., width) will cause the other dimension (e.g., height) to change automatically based on the image's aspect ratio.|
-|Keep Texture at Runtime|If enabled, `XRReferenceImage.texture` will contain a reference to the source texture. This can be useful if you need access to the source texture at runtime. This is unchecked by default to reduce the built Player size. When unchecked, `XRReferenceImage.texture` will be null.|
+|**Name**|A string name which will be available at runtime. This name isn't used by the subsystem, but it can be useful to identify which reference image has been detected. There is no check for duplicate name conflicts.|
+|**Specify Size**|If enabled, you can specify the physical size you expect the image to be in the real world. This field is mandatory for some providers and optional for others. For more information, see your provider's documentation. If you specify this field, the dimensions must be greater than zero. Editing one dimension (for example, width) causes the other dimension (height) to change automatically based on the image's aspect ratio.|
+|**Keep Texture at Runtime**|If enabled, `XRReferenceImage.texture` will contain a reference to the source texture. This can be useful if you need access to the source texture at runtime. By default, this is unchecked to reduce the built Player size. When unchecked, `XRReferenceImage.texture` is null.|
 
-## Using the Library at Runtime
+## Using the library at runtime
 
-To use the library at runtime, set it on the subsystem, e.g.:
+To use the library at runtime, set it on the subsystem. For example:
 
 ```csharp
 XRReferenceImageLibrary myLibrary = ...
@@ -44,6 +37,6 @@ XRImageTrackingSubsystem subsystem = ...
 subsystem.imageLibrary = myLibrary;
 subsystem.Start();
 ```
-Note that you _must_ set `imageLibrary` to a non-`null` reference before starting the subsystem.
+**Note:** You must set `imageLibrary` to a non-null reference before starting the subsystem.
 
-Query for changes to tracked objects with `XRImageTrackingSubsystem.GetChanges`. This will return all changes to tracked images (added, updated, and removed) since the last call to this method.
+Query for changes to tracked images with `XRImageTrackingSubsystem.GetChanges`. This returns all changes to tracked images (added, updated, and removed) since the last call to this method.

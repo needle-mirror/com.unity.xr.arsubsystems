@@ -18,8 +18,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public float zNear
         {
-            get { return m_ZNear; }
-            set { m_ZNear = value; }
+            get => m_ZNear;
+            set => m_ZNear = value;
         }
         float m_ZNear;
 
@@ -31,8 +31,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public float zFar
         {
-            get { return m_ZFar; }
-            set { m_ZFar = value; }
+            get => m_ZFar;
+            set => m_ZFar = value;
         }
         float m_ZFar;
 
@@ -44,8 +44,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public float screenWidth
         {
-            get { return m_ScreenWidth; }
-            set { m_ScreenWidth = value; }
+            get => m_ScreenWidth;
+            set => m_ScreenWidth = value;
         }
         float m_ScreenWidth;
 
@@ -57,8 +57,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public float screenHeight
         {
-            get { return m_ScreenHeight; }
-            set { m_ScreenHeight = value; }
+            get => m_ScreenHeight;
+            set => m_ScreenHeight = value;
         }
         float m_ScreenHeight;
 
@@ -70,33 +70,54 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public ScreenOrientation screenOrientation
         {
-            get { return m_ScreenOrientation; }
-            set { m_ScreenOrientation = value; }
+            get => m_ScreenOrientation;
+            set => m_ScreenOrientation = value;
         }
         ScreenOrientation m_ScreenOrientation;
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRCameraParams"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRCameraParams"/>, otherwise false.</returns>
         public bool Equals(XRCameraParams other)
         {
             return (m_ZNear.Equals(other.m_ZNear) && m_ZFar.Equals(other.m_ZFar)
                     && m_ScreenWidth.Equals(other.m_ScreenWidth) && m_ScreenHeight.Equals(other.m_ScreenHeight)
-                    && m_ScreenOrientation.Equals(other.m_ScreenOrientation));
+                    && (m_ScreenOrientation == other.m_ScreenOrientation));
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRCameraParams"/> and
+        /// <see cref="Equals(XRCameraParams)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRCameraParams) && Equals((XRCameraParams)obj));
         }
 
-        public static bool operator ==(XRCameraParams lhs, XRCameraParams rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRCameraParams)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRCameraParams lhs, XRCameraParams rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRCameraParams lhs, XRCameraParams rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRCameraParams)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRCameraParams lhs, XRCameraParams rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
@@ -111,6 +132,10 @@ namespace UnityEngine.XR.ARSubsystems
             return hashCode;
         }
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRCameraParams"/>.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRCameraParams"/>.</returns>
         public override string ToString()
         {
             return string.Format("zNear:{0} zFar:{1} screen:{2}x{3}({4})", m_ZNear.ToString("0.000"),

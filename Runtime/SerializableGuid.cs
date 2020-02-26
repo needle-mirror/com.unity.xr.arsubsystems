@@ -33,22 +33,19 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hash = m_GuidLow.GetHashCode();
-                return hash * 486187739 + m_GuidHigh.GetHashCode();
-            }
-        }
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
+        public override int GetHashCode() => HashCode.Combine(m_GuidLow.GetHashCode(), m_GuidHigh.GetHashCode());
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is SerializableGuid))
-                return false;
-
-            return Equals((SerializableGuid)obj);
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="SerializableGuid"/> and
+        /// <see cref="Equals(SerializableGuid)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => (obj is SerializableGuid) && Equals((SerializableGuid)obj);
 
         /// <summary>
         /// Generates a string representation of the <c>Guid</c>. Same as <see cref="guid"/><c>.ToString()</c>.
@@ -77,6 +74,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>A string representation of the <c>Guid</c>.</returns>
         public string ToString(string format, IFormatProvider provider) => guid.ToString(format, provider);
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="SerializableGuid"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="SerializableGuid"/>, otherwise false.</returns>
         public bool Equals(SerializableGuid other)
         {
             return
@@ -84,8 +86,20 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_GuidHigh == other.m_GuidHigh);
         }
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(SerializableGuid)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(SerializableGuid lhs, SerializableGuid rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(SerializableGuid)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(SerializableGuid lhs, SerializableGuid rhs) => !lhs.Equals(rhs);
 
         [SerializeField]

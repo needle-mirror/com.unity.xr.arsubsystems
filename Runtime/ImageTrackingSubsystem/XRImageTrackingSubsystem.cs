@@ -7,9 +7,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <summary>
     /// A subsystem for detecting and tracking a preconfigured set of images in the environment.
     /// </summary>
-    /// <typeparam name="XRTrackedImage">Low level data describing a tracked image.</typeparam>
-    /// <typeparam name="XRImageTrackingSubsystemDescriptor">The descriptor used by implementations to describe the feature set of the image tracking subsystem.</typeparam>
-    public abstract class XRImageTrackingSubsystem
+    public abstract class XRImageTrackingSubsystem 
         : TrackingSubsystem<XRTrackedImage, XRImageTrackingSubsystemDescriptor>
     {
         /// <summary>
@@ -107,16 +105,23 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// The maximum number of moving images to track.
+        /// The requested maximum number of moving images to track.
         /// </summary>
-        /// <exception cref="System.NotSupportedException"/>
+        /// <exception cref="System.NotSupportedException">
         /// Thrown if the subsystem does not support tracking moving images.
         /// Check for support of this feature with <see cref="XRImageTrackingSubsystemDescriptor.supportsMovingImages"/>.
         /// </exception>
-        public int maxNumberOfMovingImages
+        public int requestedMaxNumberOfMovingImages
         {
-            set => m_Provider.maxNumberOfMovingImages = value;
+            get => m_Provider.requestedMaxNumberOfMovingImages;
+            set => m_Provider.requestedMaxNumberOfMovingImages = value;
         }
+
+        /// <summary>
+        /// The current maximum number of moving images to track.
+        /// This may be different from <see cref="requestedMaxNumberOfMovingImages"/>.
+        /// </summary>
+        public int currentMaxNumberOfMovingImages => m_Provider.currentMaxNumberOfMovingImages;
 
         /// <summary>
         /// Methods to implement by the implementing provider.
@@ -155,17 +160,26 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract RuntimeReferenceImageLibrary CreateRuntimeLibrary(XRReferenceImageLibrary serializedLibrary);
 
             /// <summary>
-            /// The maximum number of moving images to track in realtime.
+            /// The requested maximum number of moving images to track in realtime.
             /// </summary>
             /// <remarks>
             /// Must be implemented if <see cref="XRImageTrackingSubsystemDescriptor.supportsMovingImages"/> is <c>true</c>;
             /// otherwise, this property will never be set and need not be implemented.
             /// </remarks>
             /// <exception cref="System.NotSupportedException">Thrown if not overridden by the derived class.</exception>
-            public virtual int maxNumberOfMovingImages
+            public virtual int requestedMaxNumberOfMovingImages
             {
+                get => 0;
                 set => throw new NotSupportedException("This subsystem does not track moving images.");
             }
+
+            /// <summary>
+            /// The current maximum number of moving images to track in realtime.
+            /// </summary>
+            /// <remarks>
+            /// Must be implemented if <see cref="XRImageTrackingSubsystemDescriptor.supportsMovingImages"/> is <c>true</c>.
+            /// </remarks>
+            public virtual int currentMaxNumberOfMovingImages => 0;
         }
 
         /// <summary>

@@ -2,6 +2,9 @@ using System;
 
 namespace UnityEngine.XR.ARSubsystems
 {
+    /// <summary>
+    /// Constructor info for the <see cref="XRHumanBodySubsystemDescriptor"/>.
+    /// </summary>
     public struct XRHumanBodySubsystemCinfo : IEquatable<XRHumanBodySubsystemCinfo>
     {
         /// <summary>
@@ -44,6 +47,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsHumanBody3DScaleEstimation { get; set; }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRHumanBodySubsystemCinfo"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRHumanBodySubsystemCinfo"/>, otherwise false.</returns>
         public bool Equals(XRHumanBodySubsystemCinfo other)
         {
             return (id.Equals(other.id) && implementationType.Equals(other.implementationType)
@@ -52,28 +60,50 @@ namespace UnityEngine.XR.ARSubsystems
                     && supportsHumanBody3DScaleEstimation.Equals(other.supportsHumanBody3DScaleEstimation));
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRHumanBodySubsystemCinfo"/> and
+        /// <see cref="Equals(XRHumanBodySubsystemCinfo)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRHumanBodySubsystemCinfo) && Equals((XRHumanBodySubsystemCinfo)obj));
         }
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRHumanBodySubsystemCinfo)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRHumanBodySubsystemCinfo lhs, XRHumanBodySubsystemCinfo rhs)
         {
             return lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRHumanBodySubsystemCinfo)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRHumanBodySubsystemCinfo lhs, XRHumanBodySubsystemCinfo rhs)
         {
             return !lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
             unchecked
             {
-                hashCode = (hashCode * 486187739) + id.GetHashCode();
-                hashCode = (hashCode * 486187739) + implementationType.GetHashCode();
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
                 hashCode = (hashCode * 486187739) + supportsHumanBody2D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3DScaleEstimation.GetHashCode();
@@ -82,6 +112,9 @@ namespace UnityEngine.XR.ARSubsystems
         }
     }
 
+    /// <summary>
+    /// The descriptor for the <see cref="XRHumanBodySubsystem"/>.
+    /// </summary>
     public class XRHumanBodySubsystemDescriptor : SubsystemDescriptor<XRHumanBodySubsystem>
     {
         XRHumanBodySubsystemDescriptor(XRHumanBodySubsystemCinfo humanBodySubsystemCinfo)

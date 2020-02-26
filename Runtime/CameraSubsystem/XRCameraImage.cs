@@ -42,7 +42,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The image width.
         /// </value>
-        public int width { get { return dimensions.x; } }
+        public int width => dimensions.x;
 
         /// <summary>
         /// The image height.
@@ -50,7 +50,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The image height.
         /// </value>
-        public int height { get { return dimensions.y; } }
+        public int height => dimensions.y;
 
         /// <summary>
         /// The number of image planes. A "plane" in this context refers to a channel in the raw video format,
@@ -83,10 +83,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if this <c>XRCameraImage</c> represents a valid image. Otherwise, <c>false</c>.
         /// </value>
-        public bool valid
-        {
-            get { return (m_CameraSubsystem != null) && m_CameraSubsystem.NativeHandleValid(m_NativeHandle); }
-        }
+        public bool valid => (m_CameraSubsystem != null) && m_CameraSubsystem.NativeHandleValid(m_NativeHandle);
 
         /// <summary>
         /// Initialize the static callback for when the image request completes.
@@ -435,49 +432,69 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
-                var hash = width.GetHashCode();
-                hash = hash * 486187739 + height.GetHashCode();
+                var hash = dimensions.GetHashCode();
                 hash = hash * 486187739 + planeCount.GetHashCode();
                 hash = hash * 486187739 + m_NativeHandle.GetHashCode();
                 hash = hash * 486187739 + ((int)format).GetHashCode();
-                if (m_CameraSubsystem != null)
-                {
-                    hash = hash * 486187739 + m_CameraSubsystem.GetHashCode();
-                }
+                hash = hash * 486187739 + HashCode.ReferenceHash(m_CameraSubsystem);
                 return hash;
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRCameraImage"/> and
+        /// <see cref="Equals(XRCameraImage)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj)
         {
             return ((obj is XRCameraImage) && Equals((XRCameraImage)obj));
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRCameraImage"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRCameraImage"/>, otherwise false.</returns>
         public bool Equals(XRCameraImage other)
         {
             return
-                (width == other.width) &&
-                (height == other.height) &&
+                dimensions.Equals(other.dimensions) &&
                 (planeCount == other.planeCount) &&
                 (format == other.format) &&
                 (m_NativeHandle == other.m_NativeHandle) &&
                 (m_CameraSubsystem == other.m_CameraSubsystem);
         }
 
-        public static bool operator ==(XRCameraImage lhs, XRCameraImage rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRCameraImage)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRCameraImage lhs, XRCameraImage rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRCameraImage lhs, XRCameraImage rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRCameraImage)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRCameraImage lhs, XRCameraImage rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRCameraImage"/>.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRCameraImage"/>.</returns>
         public override string ToString()
         {
             return string.Format(

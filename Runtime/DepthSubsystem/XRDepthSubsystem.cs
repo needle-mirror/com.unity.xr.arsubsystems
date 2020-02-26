@@ -52,7 +52,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Retrieve point cloud data (positions, confidence values, & identifiers)
+        /// Retrieve point cloud data (positions, confidence values, and identifiers)
         /// for the point cloud with the given <paramref name="trackableId"/>.
         /// </summary>
         /// <param name="trackableId">The point cloud for which to retrieve data.</param>
@@ -116,7 +116,7 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract TrackableChanges<XRPointCloud> GetChanges(XRPointCloud defaultPointCloud, Allocator allocator);
 
             /// <summary>
-            /// Generate point cloud data (positions, confidence values, & identifiers)
+            /// Generate point cloud data (positions, confidence values, and identifiers)
             /// for the point cloud with the given <paramref name="trackableId"/>.
             /// </summary>
             /// <param name="trackableId">The point cloud for which to retrieve data.</param>

@@ -132,13 +132,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Registers a novel implementation of the <see cref="XRObjectTrackingSubsystem"/>.
         /// </summary>
+        /// <typeparam name="T">The concrete type of the subsystem being registered.</typeparam>
         /// <param name="id">A unique string identifying the subsystem implementation.</param>
         /// <param name="capabilities">Describes the capabilities of the implementation.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="id"/> is <c>null</c>.</exception>
         public static void Register<T>(string id, XRObjectTrackingSubsystemDescriptor.Capabilities capabilities) where T : XRObjectTrackingSubsystem
         {
             if (id == null)
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
 
             SubsystemRegistration.CreateDescriptor(new XRObjectTrackingSubsystemDescriptor(id, typeof(T), capabilities));
         }

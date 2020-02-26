@@ -4,17 +4,14 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1.0-preview.8] - 2020-03-12
+## [4.0.0-preview.1] - 2020-02-26
+### Breaking Changes
+- Several subsystem properties have been broken into 'current' and 'requested' properties. See the [ARFoundation Migration Guide](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/migration-guide-3.html) for more details.
 
-## [3.1.0-preview.7] - 2020-02-27
-
-## [3.1.0-preview.6] - 2020-02-18
-### Fixes
-- Added fix to `XRCameraConfiguration` that adds `nativeConfigurationHandle` to equality checks between `XRCameraConfiguration`s.
-
-## [3.1.0-preview.4] - 2020-01-08
+## [3.1.0-preview.4] - 2019-01-08
 ### Fixes
 - Fixes an issue with the 2D joint positions from human body tracking.
+- Fixes an issue where the equality comparison for XRCameraConfiguration did not take `nativeConfigurationHandle` into account
 
 ## [3.1.0-preview.2] - 2019-12-06
 ### New

@@ -27,8 +27,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public TrackableId trackableId
         {
-            get { return m_TrackableId; }
-            set { m_TrackableId = value; }
+            get => m_TrackableId;
+            set => m_TrackableId = value;
         }
 
         /// <summary>
@@ -36,8 +36,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public Pose pose
         {
-            get { return m_Pose; }
-            set { m_Pose = value; }
+            get => m_Pose;
+            set => m_Pose = value;
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public float distance
         {
-            get { return m_Distance; }
-            set { m_Distance = value; }
+            get => m_Distance;
+            set => m_Distance = value;
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public TrackableType hitType
         {
-            get { return m_HitType; }
-            set { m_HitType = value; }
+            get => m_HitType;
+            set => m_HitType = value;
         }
 
         /// <summary>
@@ -77,6 +77,10 @@ namespace UnityEngine.XR.ARSubsystems
             m_HitType = hitType;
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -89,14 +93,19 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is XRRaycastHit))
-                return false;
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRRaycastHit"/> and
+        /// <see cref="Equals(XRRaycastHit)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => (obj is XRRaycastHit other) && Equals(other);
 
-            return Equals((XRRaycastHit)obj);
-        }
-
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRRaycastHit"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRRaycastHit"/>, otherwise false.</returns>
         public bool Equals(XRRaycastHit other)
         {
             return
@@ -106,9 +115,21 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_HitType == other.m_HitType);
         }
 
-        public static bool operator ==(XRRaycastHit lhs, XRRaycastHit rhs) { return lhs.Equals(rhs); }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRRaycastHit)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRRaycastHit lhs, XRRaycastHit rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRRaycastHit lhs, XRRaycastHit rhs) { return !lhs.Equals(rhs); }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRRaycastHit)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRRaycastHit lhs, XRRaycastHit rhs) => !lhs.Equals(rhs);
 
         TrackableId m_TrackableId;
 

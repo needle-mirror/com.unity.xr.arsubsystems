@@ -55,6 +55,11 @@ namespace UnityEngine.XR.ARSubsystems
             return null;
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRReferenceObject"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRReferenceObject"/>, otherwise false.</returns>
         public bool Equals(XRReferenceObject other)
         {
             return
@@ -64,22 +69,44 @@ namespace UnityEngine.XR.ARSubsystems
                 ReferenceEquals(m_Entries, other.m_Entries);
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
                 var hash = m_GuidLow.GetHashCode();
                 hash = hash * 486187739 + m_GuidHigh.GetHashCode();
-                hash = hash * 486187739 + (m_Name == null ? 0 : m_Name.GetHashCode());
-                hash = hash * 486187739 + (m_Entries == null ? 0 : m_Entries.GetHashCode());
+                hash = hash * 486187739 + HashCode.ReferenceHash(m_Name);
+                hash = hash * 486187739 + HashCode.ReferenceHash(m_Entries);
                 return hash;
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRReferenceObject"/> and
+        /// <see cref="Equals(XRReferenceObject)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => obj is XRReferenceObject && Equals((XRReferenceObject)obj);
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRReferenceObject)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRReferenceObject lhs, XRReferenceObject rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRReferenceObject)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRReferenceObject lhs, XRReferenceObject rhs) => !lhs.Equals(rhs);
 
 #pragma warning disable CS0649

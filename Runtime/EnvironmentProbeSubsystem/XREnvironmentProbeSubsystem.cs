@@ -29,23 +29,23 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         /// <exception cref="System.NotSupportedException">Thrown when setting this value to <c>true</c> for
         /// implementations that do not support automatic placement.</exception>
-        public bool automaticPlacement
+        public bool automaticPlacementRequested
         {
-            get { return m_AutomaticPlacement; }
+            get => m_Provider.automaticPlacementRequested;
             set
             {
                 if (value && !SubsystemDescriptor.supportsAutomaticPlacement)
-                    throw new NotSupportedException("subsystem does not support automatic placement of environment probes.");
+                    throw new NotSupportedException("Subsystem does not support automatic placement of environment probes.");
 
-                if (m_AutomaticPlacement != value && running)
-                {
-                    m_Provider.SetAutomaticPlacement(value);
-                }
-
-                m_AutomaticPlacement = value;
+                m_Provider.automaticPlacementRequested = value;
             }
         }
-        bool m_AutomaticPlacement;
+
+        /// <summary>
+        /// Specifies whether the AR session will automatically place environment probes in the scene.
+        /// </summary>
+        /// <seealso cref="automaticPlacementRequested"/>
+        public bool automaticPlacementEnabled => m_Provider.automaticPlacementEnabled;
 
         /// <summary>
         /// Specifies whether the environment textures should be returned as HDR textures.
@@ -53,18 +53,16 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if the environment textures should be returned as HDR textures. Otherwise, <c>false</c>.
         /// </value>
-        public bool environmentTextureHDR
+        public bool environmentTextureHDRRequested
         {
-            get { return m_EnvironmentTextureHDR; }
-            set
-            {
-                if ((m_EnvironmentTextureHDR != value) && m_Provider.TrySetEnvironmentTextureHDREnabled(value))
-                {
-                    m_EnvironmentTextureHDR = value;
-                }
-            }
+            get => m_Provider.environmentTextureHDRRequested;
+            set => m_Provider.environmentTextureHDRRequested = value;
         }
-        bool m_EnvironmentTextureHDR = true;
+
+        /// <summary>
+        /// Queries whether HDR environment textures are enabled.
+        /// </summary>
+        public bool environmentTextureHDREnabled => m_Provider.environmentTextureHDREnabled;
 
         /// <summary>
         ///
@@ -72,18 +70,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="allocator"></param>
         /// <returns></returns>
         public override TrackableChanges<XREnvironmentProbe> GetChanges(Allocator allocator)
-        {
-            return m_Provider.GetChanges(XREnvironmentProbe.defaultValue, allocator);
-        }
+            => m_Provider.GetChanges(XREnvironmentProbe.defaultValue, allocator);
 
         /// <summary>
         /// Starts the subsystem. If <see cref="automaticPlacement"/> is <c>true</c>, environment probes will be created automatically.
         /// </summary>
-        protected sealed override void OnStart()
-        {
-            m_Provider.SetAutomaticPlacement(automaticPlacement);
-            m_Provider.Start();
-        }
+        protected sealed override void OnStart() => m_Provider.Start();
 
         /// <summary>
         /// Stops the subsystem. This does not remove existing environment probes, but it stops automatically placing them, and manually placed probes will not be updated
@@ -152,6 +144,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Must create an implementation of <see cref="Provider"/>, the provider-specific implementation of this subsystem.
         /// </summary>
+        /// <returns>An instance of a derived <see cref="Provider"/>.</returns> 
         protected abstract Provider CreateProvider();
 
         /// <summary>
@@ -162,55 +155,60 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Starts the subsystem. Will only be invoked if <see cref="running"/> is <c>false</c>.
             /// </summary>
-            public virtual void Start()
-            { }
+            public virtual void Start() {}
 
             /// <summary>
             /// Stops the subsystem. Will only be invoked if <see cref="running"/> is <c>true</c>.
             /// </summary>
-            public virtual void Stop()
-            { }
+            public virtual void Stop() {}
 
             /// <summary>
             /// Invoked when the <see cref="XREnvironmentProbeSubsystem"/> is about to be destroyed.
             /// </summary>
-            public virtual void Destroy()
-            { }
+            public virtual void Destroy() {}
 
             /// <summary>
-            /// Overridden by the provider implementation to set the automatic placement state for the environment probe
-            /// subsystem.
+            /// Overridden by the provider implementation to set the automatic placement request state for the environment probe subsystem.
             /// </summary>
-            /// <param name='value'>Whether automatic placement of environment probes should be enabled (<c>true</c>) or
-            /// disabled (<c>false</c>).</param>
-            /// <exception cref="System.NotSupportedException">Thrown in the defualt implementation if
-            /// <paramref name="value"/> is <c>true</c>.</exception>
-            public virtual void SetAutomaticPlacement(bool value)
+            /// <exception cref="System.NotSupportedException">Thrown in the defualt implementation if set to <c>true</c>.</exception>
+            public virtual bool automaticPlacementRequested
             {
-                if (value)
+                get => false;
+                set
                 {
-                    throw new NotSupportedException("automatic placement of environment probes is not supported by this implementation");
+                    if (value)
+                    {
+                        throw new NotSupportedException("automatic placement of environment probes is not supported by this implementation");
+                    }
                 }
             }
 
             /// <summary>
-            /// Overridden by the provider implementation to set the state of HDR environment texture generation.
+            /// Overridden by the provider implementation to query whether automatic placement is enabled for the environment probe subsystem.
             /// </summary>
-            /// <param name="value">Whether HDR environment texture generation is enabled (<c>true</c>) or disabled
-            /// (<c>false</c>).</param>
-            /// <returns>
-            /// Whether the HDR environment texture generation state was set.
-            /// </returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support HDR
-            /// environment textures if the state is being enabled.</exception>
-            public virtual bool TrySetEnvironmentTextureHDREnabled(bool value)
+            public virtual bool automaticPlacementEnabled => false;
+
+            /// <summary>
+            /// Overridden by the provider implementation to request the state of HDR environment texture generation.
+            /// </summary>
+            /// <exception cref="System.NotSupportedException">Thrown if HDR textures are requested but the implementation
+            /// does not support HDR environment textures.</exception>
+            public virtual bool environmentTextureHDRRequested
             {
-                if (value)
+                get => false;
+                set
                 {
-                    throw new NotSupportedException("HDR environment textures are not supported by this implementation");
+                    if (value)
+                    {
+                        throw new NotSupportedException("HDR environment textures are not supported by this implementation");
+                    }
                 }
-                return false;
             }
+
+            /// <summary>
+            /// Overridden by the provider implementation to query the state of HDR environment texture generation.
+            /// </summary>
+            public virtual bool environmentTextureHDREnabled => false;
 
             /// <summary>
             /// Overridden by the provider implementation to manually add an environment probe to the AR session.

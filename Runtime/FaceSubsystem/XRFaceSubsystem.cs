@@ -36,14 +36,26 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Get or set the maximum number of faces to track simultaneously.
         /// </summary>
-        public int maximumFaceCount
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the requested maximum face count is less than one. To stop face tracking, call <see cref="Stop()"/>.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown if the requested maximum face count is greater than one but the subsystem does not support tracking multiple faces.</exception>
+        public int requestedMaximumFaceCount
         {
-            get => m_Provider.maximumFaceCount;
-            set => m_Provider.maximumFaceCount = value;
+            get => m_Provider.requestedMaximumFaceCount;
+            set
+            {
+                if (value < 1)
+                    throw new ArgumentOutOfRangeException("value", "Must track at least one face. Call Stop() if you wish to stop face tracking.");
+                m_Provider.requestedMaximumFaceCount = value;
+            }
         }
 
         /// <summary>
-        /// Get the number of faces the subsystem is able to track simultaneously.
+        /// Get the maximum number of faces the provider will simultaneously track.
+        /// </summary>
+        public int currentMaximumFaceCount => m_Provider.currentMaximumFaceCount;
+
+        /// <summary>
+        /// Get the number of faces the subsystem is able to track simultaneously in its current configuration.
         /// </summary>
         public int supportedFaceCount => m_Provider.supportedFaceCount;
 
@@ -57,11 +69,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<XRFace> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(XRFace.defaultValue, allocator);
+            using (new ScopedProfiler("GetChanges"))
+            {
+                var changes = m_Provider.GetChanges(XRFace.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
+                m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
-            return changes;
+                return changes;
+            }
         }
 
         /// <summary>
@@ -71,8 +86,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="faceId">The <see cref="TrackableId"/> for a <see cref="XRFace"/>.</param>
         /// <param name="allocator">The allocator to use for the returned data if a resize is necessary. Must be <c>Allocator.TempJob</c> or <c>Allocator.Persistent</c>.</param>
         /// <param name="faceMesh">The container for the mesh data to either re-use or re-allocate.</param>
-        /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="allocator"> is <c>Allocator.Temp</c></exception>
-        /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="allocator"> is <c>Allocator.None</c></exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="allocator"/> is <c>Allocator.Temp</c></exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="allocator"/> is <c>Allocator.None</c></exception>
         public virtual void GetFaceMesh(TrackableId faceId, Allocator allocator, ref XRFaceMesh faceMesh)
         {
             if (allocator == Allocator.Temp)
@@ -81,6 +96,7 @@ namespace UnityEngine.XR.ARSubsystems
             if (allocator == Allocator.None)
                 throw new InvalidOperationException("Allocator.None is not a valid allocator.");
 
+            using (new ScopedProfiler("GetFaceMesh"))
             m_Provider.GetFaceMesh(faceId, allocator, ref faceMesh);
         }
 
@@ -164,18 +180,18 @@ namespace UnityEngine.XR.ARSubsystems
             /// Get or set the maximum number of faces the subsystem should attempt to track simultaneously.
             /// Defaults to 1.
             /// </summary>
-            public virtual int maximumFaceCount
+            /// <exception cref="System.NotSupportedException">Thrown if the requested maximum face count is greater than one but the subsystem does not support tracking multiple faces.</exception>
+            public virtual int requestedMaximumFaceCount
             {
-                get => 1;
-                set
-                {
-                    if (maximumFaceCount < 1)
-                        throw new ArgumentOutOfRangeException("value", "Must track at least one face. Call Stop() if you wish to stop face tracking.");
-
-                    if (maximumFaceCount > 1)
-                        throw new NotSupportedException("This subsystem does not support multiple faces.");
-                }
+                get => m_RequestedMaximumFaceCount;
+                set => m_RequestedMaximumFaceCount = value;
             }
+            int m_RequestedMaximumFaceCount = 1;
+
+            /// <summary>
+            /// Gets the maximum number of faces the provider will track.
+            /// </summary>
+            public virtual int currentMaximumFaceCount => 1;
         }
 
         Provider m_Provider;

@@ -72,6 +72,11 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public bool supportsClassification { get; set; }
 
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="other">The other <see cref="Cinfo"/> to compare against.</param>
+            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Cinfo"/>, otherwise false.</returns>
             public bool Equals(Cinfo other)
             {
                 return
@@ -84,6 +89,12 @@ namespace UnityEngine.XR.ARSubsystems
                     (supportsBoundaryVertices == other.supportsBoundaryVertices);
             }
 
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="obj">The `object` to compare against.</param>
+            /// <returns>`True` if <paramref name="obj"/> is of type <see cref="Cinfo"/> and
+            /// <see cref="Equals(Cinfo)"/> also returns `true`; otherwise `false`.</returns>
             public override bool Equals(object obj)
             {
                 if (!(obj is Cinfo))
@@ -92,12 +103,16 @@ namespace UnityEngine.XR.ARSubsystems
                 return Equals((Cinfo)obj);
             }
 
+            /// <summary>
+            /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+            /// </summary>
+            /// <returns>A hash code generated from this object's fields.</returns>
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    var hashCode = id.GetHashCode();
-                    hashCode = (hashCode * 486187739) + subsystemImplementationType.GetHashCode();
+                    var hashCode = HashCode.ReferenceHash(id);
+                    hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemImplementationType);
                     hashCode = (hashCode * 486187739) + supportsHorizontalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsVerticalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsArbitraryPlaneDetection.GetHashCode();
@@ -107,15 +122,21 @@ namespace UnityEngine.XR.ARSubsystems
                 }
             }
 
-            public static bool operator ==(Cinfo lhs, Cinfo rhs)
-            {
-                return lhs.Equals(rhs);
-            }
+            /// <summary>
+            /// Tests for equality. Same as <see cref="Equals(Cinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+            public static bool operator ==(Cinfo lhs, Cinfo rhs) => lhs.Equals(rhs);
 
-            public static bool operator !=(Cinfo lhs, Cinfo rhs)
-            {
-                return !lhs.Equals(rhs);
-            }
+            /// <summary>
+            /// Tests for inequality. Same as `!`<see cref="Equals(Cinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+            public static bool operator !=(Cinfo lhs, Cinfo rhs) => !lhs.Equals(rhs);
         }
 
         /// <summary>

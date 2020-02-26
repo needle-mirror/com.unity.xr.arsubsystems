@@ -17,7 +17,7 @@ namespace UnityEditor.XR.ARSubsystems
 
                 s_RemoveButtonContent = new GUIContent(
                     string.Empty,
-                    EditorGUIUtility.FindTexture("d_LookDevClose"),
+                    EditorGUIUtility.FindTexture("d_winbtn_win_close"),
                     "Remove this image from the library.");
             }
 

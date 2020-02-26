@@ -67,49 +67,49 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The <see cref="TrackableId"/> associated with this plane.
         /// </summary>
-        public TrackableId trackableId { get { return m_TrackableId; } }
+        public TrackableId trackableId => m_TrackableId;
 
         /// <summary>
         /// The <see cref="TrackableId"/> associated with the plane which subsumed this one. Will be <see cref="TrackableId.invalidId"/>
         /// if this plane has not been subsumed.
         /// </summary>
-        public TrackableId subsumedById { get { return m_SubsumedById; } }
+        public TrackableId subsumedById => m_SubsumedById;
 
         /// <summary>
         /// The <c>Pose</c>, in session space, of the plane.
         /// </summary>
-        public Pose pose { get { return m_Pose; } }
+        public Pose pose => m_Pose;
 
         /// <summary>
         /// The center of the plane in plane space (relative to its <see cref="pose"/>).
         /// </summary>
-        public Vector2 center { get { return m_Center; } }
+        public Vector2 center => m_Center;
 
         /// <summary>
         /// The extents of the plane (half dimensions) in meters.
         /// </summary>
-        public Vector2 extents { get { return m_Size * 0.5f; } }
+        public Vector2 extents => m_Size * 0.5f;
 
         /// <summary>
         /// The size (dimensions) of the plane in meters.
         /// </summary>
-        public Vector2 size { get { return m_Size; } }
+        public Vector2 size => m_Size;
 
         /// <summary>
         /// The <see cref="PlaneAlignment"/> of the plane.
         /// </summary>
-        public PlaneAlignment alignment { get { return m_Alignment; } }
+        public PlaneAlignment alignment => m_Alignment;
 
         /// <summary>
         /// The <see cref="TrackingState"/> of the plane.
         /// </summary>
-        public TrackingState trackingState { get { return m_TrackingState; } }
+        public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
         /// A native pointer associated with this plane.
         /// The data pointer to by this pointer is implementation defined.
         /// </summary>
-        public IntPtr nativePtr { get { return m_NativePtr; } }
+        public IntPtr nativePtr => m_NativePtr;
 
         /// <summary>
         /// The <see cref="PlaneClassification"/> of the plane.
@@ -119,22 +119,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The width of the plane in meters.
         /// </summary>
-        public float width { get { return m_Size.x; } }
+        public float width => m_Size.x;
 
         /// <summary>
         /// The height (or depth) of the plane in meters.
         /// </summary>
-        public float height { get { return m_Size.y; } }
+        public float height => m_Size.y;
 
         /// <summary>
         /// The normal of the plane in session space.
         /// </summary>
-        public Vector3 normal { get { return m_Pose.up; } }
+        public Vector3 normal => m_Pose.up;
 
         /// <summary>
         /// Gets an infinite plane in session space.
         /// </summary>
-        public Plane plane { get { return new Plane(normal, center); } }
+        public Plane plane => new Plane(normal, center);
 
         /// <summary>
         /// Get the four corners of the plane in session space in clockwise order.
@@ -177,12 +177,18 @@ namespace UnityEngine.XR.ARSubsystems
                 nativePtr.ToInt64());
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is BoundedPlane && Equals((BoundedPlane)obj);
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="BoundedPlane"/> and
+        /// <see cref="Equals(BoundedPlane)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => (obj is BoundedPlane other) && Equals(other);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -200,16 +206,27 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        public static bool operator ==(BoundedPlane lhs, BoundedPlane rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(BoundedPlane)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(BoundedPlane lhs, BoundedPlane rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(BoundedPlane lhs, BoundedPlane rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(BoundedPlane)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(BoundedPlane lhs, BoundedPlane rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="BoundedPlane"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="BoundedPlane"/>, otherwise false.</returns>
         public bool Equals(BoundedPlane other)
         {
             return

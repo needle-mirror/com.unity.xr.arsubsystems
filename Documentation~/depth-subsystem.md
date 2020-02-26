@@ -1,7 +1,7 @@
-# XR Depth Subsystem
+# XR depth subsystem
 
-The depth subsystem is an interface into depth information detected in the scene. Currently, this means the detection of feature points, unique features in the environment which can be correlated between multiple frames.
+The depth subsystem is an interface into depth information detected in the scene. This refers to feature points, which are unique features detected in the environment that can be correlated between multiple frames. A set of feature points is called a point cloud.
 
-A set of feature points is called a point cloud. The depth subsystem is a type of [tracking subsystem](index.html#tracking-subsystems) and [`XRPointCloud`](../api/UnityEngine.XR.ARSubsystems.XRPointCloud.html) is its trackable.
+The depth subsystem is a type of [tracking subsystem](index.html#tracking-subsystems). Its trackable is [`XRPointCloud`](../api/UnityEngine.XR.ARSubsystems.XRPointCloud.html).
 
-Some providers may only have one `XRPointCloud`, while others have several. Check with your provider's documentation for more details.
+Some providers only have one `XRPointCloud`, while others might have several. Check your provider's documentation for more details.

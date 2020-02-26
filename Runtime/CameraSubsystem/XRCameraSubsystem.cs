@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Unity.Collections;
 
 namespace UnityEngine.XR.ARSubsystems
@@ -31,6 +30,21 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
+        /// Gets the camera currently in use.
+        /// </summary>
+        /// <returns></returns>
+        public Feature currentCamera => m_Provider.currentCamera.Cameras();
+
+        /// <summary>
+        /// Get or set the requested camera, i.e., the <see cref="Feature.AnyCamera"/> bits.
+        /// </summary>
+        public Feature requestedCamera
+        {
+            get => m_Provider.requestedCamera;
+            set => m_Provider.requestedCamera = value.Cameras();
+        }
+
+        /// <summary>
         /// Interface for providing camera functionality for the implementation.
         /// </summary>
         protected class Provider
@@ -57,6 +71,21 @@ namespace UnityEngine.XR.ARSubsystems
             /// camera modes may require this.
             /// </summary>
             public virtual bool invertCulling => false;
+
+            /// <summary>
+            /// This property should get the actual camera facing direction.
+            /// </summary>
+            public virtual Feature currentCamera => Feature.None;
+
+            /// <summary>
+            /// This property should get or set the requested camera facing direction,
+            /// that is, the <see cref="Feature.AnyCamera"/> bits.
+            /// </summary>
+            public virtual Feature requestedCamera
+            {
+                get => Feature.None;
+                set { }
+            }
 
             /// <summary>
             /// Method to be implemented by provider to start the camera for the subsystem.
@@ -90,22 +119,32 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
+            /// Property to be implemented by the provider to get the current camera focus mode.
+            /// </summary>
+            public virtual bool autoFocusEnabled => false;
+
+            /// <summary>
             /// Property to be implemented by the provider to get or set the focus mode for the camera.
             /// </summary>
-            public virtual CameraFocusMode cameraFocusMode
+            public virtual bool autoFocusRequested
             {
-                get => CameraFocusMode.Fixed;
+                get => false;
                 set { }
             }
 
             /// <summary>
-            /// Method to be implemented by the provider to set the light estimation mode.
+            /// Property to be implemented by the provider to get the current light estimation mode in use.
             /// </summary>
-            /// <param name="lightEstimationMode">The light estimation mode to set.</param>
-            /// <returns>
-            /// <c>true</c> if the method successfully set the light estimation mode. Otherwise, <c>false</c>.
-            /// </returns>
-            public virtual bool TrySetLightEstimationMode(LightEstimationMode lightEstimationMode) => false;
+            public virtual Feature currentLightEstimation => Feature.None;
+
+            /// <summary>
+            /// Property to be implemented by the provider to get or set the light estimation mode.
+            /// </summary>
+            public virtual Feature requestedLightEstimation
+            {
+                get => Feature.None;
+                set {}
+            }
 
             /// <summary>
             /// Method to be implemented by the provider to get the camera intrinisics information.
@@ -400,35 +439,39 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
+        /// Get the current focus mode in use by the provider.
+        /// </summary>
+        public bool autoFocusEnabled => m_Provider.autoFocusEnabled;
+
+        /// <summary>
         /// Get or set the focus mode for the camera.
         /// </summary>
         /// <value>
         /// The focus mode for the camera.
         /// </value>
-        public CameraFocusMode focusMode
+        public bool autoFocusRequested
         {
-            get => m_Provider.cameraFocusMode;
-            set => m_Provider.cameraFocusMode = value;
+            get => m_Provider.autoFocusRequested;
+            set => m_Provider.autoFocusRequested = value;
         }
 
         /// <summary>
-        /// Specifies the light estimation mode.
+        /// Returns the current light estimation mode in use by the provider.
+        /// </summary>
+        /// <seealso cref="requestedLightEstimation"/>
+        public Feature currentLightEstimation => m_Provider.currentLightEstimation.LightEstimation();
+
+        /// <summary>
+        /// Get or set the requested light estimation mode.
         /// </summary>
         /// <value>
         /// The light estimation mode.
         /// </value>
-        public LightEstimationMode lightEstimationMode
+        public Feature requestedLightEstimation
         {
-            get => m_LightEstimationMode;
-            set
-            {
-                if ((m_LightEstimationMode != value) && m_Provider.TrySetLightEstimationMode(value))
-                {
-                    m_LightEstimationMode = value;
-                }
-            }
+            get => m_Provider.requestedLightEstimation.LightEstimation();
+            set => m_Provider.requestedLightEstimation = value.LightEstimation();
         }
-        LightEstimationMode m_LightEstimationMode = LightEstimationMode.Disabled;
 
         /// <summary>
         /// Start the camera subsystem.
@@ -873,22 +916,46 @@ namespace UnityEngine.XR.ARSubsystems
                 this.m_Format = format;
             }
 
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="other">The other <see cref="CameraImageCinfo"/> to compare against.</param>
+            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="CameraImageCinfo"/>, otherwise false.</returns>
             public bool Equals(CameraImageCinfo other)
             {
                 return (nativeHandle.Equals(other.nativeHandle) && dimensions.Equals(other.dimensions)
                         && planeCount.Equals(other.planeCount) && timestamp.Equals(other.timestamp)
-                        && format.Equals(other.format));
+                        && (format == other.format));
             }
 
-            public override bool Equals(System.Object obj)
-            {
-                return ReferenceEquals(this, obj) || ((obj is CameraImageCinfo) && Equals((CameraImageCinfo)obj));
-            }
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="obj">The `object` to compare against.</param>
+            /// <returns>`True` if <paramref name="obj"/> is of type <see cref="CameraImageCinfo"/> and
+            /// <see cref="Equals(CameraImageCinfo)"/> also returns `true`; otherwise `false`.</returns>
+            public override bool Equals(System.Object obj) => (obj is CameraImageCinfo) && Equals((CameraImageCinfo)obj);
 
+            /// <summary>
+            /// Tests for equality. Same as <see cref="Equals(CameraImageCinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
             public static bool operator ==(CameraImageCinfo lhs, CameraImageCinfo rhs) => lhs.Equals(rhs);
 
+            /// <summary>
+            /// Tests for inequality. Same as `!`<see cref="Equals(CameraImageCinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
             public static bool operator !=(CameraImageCinfo lhs, CameraImageCinfo rhs) => !(lhs == rhs);
 
+            /// <summary>
+            /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+            /// </summary>
+            /// <returns>A hash code generated from this object's fields.</returns>
             public override int GetHashCode()
             {
                 int hashCode = 486187739;
@@ -903,6 +970,10 @@ namespace UnityEngine.XR.ARSubsystems
                 return hashCode;
             }
 
+            /// <summary>
+            /// Generates a string representation of this object suitable for debugging.
+            /// </summary>
+            /// <returns>A string representation of this <see cref="CameraImageCinfo"/>.</returns>
             public override string ToString()
             {
                 return string.Format("nativeHandle: {0} dimensions:{1} planes:{2} timestamp:{3} format:{4}",
@@ -967,21 +1038,45 @@ namespace UnityEngine.XR.ARSubsystems
                 this.m_PixelStride = pixelStride;
             }
 
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="other">The other <see cref="CameraImagePlaneCinfo"/> to compare against.</param>
+            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="CameraImagePlaneCinfo"/>, otherwise false.</returns>
             public bool Equals(CameraImagePlaneCinfo other)
             {
                 return (dataPtr.Equals(other.dataPtr) && dataLength.Equals(other.dataLength)
                         && rowStride.Equals(other.rowStride) && pixelStride.Equals(other.pixelStride));
             }
 
-            public override bool Equals(System.Object obj)
-            {
-                return ReferenceEquals(this, obj) || ((obj is CameraImagePlaneCinfo) && Equals((CameraImagePlaneCinfo)obj));
-            }
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="obj">The `object` to compare against.</param>
+            /// <returns>`True` if <paramref name="obj"/> is of type <see cref="CameraImagePlaneCinfo"/> and
+            /// <see cref="Equals(CameraImagePlaneCinfo)"/> also returns `true`; otherwise `false`.</returns>
+            public override bool Equals(System.Object obj) => (obj is CameraImagePlaneCinfo) && Equals((CameraImagePlaneCinfo)obj);
 
+            /// <summary>
+            /// Tests for equality. Same as <see cref="Equals(CameraImagePlaneCinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
             public static bool operator ==(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs) => lhs.Equals(rhs);
 
+            /// <summary>
+            /// Tests for inequality. Same as `!`<see cref="Equals(CameraImagePlaneCinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
             public static bool operator !=(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs) => !(lhs == rhs);
 
+            /// <summary>
+            /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+            /// </summary>
+            /// <returns>A hash code generated from this object's fields.</returns>
             public override int GetHashCode()
             {
                 int hashCode = 486187739;
@@ -995,6 +1090,10 @@ namespace UnityEngine.XR.ARSubsystems
                 return hashCode;
             }
 
+            /// <summary>
+            /// Generates a string suitable for debugging.
+            /// </summary>
+            /// <returns>A string representation of this <see cref="CameraImagePlaneCinfo"/>.</returns>
             public override string ToString()
             {
                 return string.Format("dataPtr: {0} length:{1} rowStride:{2} pixelStride:{3}", dataPtr.ToString(),

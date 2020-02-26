@@ -1,39 +1,32 @@
-# XR Object Tracking Subsystem
+# XR object tracking subsystem
 
-The object tracking subsystem attempts to detect three dimensional objects in the environment that have previously been scanned and stored in a library of reference objects.
+The object tracking subsystem attempts to detect three-dimensional objects in the environment that have previously been scanned and stored in a reference objects library.
 
 ## Terminology
-**Reference Object**
 
-A reference object is a previously scanned object. The object tracking subsystem will attempt to find instances of the object and report on their poses.
+|**Term**|**Description**|
+|--------|---------------|
+|**Reference object**|A reference object is a previously scanned object. The object tracking subsystem attempts to find instances of the object and report on their poses.|
+|**Reference object library**|A set of reference objects. When you start an object tracking subsystem, you must first provide it with a library of reference objects so it knows what to search for.|
+|**Provider**|The object tracking subsystem is an interface which is implemented in other packages. Each implementation is called a "provider". For example, you might have a different provider package for each AR platform.|
 
-**Reference Object Library**
+## Creating a reference object library
 
-A set of reference objects. When you start an object tracking subsystem, you will first need to provide it with a library of reference objects so that it knows what to search for.
+You create reference object libraries in the Unity Editor, then fill it with reference objects. Each reference object requires a provider-specific representation for each provider package you have in your project.
 
-**Provider**
+From Unity's main menu, go to **Assets &gt; Create &gt; XR &gt; Reference Object Library**:
 
-A "provider" in this context is a specific implementation of the object tracking subsystem. Subsystems are interfaces that are implemented in other packages. You might have a different provider package for each AR platform, for example.
+This creates a new Asset in your Project. To create reference objects, select this Asset, then click **Add Entry**:
 
-## Creating a Reference Object Library
+![A reference object library](images/reference-object-library-inspector.png "A reference object library")
 
-In the Unity Editor, you need to create a Reference Object Library, then fill it with reference objects. Each reference object requires a provider-specific representation for each provider package you have in your project.
+Reference objects have a **Name**, followed by a list of provider-specific entries. In the example above, the object only has one entry for ARKit.
 
-In the Editor, click *Assets > Create > XR > Reference Object Library*:
+You need to populate the reference object entries with provider-specific assets. For instructions on how to do this, refer to the provider's documentation.
 
-![alt text](images/reference-object-library-menu.png "Create Reference Object Library")
+## Using the library at runtime
 
-This creates a new asset in your project. Select it, and start creating reference objects:
-
-![alt text](images/reference-object-library-inspector.png "Reference Object Library")
-
-Reference Objects have a name followed by a list of provider-specific entries. In this example, I only have one entry for ARKit.
-
-You will need to then populate the reference object entries with provider-specific assets. Refer to the provider's documentation for instructions on how to do this.
-
-## Using the Library at Runtime
-
-To use the library at runtime, set it on the subsystem, e.g.:
+To use the library at runtime, set it on the subsystem. For example:
 
 ```csharp
 XRReferenceObjectLibrary myLibrary = ...
@@ -43,6 +36,6 @@ subsystem.library = myLibrary;
 subsystem.Start();
 ```
 
-Note that you _must_ set `library` to a non-`null` reference before starting the subsystem.
+**Note:** You must set `imageLibrary` to a non-null reference before starting the subsystem.
 
-Query for changes to tracked objects with `XRObjectTrackingSubsystem.GetChanges`. This will return all changes to tracked objects (added, updated, and removed) since the last call to this method.
+Query for changes to tracked objects with `XRImageTrackingSubsystem.GetChanges`. This returns all changes to tracked objects (added, updated, and removed) since the last call to this method.

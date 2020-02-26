@@ -16,10 +16,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// All indices will be non-negative.
         /// </remarks>
-        public int index
-        {
-            get { return m_Index; }
-        }
+        public int index => m_Index;
         int m_Index;
 
         /// <summary>
@@ -31,10 +28,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// A parent index that is negative represents that the joint has no parent in the hierachy.
         /// </remarks>
-        public int parentIndex
-        {
-            get { return m_ParentIndex; }
-        }
+        public int parentIndex => m_ParentIndex;
         int m_ParentIndex;
 
         /// <summary>
@@ -43,10 +37,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The position of the joint in 2D screenspace.
         /// </value>
-        public Vector2 position
-        {
-            get { return m_Position; }
-        }
+        public Vector2 position => m_Position;
         Vector2 m_Position;
 
         /// <summary>
@@ -55,10 +46,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if the joint is tracked. Otherwise, <c>false</c>.
         /// </value>
-        public bool tracked
-        {
-            get { return (m_Tracked != 0); }
-        }
+        public bool tracked => (m_Tracked != 0);
         int m_Tracked;
 
         /// <summary>
@@ -76,27 +64,48 @@ namespace UnityEngine.XR.ARSubsystems
             m_Tracked = tracked ? 1 : 0;
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRHumanBodyPose2DJoint"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRHumanBodyPose2DJoint"/>, otherwise false.</returns>
         public bool Equals(XRHumanBodyPose2DJoint other)
         {
             return (m_Index.Equals(other.m_Index) && m_ParentIndex.Equals(other.m_ParentIndex)
                     && m_Position.Equals(other.m_Position) && m_Tracked.Equals(other.m_Tracked));
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRHumanBodyPose2DJoint"/> and
+        /// <see cref="Equals(XRHumanBodyPose2DJoint)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRHumanBodyPose2DJoint) && Equals((XRHumanBodyPose2DJoint)obj));
         }
 
-        public static bool operator ==(XRHumanBodyPose2DJoint lhs, XRHumanBodyPose2DJoint rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRHumanBodyPose2DJoint)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRHumanBodyPose2DJoint lhs, XRHumanBodyPose2DJoint rhs)  => lhs.Equals(rhs);
 
-        public static bool operator !=(XRHumanBodyPose2DJoint lhs, XRHumanBodyPose2DJoint rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRHumanBodyPose2DJoint)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRHumanBodyPose2DJoint lhs, XRHumanBodyPose2DJoint rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
@@ -110,11 +119,22 @@ namespace UnityEngine.XR.ARSubsystems
             return hashCode;
         }
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRHumanBodyPose2DJoint"/>. Floating point
+        /// values using the ["F5"](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
+        /// format specifier.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRHumanBodyPose2DJoint"/>.</returns>
         public override string ToString()
         {
             return ToString("F5");
         }
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRHumanBodyPose2DJoint"/>.
+        /// </summary>
+        /// <param name="format">A format specifier used for the floating point fields.</param>
+        /// <returns>A string representation of this <see cref="XRHumanBodyPose2DJoint"/>.</returns>
         public string ToString(string format)
         {
             return String.Format("joint [{0}] -> [{1}] {2}", m_Index, m_ParentIndex,

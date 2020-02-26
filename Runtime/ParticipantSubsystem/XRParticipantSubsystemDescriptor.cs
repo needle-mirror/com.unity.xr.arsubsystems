@@ -35,6 +35,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="subsystemId">The name of the specific subsystem implementation.</param>
         /// <param name="capabilities">The <see cref="Capabilities"/> of the specific subsystem implementation.</param>
+        /// <typeparam name="T">The concrete type derived from <see cref="XRParticipantSubsystem"/> being registered.</typeparam>
         public static void Register<T>(string subsystemId, Capabilities capabilities) where T : XRParticipantSubsystem
         {
             SubsystemRegistration.CreateDescriptor(new XRParticipantSubsystemDescriptor(subsystemId, typeof(T), capabilities));

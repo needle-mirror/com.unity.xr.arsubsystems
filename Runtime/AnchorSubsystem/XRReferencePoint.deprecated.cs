@@ -8,7 +8,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// </summary>
     /// <seealso cref="XRReferencePointSubsystem"/>
     [StructLayout(LayoutKind.Sequential)]
-    [Obsolete("XRReferencePoint has been deprecated. Use XRAnchor instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchor", true)]
+    [Obsolete("XRReferencePoint has been deprecated. Use XRReferencePoint instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRReferencePoint", true)]
     public struct XRReferencePoint : ITrackable, IEquatable<XRReferencePoint>
     {
         /// <summary>
@@ -96,6 +96,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public Guid sessionId => m_SessionId;
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -109,6 +113,11 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRReferencePoint"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRReferencePoint"/>, otherwise false.</returns>
         public bool Equals(XRReferencePoint other)
         {
             return
@@ -120,10 +129,28 @@ namespace UnityEngine.XR.ARSubsystems
 
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRReferencePoint"/> and
+        /// <see cref="Equals(XRReferencePoint)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => obj is XRReferencePoint && Equals((XRReferencePoint)obj);
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRReferencePoint)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator==(XRReferencePoint lhs, XRReferencePoint rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRReferencePoint)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator!=(XRReferencePoint lhs, XRReferencePoint rhs) => !lhs.Equals(rhs);
 
         TrackableId m_Id;

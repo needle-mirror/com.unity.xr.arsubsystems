@@ -61,7 +61,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         [Description("ExposureDuration")]
         ExposureDuration = (1 << 7),
-        
+
         /// <summary>
         /// The camera exposure offset is included.
         /// </summary>
@@ -419,7 +419,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Provides intensity, in lumens, for the environment.
         /// </summary>
-        /// <param name="averageBrightness">An estimated average intensity, in lumens, for the environment.</param>
+        /// <param name="averageIntensityInLumens">An estimated average intensity, in lumens, for the environment.</param>
         /// <returns>
         /// <c>true</c> if average intensity was provided. Otherwise, <c>false</c>.
         /// </returns>
@@ -447,7 +447,7 @@ namespace UnityEngine.XR.ARSubsystems
                     && m_MainLightIntensityLumens.Equals(other.m_MainLightIntensityLumens)
                     && m_MainLightColor.Equals(other.m_MainLightColor)
                     && m_AmbientSphericalHarmonics.Equals(other.m_AmbientSphericalHarmonics)
-                    && m_Properties.Equals(other.m_Properties));
+                    && (m_Properties == other.m_Properties));
         }
 
         /// <summary>
@@ -507,11 +507,15 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_AmbientSphericalHarmonics.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_MainLightIntensityLumens.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_NativePtr.GetHashCode();
-                hashCode = (hashCode * 486187739) + m_Properties.GetHashCode();
+                hashCode = (hashCode * 486187739) + ((int)m_Properties).GetHashCode();
             }
             return hashCode;
         }
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRCameraFrame"/> suitable for debugging purposes.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRCameraFrame"/>.</returns>
         public override string ToString()
         {
             return $"properties:{m_Properties}\n   timestamp:{m_TimestampNs}ns\n   avgBrightness:{m_AverageBrightness.ToString("0.000")}\n"

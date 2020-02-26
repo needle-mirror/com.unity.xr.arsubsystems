@@ -20,15 +20,15 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Get the invalid id.
         /// </summary>
-        public static TrackableId invalidId { get { return s_InvalidId; } }
+        public static TrackableId invalidId => s_InvalidId;
 
         /// <summary>
         /// The first half of the id.
         /// </summary>
         public ulong subId1
         {
-            get { return m_SubId1; }
-            set { m_SubId1 = value; }
+            get => m_SubId1;
+            set => m_SubId1 = value;
         }
 
         /// <summary>
@@ -36,8 +36,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public ulong subId2
         {
-            get { return m_SubId2; }
-            set { m_SubId2 = value; }
+            get => m_SubId2;
+            set => m_SubId2 = value;
         }
 
         /// <summary>
@@ -66,38 +66,42 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash code suitable for use in a <c>Dictionary</c> or <c>Set</c>.
         /// </summary>
         /// <returns>A hash code for participation in certain collections.</returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hash = m_SubId1.GetHashCode();
-                return hash * 486187739 + m_SubId2.GetHashCode();
-            }
-        }
+        public override int GetHashCode() => HashCode.Combine(m_SubId1.GetHashCode(), m_SubId2.GetHashCode());
 
-        public override bool Equals(object obj)
-        {
-            return obj is TrackableId && Equals((TrackableId)obj);
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="TrackableId"/> and
+        /// <see cref="Equals(TrackableId)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => obj is TrackableId && Equals((TrackableId)obj);
 
-        public bool Equals(TrackableId other)
-        {
-            return (m_SubId1 == other.m_SubId1) && (m_SubId2 == other.m_SubId2);
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="TrackableId"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="TrackableId"/>, otherwise false.</returns>
+        public bool Equals(TrackableId other) => (m_SubId1 == other.m_SubId1) && (m_SubId2 == other.m_SubId2);
 
-        public static bool operator==(TrackableId id1, TrackableId id2)
-        {
-            return
-                (id1.m_SubId1 == id2.m_SubId1) &&
-                (id1.m_SubId2 == id2.m_SubId2);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(TrackableId)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator==(TrackableId lhs, TrackableId rhs) =>
+            (lhs.m_SubId1 == rhs.m_SubId1) &&
+            (lhs.m_SubId2 == rhs.m_SubId2);
 
-        public static bool operator!=(TrackableId id1, TrackableId id2)
-        {
-            return
-                (id1.m_SubId1 != id2.m_SubId1) ||
-                (id1.m_SubId2 != id2.m_SubId2);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(TrackableId)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator!=(TrackableId lhs, TrackableId rhs) =>
+            (lhs.m_SubId1 != rhs.m_SubId1) ||
+            (lhs.m_SubId2 != rhs.m_SubId2);
 
         static TrackableId s_InvalidId = new TrackableId(0, 0);
 

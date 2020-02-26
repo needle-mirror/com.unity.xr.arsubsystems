@@ -117,6 +117,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public bool supportsFocusModes { get; set; }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRCameraSubsystemCinfo"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRCameraSubsystemCinfo"/>, otherwise false.</returns>
         public bool Equals(XRCameraSubsystemCinfo other)
         {
             return
@@ -133,21 +138,37 @@ namespace UnityEngine.XR.ARSubsystems
                 && supportsFocusModes.Equals(other.supportsFocusModes);
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRCameraSubsystemCinfo"/> and
+        /// <see cref="Equals(XRCameraSubsystemCinfo)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRCameraSubsystemCinfo) && Equals((XRCameraSubsystemCinfo)obj));
         }
 
-        public static bool operator ==(XRCameraSubsystemCinfo lhs, XRCameraSubsystemCinfo rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRCameraSubsystemCinfo)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRCameraSubsystemCinfo lhs, XRCameraSubsystemCinfo rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRCameraSubsystemCinfo lhs, XRCameraSubsystemCinfo rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRCameraSubsystemCinfo)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRCameraSubsystemCinfo lhs, XRCameraSubsystemCinfo rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;

@@ -95,19 +95,28 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public Guid sessionId => m_SessionId;
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
                 var hashCode = m_Id.GetHashCode();
                 hashCode = hashCode * 486187739 + m_Pose.GetHashCode();
-                hashCode = hashCode * 486187739 + m_TrackingState.GetHashCode();
+                hashCode = hashCode * 486187739 + ((int)m_TrackingState).GetHashCode();
                 hashCode = hashCode * 486187739 + m_NativePtr.GetHashCode();
                 hashCode = hashCode * 486187739 + m_SessionId.GetHashCode();
                 return hashCode;
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRAnchor"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRAnchor"/>, otherwise false.</returns>
         public bool Equals(XRAnchor other)
         {
             return
@@ -116,13 +125,30 @@ namespace UnityEngine.XR.ARSubsystems
                 m_TrackingState == other.m_TrackingState &&
                 m_NativePtr == other.m_NativePtr &&
                 m_SessionId.Equals(other.m_SessionId);
-
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRAnchor"/> and
+        /// <see cref="Equals(XRAnchor)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => obj is XRAnchor && Equals((XRAnchor)obj);
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRAnchor)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator==(XRAnchor lhs, XRAnchor rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRAnchor)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator!=(XRAnchor lhs, XRAnchor rhs) => !lhs.Equals(rhs);
 
         TrackableId m_Id;

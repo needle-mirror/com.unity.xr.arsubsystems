@@ -113,23 +113,37 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
                 var hash = conversionParams.GetHashCode();
                 hash = hash * 486187739 + m_RequestId.GetHashCode();
-                if (m_CameraSubsystem != null)
-                    hash = hash * 486187739 + m_CameraSubsystem.GetHashCode();
+                hash = hash * 486187739 + HashCode.ReferenceHash(m_CameraSubsystem);
                 return hash;
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRAsyncCameraImageConversion"/> and
+        /// <see cref="Equals(XRAsyncCameraImageConversion)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj)
         {
             return ((obj is XRAsyncCameraImageConversion) && Equals((XRAsyncCameraImageConversion)obj));
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRAsyncCameraImageConversion"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRAsyncCameraImageConversion"/>, otherwise false.</returns>
         public bool Equals(XRAsyncCameraImageConversion other)
         {
             return
@@ -138,19 +152,26 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_CameraSubsystem == other.m_CameraSubsystem);
         }
 
-        public static bool operator ==(XRAsyncCameraImageConversion lhs, XRAsyncCameraImageConversion rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRAsyncCameraImageConversion)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRAsyncCameraImageConversion lhs, XRAsyncCameraImageConversion rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRAsyncCameraImageConversion lhs, XRAsyncCameraImageConversion rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRAsyncCameraImageConversion)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRAsyncCameraImageConversion lhs, XRAsyncCameraImageConversion rhs) => !lhs.Equals(rhs);
 
-        public override string ToString()
-        {
-            return string.Format("ConversionParams: {0}", conversionParams);
-        }
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRAsyncCameraImageConversion"/>.
+        /// </summary>
+        /// <returns>A string representation of the conversion parameters.</returns>
+        public override string ToString() => $"ConversionParams: {conversionParams}";
     }
 }

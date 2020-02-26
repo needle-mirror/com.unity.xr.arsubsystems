@@ -17,6 +17,28 @@ namespace UnityEngine.XR.ARSubsystems
     [Serializable]
     public struct XRReferenceImage : IEquatable<XRReferenceImage>
     {
+        /// <summary>
+        /// Constructs a <see cref="XRReferenceImage"/>.
+        /// </summary>
+        /// <param name="guid">The [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netframework-4.8)
+        /// associated with this image.</param>
+        /// <param name="textureGuid">
+        /// The [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netframework-4.8)
+        /// of the source texture as it appeared in the
+        /// [AssetDatabase](https://docs.unity3d.com/ScriptReference/AssetDatabase.html)
+        /// in the Editor.
+        /// </param>
+        /// <param name="size">
+        /// Optional. The size of the image, in meters. This can improve image detection,
+        /// and may be required by some platforms.
+        /// </param>
+        /// <param name="name">A name associated with this reference image.</param>
+        /// <param name="texture">
+        /// The source texture which this reference image represents.
+        /// This may be `null` to avoid including the texture in
+        /// the Player build if that is not desired. See `XRReferenceImageLibraryExtensions.SetTexture`
+        /// for more details.
+        /// </param>
         public XRReferenceImage(
             SerializableGuid guid, SerializableGuid textureGuid,
             Vector2? size, string name, Texture2D texture)
@@ -30,12 +52,14 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// The <c>Guid</c> associated with this image.
+        /// The [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netframework-4.8)
+        /// associated with this image.
         /// </summary>
         public Guid guid => m_SerializedGuid.guid;
 
         /// <summary>
-        /// The <c>Guid</c> of the source texture as it appeared in the
+        /// The [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netframework-4.8)
+        /// of the source texture as it appeared in the
         /// [AssetDatabase](https://docs.unity3d.com/ScriptReference/AssetDatabase.html)
         /// in the Editor.
         /// </summary>
@@ -83,10 +107,41 @@ namespace UnityEngine.XR.ARSubsystems
         public override string ToString() =>
             $"GUID: '{guid}', Texture GUID: '{textureGuid}` Size: {(m_SpecifySize ? "" : "NOT ")} specified {m_Size}";
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's <see cref="guid"/>.</returns>
         public override int GetHashCode() => guid.GetHashCode();
+
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRReferenceImage"/> and
+        /// <see cref="Equals(XRReferenceImage)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => (obj is XRReferenceImage) && Equals((XRReferenceImage)obj);
+
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRReferenceImage"/> to compare against.</param>
+        /// <returns>`True` if the <see cref="guid"/> of this reference image matches <paramref name="other"/>'s, otherwise false.</returns>
         public bool Equals(XRReferenceImage other) => guid.Equals(other.guid);
+
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRReferenceImage)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRReferenceImage lhs, XRReferenceImage rhs) => lhs.Equals(rhs);
+
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRReferenceImage)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRReferenceImage lhs, XRReferenceImage rhs) => !lhs.Equals(rhs);
 
 #pragma warning disable CS0649

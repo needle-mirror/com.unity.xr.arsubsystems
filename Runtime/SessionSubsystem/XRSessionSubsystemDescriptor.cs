@@ -44,6 +44,10 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public Type subsystemImplementationType { get; set; }
 
+            /// <summary>
+            /// Generates a hash code suitable for use in a <c>HashSet</c> or <c>Dictionary</c>.
+            /// </summary>
+            /// <returns>A hash code suitable for use in a <c>HashSet</c> or <c>Dictionary</c>.</returns>
             public override int GetHashCode()
             {
                 unchecked
@@ -56,14 +60,11 @@ namespace UnityEngine.XR.ARSubsystems
                 }
             }
 
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Cinfo))
-                    return false;
-
-                return Equals((Cinfo)obj);
-            }
-
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="other">The other <see cref="Cinfo"/> to compare against.</param>
+            /// <returns><c>true</c> if all fields in <paramref name="other"/> are equal to this <see cref="Cinfo"/>, otherwise <c>false</c>.</returns>
             public bool Equals(Cinfo other)
             {
                 return
@@ -73,15 +74,28 @@ namespace UnityEngine.XR.ARSubsystems
                     (supportsMatchFrameRate == other.supportsMatchFrameRate);
             }
 
-            public static bool operator ==(Cinfo lhs, Cinfo rhs)
-            {
-                return lhs.Equals(rhs);
-            }
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="obj">The <c>object</c> to test for equality.</param>
+            /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="Cinfo"/> and <see cref="Equals(Cinfo)"/> returns <c>true</c>, otherwise <c>false</c>.</returns>
+            public override bool Equals(object obj) => obj is Cinfo && Equals((Cinfo)obj);
 
-            public static bool operator !=(Cinfo lhs, Cinfo rhs)
-            {
-                return !lhs.Equals(rhs);
-            }
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns><c>true</c> if <paramref name="lhs"/> is equal to <paramref name="rhs"/>. Same as <see cref="Equals(Cinfo"/>.</returns>
+            public static bool operator ==(Cinfo lhs, Cinfo rhs) => lhs.Equals(rhs);
+
+            /// <summary>
+            /// Tests for inequality.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns><c>true</c> if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>. Same as !<see cref="Equals(Cinfo"/>.</returns>
+            public static bool operator !=(Cinfo lhs, Cinfo rhs) => !lhs.Equals(rhs);
         }
 
         /// <summary>

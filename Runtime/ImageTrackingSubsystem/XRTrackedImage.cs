@@ -80,6 +80,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public IntPtr nativePtr => m_NativePtr;
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -88,11 +92,16 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = hashCode * 486187739 + m_SourceImageId.GetHashCode();
                 hashCode = hashCode * 486187739 + m_Pose.GetHashCode();
                 hashCode = hashCode * 486187739 + m_Size.GetHashCode();
-                hashCode = hashCode * 486187739 + m_TrackingState.GetHashCode();
+                hashCode = hashCode * 486187739 + ((int)m_TrackingState).GetHashCode();
                 return hashCode;
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRTrackedImage"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRTrackedImage"/>, otherwise false.</returns>
         public bool Equals(XRTrackedImage other)
         {
             return
@@ -103,10 +112,28 @@ namespace UnityEngine.XR.ARSubsystems
                 m_TrackingState == other.m_TrackingState;
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRTrackedImage"/> and
+        /// <see cref="Equals(XRTrackedImage)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => obj is XRTrackedImage && Equals((XRTrackedImage)obj);
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRTrackedImage)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator==(XRTrackedImage lhs, XRTrackedImage rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRTrackedImage)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator!=(XRTrackedImage lhs, XRTrackedImage rhs) => !lhs.Equals(rhs);
 
         TrackableId m_Id;

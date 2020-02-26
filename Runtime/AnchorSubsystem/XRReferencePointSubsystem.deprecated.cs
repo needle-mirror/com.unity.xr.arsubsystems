@@ -40,7 +40,7 @@ namespace UnityEngine.XR.ARSubsystems
         protected sealed override void OnDestroyed() => m_Provider.Destroy();
 
         /// <summary>
-        /// Get the changes (added, updated, & removed) reference points since the last call
+        /// Get the changes (added, updated, and removed) reference points since the last call
         /// to <see cref="GetChanges(Allocator)"/>.
         /// </summary>
         /// <param name="allocator">An allocator to use for the <c>NativeArray</c>s in <see cref="TrackableChanges{T}"/>.</param>
@@ -115,7 +115,7 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual void Destroy() { }
 
             /// <summary>
-            /// Invoked to get the changes to reference points (added, updated, & removed) since the last call to <see cref="GetChanges(Allocator)"/>.
+            /// Invoked to get the changes to reference points (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
             /// </summary>
             /// <param name="defaultReferencePoint">The default reference point. This should be used to initialize the returned
             /// <c>NativeArray</c>s for backwards compatibility.

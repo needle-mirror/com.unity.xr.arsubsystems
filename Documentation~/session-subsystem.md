@@ -1,15 +1,19 @@
-# XR Session Subsystem
+# XR session subsystem
 
-A "session" refers to an instance of AR. While the other AR subsystems provide specific pieces of functionality, like plane detection, the session controls the lifecycle of all AR-related subsystems. Thus, if you `Stop` (or fail to `Create`) an `XRSessionSubsystem`, the other AR subsystems may not work.
+A "session" refers to an instance of AR. While the other AR subsystems provide specific pieces of functionality, like plane detection, the session controls the lifecycle of all AR-related subsystems. If you `Stop` (or fail to `Create`) an `XRSessionSubsystem`, the other AR subsystems might not work.
 
-`Start` and `Stop` will start/resume and pause the session, respectively.
+`Start` starts the session. `Stop` pauses it.
 
-## Determining Availability
+## Determining availability
 
-On some platforms, AR capabilities are built into the device's operating system. However, on others, AR software may be installable on demand. The question "is AR available on this device" may require checking a remote server for software availability. Therefore,  `XRSessionSubsystem.GetAvailabilityAsync` as a method that returns a `Promise<SessionAvailability>`. `Promise` is a `CustomYieldInstruction`, so it can be used in a coroutine.
+Some platforms have AR capabilities built into the device's operating system. On others, AR software might be able to be installed on-demand. The question "is AR available on this device?" might require checking a remote server for software availability. Therefore, `XRSessionSubsystem.GetAvailabilityAsync` should be called to determine whether AR is presently available to the app. This method returns a `Promise<SessionAvailability>`which can be used in a coroutine.
 
-Once availability is determined, the device might be unsupported, supported but only with an update or install, or supported and ready.
+Once availability is determined, the device can be:
 
-## Installing Additional AR Software
+* unsupported
+* supported but requiring an update or install
+* supported and ready
 
-If `SessionAvailability` is `SessionAvailability.Supported` but not `SessionAvailability.Installed`, you should call `InstallAsync` to install the AR software. This returns another type of `Promise`: `Promise<SessionInstallationStatus>`. If the installation is successful, then it is safe to `Start` the subsystem.
+## Installing additional AR software
+
+If `SessionAvailability` is `SessionAvailability.Supported` but not `SessionAvailability.Installed`, you should call `InstallAsync` to install the AR software. This returns another type of `Promise`: `Promise<SessionInstallationStatus>`. If the installation is successful, it's safe to `Start` the subsystem.

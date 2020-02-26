@@ -18,7 +18,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// simultaneously, e.g., added and removed. Also ensures that a trackable cannot be
         /// removed before being added.
         /// </summary>
-        /// <param name="changes">A set of trackable changes (added, updated & removed)</param>
+        /// <param name="changes">A set of trackable changes (added, updated and removed)</param>
         public void ValidateAndThrow(TrackableChanges<T> changes)
         {
             s_IdSet.Clear();
@@ -41,11 +41,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Same as <see cref="ValidateAndThrow(TrackableChanges{T})"/> but also disposes the <paramref name="changes"/>.
         /// </summary>
-        /// <param name="changes">A set of trackable changes (added, updated & removed)</param>
+        /// <param name="changes">A set of trackable changes (added, updated and removed)</param>
         public void ValidateAndDisposeIfThrown(TrackableChanges<T> changes)
         {
             try
             {
+                using (new ScopedProfiler("ValidateTrackableChanges"))
                 ValidateAndThrow(changes);
             }
             catch

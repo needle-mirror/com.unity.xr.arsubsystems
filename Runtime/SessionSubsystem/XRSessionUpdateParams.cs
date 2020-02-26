@@ -17,45 +17,49 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public Vector2Int screenDimensions { get; set; }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hash = ((int)screenOrientation).GetHashCode();
-                hash = hash * 486187739 + screenDimensions.GetHashCode();
-                return hash;
-            }
-        }
+        /// <summary>
+        /// Generates a hash code suitable for use in a Dictionary or HashSet.
+        /// </summary>
+        /// <returns>A hash code of this <see cref="XRSessionUpdateParams"/>.</returns>
+        public override int GetHashCode() => HashCode.Combine(((int)screenOrientation).GetHashCode(), screenDimensions.GetHashCode());
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is XRSessionUpdateParams))
-                return false;
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="obj">The <c>object</c> to compare against.</param>
+        /// <returns><c>true</c> if <paramref name="obj"/> is of type <see cref="XRSessionUpdateParams"/> and <see cref="Equals(XRSessionUpdateParams)"/> is <c>true</c>.</returns>
+        public override bool Equals(object obj) => (obj is XRSessionUpdateParams) && Equals((XRSessionUpdateParams)obj);
 
-            return Equals((XRSessionUpdateParams)obj);
-        }
+        /// <summary>
+        /// Generates a string suitable for debugging.
+        /// </summary>
+        /// <returns>A string representation of the update parameters.</returns>
+        public override string ToString() => $"Screen Orientation: {screenOrientation}, Screen Dimensions: {screenDimensions}";
 
-        public override string ToString()
-        {
-            return string.Format("Screen Orientation: {0}, Screen Dimensions: {1}",
-                screenOrientation, screenDimensions);
-        }
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRSessionUpdateParams"/> to compare against.</param>
+        /// <returns><c>true</c> if the other <see cref="XRSessionUpdateParams"/> is equal to this one.</returns>
+        public bool Equals(XRSessionUpdateParams other) =>
+            (screenOrientation == other.screenOrientation) &&
+            screenDimensions.Equals(other.screenDimensions);
 
-        public bool Equals(XRSessionUpdateParams other)
-        {
-            return
-                (screenOrientation == other.screenOrientation) &&
-                (screenDimensions.Equals(other.screenDimensions));
-        }
 
-        public static bool operator ==(XRSessionUpdateParams lhs, XRSessionUpdateParams rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Compares for equality.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>The same as <see cref="Equals(XRSessionUpdateParams)"/>.</returns>
+        public static bool operator ==(XRSessionUpdateParams lhs, XRSessionUpdateParams rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRSessionUpdateParams lhs, XRSessionUpdateParams rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Compares for inequality.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>The negation of <see cref="Equals(XRSessionUpdateParams)"/>.</returns>
+        public static bool operator !=(XRSessionUpdateParams lhs, XRSessionUpdateParams rhs) => !lhs.Equals(rhs);
     }
 }

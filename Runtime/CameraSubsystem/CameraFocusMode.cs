@@ -3,7 +3,7 @@ using System.ComponentModel;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Represents the focus mode of the camera.
+    /// Represents the focus mode of the camera. This is deprecated.
     /// </summary>
     public enum CameraFocusMode
     {

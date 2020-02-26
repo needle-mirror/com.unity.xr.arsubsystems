@@ -25,11 +25,16 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation stencil mode to
         /// enabled if the implementation does not support human segmentation.</exception>
-        public SegmentationStencilMode humanSegmentationStencilMode
+        public HumanSegmentationStencilMode requestedHumanStencilMode
         {
-            get => m_Provider.humanSegmentationStencilMode;
-            set => m_Provider.humanSegmentationStencilMode = value;
+            get => m_Provider.requestedHumanStencilMode;
+            set => m_Provider.requestedHumanStencilMode = value;
         }
+
+        /// <summary>
+        /// Get the current segmentation stencil mode in use by the subsystem.
+        /// </summary>
+        public HumanSegmentationStencilMode currentHumanStencilMode => m_Provider.currentHumanStencilMode;
 
         /// <summary>
         /// Specifies the human segmentation depth mode.
@@ -39,11 +44,16 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation depth mode to
         /// enabled if the implementation does not support human segmentation.</exception>
-        public SegmentationDepthMode humanSegmentationDepthMode
+        public HumanSegmentationDepthMode requestedHumanDepthMode
         {
-            get => m_Provider.humanSegmentationDepthMode;
-            set => m_Provider.humanSegmentationDepthMode = value;
+            get => m_Provider.requestedHumanDepthMode;
+            set => m_Provider.requestedHumanDepthMode = value;
         }
+
+        /// <summary>
+        /// Get the human segmentation depth mode currently in use by the provider.
+        /// </summary>
+        public HumanSegmentationDepthMode currentHumanDepthMode => m_Provider.currentHumanDepthMode;
 
         /// <summary>
         /// Construct the subsystem by creating the functionality provider.
@@ -133,6 +143,9 @@ namespace UnityEngine.XR.ARSubsystems
             return SubsystemRegistration.CreateDescriptor(occlusionSubsystemDescriptor);
         }
 
+        /// <summary>
+        /// The provider which will service the <see cref="XROcclusionSubsystem"/>.
+        /// </summary>
         protected abstract class Provider
         {
             /// <summary>
@@ -151,16 +164,16 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual void Destroy() { }
 
             /// <summary>
-            /// Property to be implemented by the provider to get/set the human segmentation stencil mode.
+            /// Property to be implemented by the provider to get/set the requested human segmentation stencil mode.
             /// </summary>
             /// <value>
-            /// The human segmentation stencil mode.
+            /// The requested human segmentation stencil mode.
             /// </value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation stencil mode
             /// to enabled if the implementation does not support human segmentation.</exception>
-            public virtual SegmentationStencilMode humanSegmentationStencilMode
+            public virtual HumanSegmentationStencilMode requestedHumanStencilMode
             {
-                get => SegmentationStencilMode.Disabled;
+                get => HumanSegmentationStencilMode.Disabled;
                 set
                 {
                     if (value.Enabled())
@@ -172,16 +185,21 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Property to be implemented by the provider to get/set the human segmentation depth mode.
+            /// Property to be implemented by the provider to get the segmentation stencil mode currently in use.
+            /// </summary>
+            public virtual HumanSegmentationStencilMode currentHumanStencilMode => HumanSegmentationStencilMode.Disabled;
+
+            /// <summary>
+            /// Property to be implemented by the provider to get/set the requested human segmentation depth mode.
             /// </summary>
             /// <value>
-            /// The human segmentation depth mode.
+            /// The requested human segmentation depth mode.
             /// </value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the human segmentation depth mode
             /// to enabled if the implementation does not support human segmentation.</exception>
-            public virtual SegmentationDepthMode humanSegmentationDepthMode
+            public virtual HumanSegmentationDepthMode requestedHumanDepthMode
             {
-                get => SegmentationDepthMode.Disabled;
+                get => HumanSegmentationDepthMode.Disabled;
                 set
                 {
                     if (value.Enabled())
@@ -191,6 +209,11 @@ namespace UnityEngine.XR.ARSubsystems
                     }
                 }
             }
+
+            /// <summary>
+            /// Property to be implemented by the provider to get the human segmentation depth mode currently in use.
+            /// </summary>
+            public virtual HumanSegmentationDepthMode currentHumanDepthMode => HumanSegmentationDepthMode.Disabled;
 
             /// <summary>
             /// Method to be implemented by the provider to get the human stencil texture descriptor.

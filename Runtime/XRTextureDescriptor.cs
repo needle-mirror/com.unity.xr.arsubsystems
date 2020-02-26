@@ -134,6 +134,11 @@ namespace UnityEngine.XR.ARSubsystems
             m_PropertyNameId = 0;
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRTextureDescriptor"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRTextureDescriptor"/>, otherwise false.</returns>
         public bool Equals(XRTextureDescriptor other)
         {
             return
@@ -142,21 +147,43 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_NativeTexture == other.m_NativeTexture);
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRTextureDescriptor"/> and
+        /// <see cref="Equals(XRTextureDescriptor)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRTextureDescriptor) && Equals((XRTextureDescriptor)obj));
         }
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRTextureDescriptor)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRTextureDescriptor lhs, XRTextureDescriptor rhs)
         {
             return lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRTextureDescriptor)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRTextureDescriptor lhs, XRTextureDescriptor rhs)
         {
             return !lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
@@ -172,6 +199,10 @@ namespace UnityEngine.XR.ARSubsystems
             return hashCode;
         }
 
+        /// <summary>
+        /// Generates a string suitable for debugging purposes.
+        /// </summary>
+        /// <returns>A string suitable for debug logging.</returns>
         public override string ToString()
         {
             return string.Format("0x{0} {1}x{2}-{3} format:{4} propertyNameId:{5}", m_NativeTexture.ToString("X16"),

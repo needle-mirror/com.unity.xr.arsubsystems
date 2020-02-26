@@ -26,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// In a pinhole camera, the x and y values would be the same, but these can vary for
         /// real cameras.
         /// </remarks>
-        public Vector2 focalLength { get { return m_FocalLength; } }
+        public Vector2 focalLength => m_FocalLength;
         Vector2 m_FocalLength;
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The principal point is the point of intersection between the image plane and a line perpendicular to the
         /// image plane passing through the camera's pinhole.
         /// </remarks>
-        public Vector2 principalPoint { get { return m_PrincipalPoint; } }
+        public Vector2 principalPoint => m_PrincipalPoint;
         Vector2 m_PrincipalPoint;
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The dimensions of the image in pixels.
         /// </value>
-        public Vector2Int resolution { get { return m_Resolution; } }
+        public Vector2Int resolution => m_Resolution;
         Vector2Int m_Resolution;
 
         /// <summary>
@@ -64,27 +64,48 @@ namespace UnityEngine.XR.ARSubsystems
             m_Resolution = resolution;
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRCameraIntrinsics"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRCameraIntrinsics"/>, otherwise false.</returns>
         public bool Equals(XRCameraIntrinsics other)
         {
             return (m_FocalLength.Equals(other.m_FocalLength) && m_PrincipalPoint.Equals(other.m_PrincipalPoint)
                     && m_Resolution.Equals(other.m_Resolution));
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRCameraIntrinsics"/> and
+        /// <see cref="Equals(XRCameraIntrinsics)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XRCameraIntrinsics) && Equals((XRCameraIntrinsics)obj));
         }
 
-        public static bool operator ==(XRCameraIntrinsics lhs, XRCameraIntrinsics rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRCameraIntrinsics)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRCameraIntrinsics lhs, XRCameraIntrinsics rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRCameraIntrinsics lhs, XRCameraIntrinsics rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRCameraIntrinsics)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRCameraIntrinsics lhs, XRCameraIntrinsics rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
@@ -97,6 +118,10 @@ namespace UnityEngine.XR.ARSubsystems
             return hashCode;
         }
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XRCameraIntrinsics"/>.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRCameraIntrinsics"/>.</returns>
         public override string ToString()
         {
             return string.Format("focalLength: {0} principalPoint: {1} resolution: {2}", m_FocalLength,

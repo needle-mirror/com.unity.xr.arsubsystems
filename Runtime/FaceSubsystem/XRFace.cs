@@ -72,9 +72,18 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public Vector3 fixationPoint => m_FixationPoint;
 
-        // IEquatable boilerplate
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRFace"/> and
+        /// <see cref="Equals(XRFace)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj) => obj is XRFace && Equals((XRFace)obj);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -90,10 +99,27 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRFace)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator==(XRFace lhs, XRFace rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRFace)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator!=(XRFace lhs, XRFace rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRFace"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRFace"/>, otherwise false.</returns>
         public bool Equals(XRFace other)
         {
             return

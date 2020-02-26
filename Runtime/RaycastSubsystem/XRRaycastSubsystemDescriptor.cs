@@ -37,33 +37,46 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public TrackableType supportedTrackableTypes { get; set; }
 
+            /// <summary>
+            /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+            /// </summary>
+            /// <returns>A hash code generated from this object's fields.</returns>
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    var hash = (id == null) ? 0 : id.GetHashCode();
-                    hash = hash * 486187739 + ((subsystemImplementationType == null) ? 0 : subsystemImplementationType.GetHashCode());
+                    var hash = HashCode.ReferenceHash(id);
+                    hash = hash * 486187739 + HashCode.ReferenceHash(subsystemImplementationType);
                     hash = hash * 486187739 + supportsViewportBasedRaycast.GetHashCode();
                     hash = hash * 486187739 + supportsWorldBasedRaycast.GetHashCode();
-                    hash = hash * 486187739 + supportedTrackableTypes.GetHashCode();
+                    hash = hash * 486187739 + ((int)supportedTrackableTypes).GetHashCode();
                     return hash;
                 }
             }
 
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Cinfo))
-                    return false;
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="obj">The `object` to compare against.</param>
+            /// <returns>`True` if <paramref name="obj"/> is of type <see cref="Cinfo"/> and
+            /// <see cref="Equals(Cinfo)"/> also returns `true`; otherwise `false`.</returns>
+            public override bool Equals(object obj) => (obj is Cinfo) && Equals((Cinfo)obj);
 
-                return Equals((Cinfo)obj);
-            }
-
+            /// <summary>
+            /// Generates a string representation of this <see cref="Cinfo"/>.
+            /// </summary>
+            /// <returns>A string representation of this <see cref="Cinfo"/>.</returns>
             public override string ToString()
             {
                 return string.Format("XRRaycastSubsystemDescriptor:\nsupportsViewportBasedRaycast: {0}\nsupportsWorldBasedRaycast: {1}",
                     supportsViewportBasedRaycast, supportsWorldBasedRaycast);
             }
 
+            /// <summary>
+            /// Tests for equality.
+            /// </summary>
+            /// <param name="other">The other <see cref="Cinfo"/> to compare against.</param>
+            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Cinfo"/>, otherwise false.</returns>
             public bool Equals(Cinfo other)
             {
                 return
@@ -74,8 +87,20 @@ namespace UnityEngine.XR.ARSubsystems
                     (supportedTrackableTypes == other.supportedTrackableTypes);
             }
 
+            /// <summary>
+            /// Tests for equality. Same as <see cref="Equals(Cinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
             public static bool operator ==(Cinfo lhs, Cinfo rhs) { return lhs.Equals(rhs); }
 
+            /// <summary>
+            /// Tests for inequality. Same as `!`<see cref="Equals(Cinfo)"/>.
+            /// </summary>
+            /// <param name="lhs">The left-hand side of the comparison.</param>
+            /// <param name="rhs">The right-hand side of the comparison.</param>
+            /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
             public static bool operator !=(Cinfo lhs, Cinfo rhs) { return !lhs.Equals(rhs); }
         }
 

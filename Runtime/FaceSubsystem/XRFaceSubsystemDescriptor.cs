@@ -44,7 +44,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// This struct is an initializer for the creation of a <see cref="XRFaceSubsystemDescriptor"/>.
     /// </summary>
     /// <remarks>
-    /// Face Tracking data provider should create during <c>InitializeOnLoad<c> a descriptor using
+    /// Face Tracking data provider should create during <c>InitializeOnLoad</c> a descriptor using
     /// the params here to specify which of the XRFaceSubsystem features it supports.
     /// </remarks>
     public struct FaceSubsystemParams : IEquatable<FaceSubsystemParams>
@@ -64,7 +64,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public bool supportsFacePose
         {
-            get {  return (m_Capabilities & FaceSubsystemCapabilities.Pose) != 0;  }
+            get => (m_Capabilities & FaceSubsystemCapabilities.Pose) != 0;
             set
             {
                 if (value)
@@ -83,7 +83,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public bool supportsFaceMeshVerticesAndIndices
         {
-            get {  return (m_Capabilities & FaceSubsystemCapabilities.MeshVerticesAndIndices) != 0;  }
+            get => (m_Capabilities & FaceSubsystemCapabilities.MeshVerticesAndIndices) != 0;
             set
             {
                 if (value)
@@ -102,7 +102,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public bool supportsFaceMeshUVs
         {
-            get {  return (m_Capabilities & FaceSubsystemCapabilities.MeshUVs) != 0;  }
+            get => (m_Capabilities & FaceSubsystemCapabilities.MeshUVs) != 0;
             set
             {
                 if (value)
@@ -121,7 +121,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public bool supportsFaceMeshNormals
         {
-            get { return (m_Capabilities & FaceSubsystemCapabilities.MeshNormals) != 0; }
+            get => (m_Capabilities & FaceSubsystemCapabilities.MeshNormals) != 0;
             set
             {
                 if (value)
@@ -135,13 +135,12 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-
         /// <summary>
         /// Whether the subsystem supports eye tracking for each detected face.
         /// </summary>
         public bool supportsEyeTracking
         {
-            get { return (m_Capabilities & FaceSubsystemCapabilities.EyeTracking) != 0; }
+            get => (m_Capabilities & FaceSubsystemCapabilities.EyeTracking) != 0;
             set
             {
                 if (value)
@@ -157,7 +156,11 @@ namespace UnityEngine.XR.ARSubsystems
 
         FaceSubsystemCapabilities m_Capabilities;
 
-        //IEquatable boilerplate
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="FaceSubsystemParams"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="FaceSubsystemParams"/>, otherwise false.</returns>
         public bool Equals(FaceSubsystemParams other)
         {
             return
@@ -166,43 +169,51 @@ namespace UnityEngine.XR.ARSubsystems
                 (subsystemImplementationType == other.subsystemImplementationType);
         }
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is FaceSubsystemParams))
-            {
-                return false;
-            }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="FaceSubsystemParams"/> and
+        /// <see cref="Equals(FaceSubsystemParams)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => (obj is FaceSubsystemParams) && Equals((FaceSubsystemParams)obj);
 
-            return Equals((FaceSubsystemParams)obj);
-        }
-
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = (id == null) ? 0 : id.GetHashCode();
-                hashCode = (hashCode * 486187739) + subsystemImplementationType.GetHashCode();
+                var hashCode = HashCode.ReferenceHash(id);
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemImplementationType);
                 hashCode = (hashCode * 486187739) + ((int)m_Capabilities).GetHashCode();
                 return hashCode;
             }
         }
 
-        public static bool operator==(FaceSubsystemParams lhs, FaceSubsystemParams rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(FaceSubsystemParams)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator==(FaceSubsystemParams lhs, FaceSubsystemParams rhs) => lhs.Equals(rhs);
 
-        public static bool operator!=(FaceSubsystemParams lhs, FaceSubsystemParams rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(FaceSubsystemParams)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator!=(FaceSubsystemParams lhs, FaceSubsystemParams rhs) => lhs.Equals(rhs);
     }
 
     /// <summary>
     /// The descriptor of the <see cref="XRFaceSubsystem"/> that shows which face tracking features are available on that XRSubsystem.
     /// </summary>
     /// <remarks>
-    /// You use the <c>Create<c> factory method along with <see cref="FaceSubsystemParams"/> struct to construct and
+    /// You use the <c>Create</c> factory method along with <see cref="FaceSubsystemParams"/> struct to construct and
     /// register one of these from each face tracking data provider.
     /// </remarks>
     public class XRFaceSubsystemDescriptor : SubsystemDescriptor<XRFaceSubsystem>

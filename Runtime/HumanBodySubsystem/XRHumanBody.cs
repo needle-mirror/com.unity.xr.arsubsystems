@@ -89,14 +89,41 @@ namespace UnityEngine.XR.ARSubsystems
             estimatedHeightScaleFactor = 1.0f,
         };
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRHumanBody"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRHumanBody"/>, otherwise false.</returns>
         public bool Equals(XRHumanBody other) => m_TrackableId.Equals(other.m_TrackableId);
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRHumanBody"/> and
+        /// <see cref="Equals(XRHumanBody)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj) => ((obj is XRHumanBody) && Equals((XRHumanBody)obj));
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRHumanBody)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRHumanBody lhs, XRHumanBody rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRHumanBody)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRHumanBody lhs, XRHumanBody rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode() => m_TrackableId.GetHashCode();
     }
 }

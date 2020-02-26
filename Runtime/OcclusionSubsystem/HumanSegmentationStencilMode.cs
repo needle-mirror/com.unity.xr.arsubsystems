@@ -5,7 +5,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <summary>
     /// Represents the segmentation stencil mode.
     /// </summary>
-    public enum SegmentationStencilMode
+    public enum HumanSegmentationStencilMode
     {
         /// <summary>
         /// The segmentation stencil is disabled and will not be generated.
@@ -33,7 +33,7 @@ namespace UnityEngine.XR.ARSubsystems
     }
 
     /// <summary>
-    /// Extension for the <see cref="SegmentationStencilMode"/>.
+    /// Extension for the <see cref="HumanSegmentationStencilMode"/>.
     /// </summary>
     public static class SegmentationStencilModeExtension
     {
@@ -44,7 +44,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>
         /// <c>true</c> if the segmentation stencil mode is enabled. Otherwise, <c>false</c>.
         /// </returns>
-        public static bool Enabled(this SegmentationStencilMode segmentationStencilMode)
-            => segmentationStencilMode != SegmentationStencilMode.Disabled;
+        public static bool Enabled(this HumanSegmentationStencilMode segmentationStencilMode)
+            => segmentationStencilMode != HumanSegmentationStencilMode.Disabled;
     }
 }

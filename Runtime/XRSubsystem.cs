@@ -46,11 +46,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Destroys the [subsystem](https://docs.unity3d.com/ScriptReference/Subsystem.html).
         /// If the subsystem is <see cref="running"/>, <see cref="Stop"/> is also called.
         /// </summary>
-#if UNITY_2019_3_OR_NEWER
         protected sealed override void OnDestroy()
-#else
-        public sealed override void Destroy()
-#endif
         {
 #if !UNITY_2020_1_OR_NEWER
             // 2020.1 has this logic built into Unity core, but before

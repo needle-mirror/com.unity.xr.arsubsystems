@@ -99,6 +99,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="ray">A ray in session space from which to raycast.</param>
             /// <param name="trackableTypeMask">The types to raycast against.</param>
             /// <param name="allocator">The allocator with which to allocate the returned <c>NativeArray</c>.</param>
+            /// <returns>A <c>NativeArray</c> of all the resulting ray intersections.</returns>
             public virtual NativeArray<XRRaycastHit> Raycast(
                 XRRaycastHit defaultRaycastHit,
                 Ray ray,
@@ -117,6 +118,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="screenPoint">A point on the screen in normalized (0...1) coordinates</param>
             /// <param name="trackableTypeMask">The types to raycast against.</param>
             /// <param name="allocator">The allocator with which to allocate the returned <c>NativeArray</c>.</param>
+            /// <returns>A <c>NativeArray</c> of all the resulting ray intersections.</returns>
             public virtual NativeArray<XRRaycastHit> Raycast(
                 XRRaycastHit defaultRaycastHit,
                 Vector2 screenPoint,

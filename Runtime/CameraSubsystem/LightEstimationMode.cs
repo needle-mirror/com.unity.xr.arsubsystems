@@ -3,7 +3,7 @@ using System.ComponentModel;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Represents the light estimation mode.
+    /// Represents the light estimation mode. This is deprecated.
     /// </summary>
     public enum LightEstimationMode
     {

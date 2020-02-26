@@ -62,39 +62,27 @@ namespace UnityEngine.XR.ARSubsystems
         /// The vertices in the mesh. This is a parallel array to
         /// <see cref="normals"/> and <see cref="uvs"/>.
         /// </summary>
-        public NativeArray<Vector3> vertices
-        {
-            get { return m_Vertices; }
-        }
+        public NativeArray<Vector3> vertices => m_Vertices;
         NativeArray<Vector3> m_Vertices;
 
         /// <summary>
         /// The normals in the mesh. This is a parallel array to
         /// <see cref="vertices"/> and <see cref="uvs"/>.
         /// </summary>
-        public NativeArray<Vector3> normals
-        {
-            get { return m_Normals; }
-        }
+        public NativeArray<Vector3> normals => m_Normals;
         NativeArray<Vector3> m_Normals;
 
         /// <summary>
         /// The triangle indices of the mesh. There are three times as many indices as triangles.
         /// </summary>
-        public NativeArray<int> indices
-        {
-            get { return m_Indices; }
-        }
+        public NativeArray<int> indices => m_Indices;
         NativeArray<int> m_Indices;
 
         /// <summary>
         /// The texture coordinates for the mesh. This is a parallel
         /// array to <see cref="vertices"/> and <see cref="normals"/>.
         /// </summary>
-        public NativeArray<Vector2> uvs
-        {
-            get { return m_UVs; }
-        }
+        public NativeArray<Vector2> uvs => m_UVs;
         NativeArray<Vector2> m_UVs;
 
         /// <summary>
@@ -114,6 +102,10 @@ namespace UnityEngine.XR.ARSubsystems
                 m_UVs.Dispose();
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -126,6 +118,12 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRFaceMesh"/> and
+        /// <see cref="Equals(XRFaceMesh)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(object obj)
         {
             if (!(obj is XRFaceMesh))
@@ -134,12 +132,21 @@ namespace UnityEngine.XR.ARSubsystems
             return Equals((XRFaceMesh)obj);
         }
 
+        /// <summary>
+        /// Generates a string suitable for debugging purposes.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XRFaceMesh"/>.</returns>
         public override string ToString()
         {
             return string.Format("XRFaceMesh: {0} vertices {1} normals {2} indices {3} uvs",
                 m_Vertices.Length, m_Normals.Length, m_Indices.Length, m_UVs.Length);
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRFaceMesh"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRFaceMesh"/>, otherwise false.</returns>
         public bool Equals(XRFaceMesh other)
         {
             return
@@ -149,15 +156,21 @@ namespace UnityEngine.XR.ARSubsystems
                 m_UVs.Equals(other.m_UVs);
         }
 
-        public static bool operator ==(XRFaceMesh lhs, XRFaceMesh rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRFaceMesh)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator ==(XRFaceMesh lhs, XRFaceMesh rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(XRFaceMesh lhs, XRFaceMesh rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRFaceMesh)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
+        public static bool operator !=(XRFaceMesh lhs, XRFaceMesh rhs) => !lhs.Equals(rhs);
 
         static void Resize<T>(int length, Allocator allocator, ref NativeArray<T> array, bool shouldExist) where T : struct
         {

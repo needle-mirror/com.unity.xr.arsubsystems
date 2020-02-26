@@ -70,6 +70,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         public IntPtr nativePtr => m_NativePtr;
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -82,6 +86,11 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRPointCloud"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRPointCloud"/>, otherwise false.</returns>
         public bool Equals(XRPointCloud other)
         {
             return
@@ -91,16 +100,28 @@ namespace UnityEngine.XR.ARSubsystems
                 (m_NativePtr == other.m_NativePtr);
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-                return false;
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRPointCloud"/> and
+        /// <see cref="Equals(XRPointCloud)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => (obj is XRPointCloud) && Equals((XRPointCloud)obj);
 
-            return Equals((XRPointCloud)obj);
-        }
-
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRPointCloud)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator==(XRPointCloud lhs, XRPointCloud rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRPointCloud)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator!=(XRPointCloud lhs, XRPointCloud rhs) => !lhs.Equals(rhs);
 
         TrackableId m_TrackableId;

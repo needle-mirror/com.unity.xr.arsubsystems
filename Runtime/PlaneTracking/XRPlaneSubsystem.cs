@@ -33,12 +33,21 @@ namespace UnityEngine.XR.ARSubsystems
         protected sealed override void OnStop() => m_Provider.Stop();
 
         /// <summary>
-        /// Set <see cref="PlaneDetectionMode"/>, e.g., to enable different modes of detection.
+        /// Get or set the requested <see cref="PlaneDetectionMode"/>, e.g.,
+        /// to enable different modes of detection.
         /// </summary>
-        public PlaneDetectionMode planeDetectionMode
+        /// <exception cref="System.NotSupportedException">Thrown if <see cref="requestedPlaneDetectionMode"/> is set to
+        /// something other than <see cref="PlaneDetectionMode.None"/> when plane detection is not supported.</exception>
+        public PlaneDetectionMode requestedPlaneDetectionMode
         {
-            set => m_Provider.planeDetectionMode = value;
+            get => m_Provider.requestedPlaneDetectionMode;
+            set => m_Provider.requestedPlaneDetectionMode = value;
         }
+
+        /// <summary>
+        /// Get the current <see cref="PlaneDetectionMode"/> in use by the provider.
+        /// </summary>
+        public PlaneDetectionMode currentPlaneDetectionMode => m_Provider.currentPlaneDetectionMode;
 
         /// <summary>
         /// Get the changes (added, updated, and removed) planes since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -63,7 +72,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="trackableId">The <see cref="TrackableId"/> associated with the plane of which to retrieve the boundary.</param>
         /// <param name="allocator">An <c>Allocator</c> to use if <paramref name="boundary"/> needs to be created. <c>Allocator.Temp</c> is not supported; use <c>Allocator.TempJob</c> if you need temporary memory.</param>
         /// <param name="boundary">The boundary will be stored here. If <c>boundary</c> is the same length as the new boundary,
-        /// it is simply overwritten with the new data. Otherwise, it is disposed and recreated with the corect length.</param>
+        /// it is simply overwritten with the new data. Otherwise, it is disposed and recreated with the correct length.</param>
         public void GetBoundary(
             TrackableId trackableId,
             Allocator allocator,
@@ -93,6 +102,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="length">The length that <paramref name="array"/> will have after this method returns.</param>
         /// <param name="allocator">If allocation is necessary, this allocator will be used to create the new <c>NativeArray</c>.</param>
         /// <param name="array">The array to create or resize.</param>
+        /// <typeparam name="T">The type of elements held by the <paramref name="array"/>.</typeparam>
         protected static void CreateOrResizeNativeArrayIfNecessary<T>(
             int length,
             Allocator allocator,
@@ -139,8 +149,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="allocator">An <c>Allocator</c> to use for the returned <c>NativeArray</c>.</param>
             /// <param name="boundary">An existing <c>NativeArray</c> to update or recreate if necessary.
             /// See <see cref="CreateOrResizeNativeArrayIfNecessary{T}(int, Allocator, ref NativeArray{T})"/>.</param>
-            /// <returns>A <c>NativeArray</c> of 2D plane-space (relative to <see cref="BoundedPlane.pose"/>) positions describing
-            /// the plane's boundary. <c>NativeArray</c> should be allocated using <paramref name="allocator"/>.</returns>
             public virtual void GetBoundary(
                 TrackableId trackableId,
                 Allocator allocator,
@@ -165,12 +173,24 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract TrackableChanges<BoundedPlane> GetChanges(BoundedPlane defaultPlane, Allocator allocator);
 
             /// <summary>
-            /// Set the <see cref="PlaneDetectionMode"/>.
+            /// Get or set the requested <see cref="PlaneDetectionMode"/>.
             /// </summary>
-            public virtual PlaneDetectionMode planeDetectionMode
+            public virtual PlaneDetectionMode requestedPlaneDetectionMode
             {
-                set { }
+                get => PlaneDetectionMode.None;
+                set
+                {
+                    if (value != PlaneDetectionMode.None)
+                    {
+                        throw new NotSupportedException("Plane detection is not supported.");
+                    }
+                }
             }
+
+            /// <summary>
+            /// Get the current plane detection mode in use by the provider.
+            /// </summary>
+            public virtual PlaneDetectionMode currentPlaneDetectionMode => PlaneDetectionMode.None;
         }
 
         Provider m_Provider;

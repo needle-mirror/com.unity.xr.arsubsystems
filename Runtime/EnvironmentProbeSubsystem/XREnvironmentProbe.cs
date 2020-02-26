@@ -118,27 +118,60 @@ namespace UnityEngine.XR.ARSubsystems
         }
         IntPtr m_NativePtr;
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XREnvironmentProbe"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XREnvironmentProbe"/>, otherwise false.</returns>
         public bool Equals(XREnvironmentProbe other)
         {
             // Environment probes are equivalent if the trackable IDs match.
             return m_TrackableId.Equals(other.m_TrackableId);
         }
 
-        public override bool Equals(System.Object obj)
-        {
-            return (!ReferenceEquals(obj, null)
-                    && (ReferenceEquals(this, obj)
-                        || ((obj is XREnvironmentProbe) && Equals((XREnvironmentProbe)obj))));
-        }
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XREnvironmentProbe"/> and
+        /// <see cref="Equals(XREnvironmentProbe)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(System.Object obj) =>
+            (obj is XREnvironmentProbe) && Equals((XREnvironmentProbe)obj);
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XREnvironmentProbe)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XREnvironmentProbe lhs, XREnvironmentProbe rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XREnvironmentProbe)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XREnvironmentProbe lhs, XREnvironmentProbe rhs) => !(lhs == rhs);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode() => m_TrackableId.GetHashCode();
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XREnvironmentProbe"/>.
+        /// </summary>
+        /// <returns>A string representation of this <see cref="XREnvironmentProbe"/>.</returns>
         public override string ToString() => ToString("0.000");
 
+        /// <summary>
+        /// Generates a string representation of this <see cref="XREnvironmentProbe"/>. Floating point
+        /// values use <paramref name="floatingPointformat"/> to generate their string representations.
+        /// </summary>
+        /// <param name="floatingPointformat">The format specifier used for floating point fields.</param>
+        /// <returns>A string representation of this <see cref="XREnvironmentProbe"/>.</returns>
         public string ToString(string floatingPointformat)
         {
             return string.Format("{0} scale:{1} pose:{2} size:{3} environmentTextureData:{4} trackingState:{5} nativePtr:{6}",

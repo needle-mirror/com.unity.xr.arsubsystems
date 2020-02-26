@@ -76,14 +76,41 @@ namespace UnityEngine.XR.ARSubsystems
             m_ReferenceObjectGuid = referenceObjectGuid;
         }
 
-        public override bool Equals(object obj) => obj is XRTrackedObject && Equals((XRTrackedObject) obj);
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRTrackedObject"/> and
+        /// <see cref="Equals(XRTrackedObject)"/> also returns `true`; otherwise `false`.</returns>
+        public override bool Equals(object obj) => obj is XRTrackedObject other && Equals(other);
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's <see cref="trackableId"/>.</returns>
         public override int GetHashCode() => m_TrackableId.GetHashCode();
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRTrackedObject)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRTrackedObject lhs, XRTrackedObject rhs) => lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRTrackedObject)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRTrackedObject lhs, XRTrackedObject rhs) => !lhs.Equals(rhs);
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRTrackedObject"/> to compare against.</param>
+        /// <returns>`True` if this object's <see cref="trackableId"/> is equal to <paramref name="other"/>'s, otherwise false.</returns>
         public bool Equals(XRTrackedObject other) => m_TrackableId.Equals(other.m_TrackableId);
 
         TrackableId m_TrackableId;

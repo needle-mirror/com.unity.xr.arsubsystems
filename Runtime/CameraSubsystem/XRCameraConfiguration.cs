@@ -58,7 +58,7 @@ namespace UnityEngine.XR.ARSubsystems
         public int? framerate => (m_Framerate > 0) ? new int?(m_Framerate) : new int?();
 
         /// <summary>
-        /// The platform-dependent handle that contains information required to acquire 
+        /// The platform-dependent handle that contains information required to acquire
         /// the native camera configuration.
         /// </summary>
         public IntPtr nativeConfigurationHandle => m_NativeConfigurationHandle;
@@ -97,8 +97,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// Converts the configuration to a string, suitable for debug logging.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"Native Config Handle<{m_NativeConfigurationHandle}>: {width}x{height}" + (framerate.HasValue ? $" at {framerate.Value} Hz" : "");
+        public override string ToString() => $"handle <{m_NativeConfigurationHandle}> {width}x{height}{(framerate.HasValue ? $" at {framerate.Value} Hz" : "")}";
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -106,13 +110,39 @@ namespace UnityEngine.XR.ARSubsystems
                 var hash = m_NativeConfigurationHandle.GetHashCode();
                 hash = hash * 486187739 + m_Resolution.GetHashCode();
                 hash = hash * 486187739 + framerate.GetHashCode();
-                return hash;
+                return hash * 486187739 + m_NativeConfigurationHandle.GetHashCode();
             }
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XRCameraConfiguration"/> and
+        /// <see cref="Equals(XRCameraConfiguration)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj) => ((obj is XRCameraConfiguration) && Equals((XRCameraConfiguration)obj));
+
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XRCameraConfiguration"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRCameraConfiguration"/>, otherwise false.</returns>
         public bool Equals(XRCameraConfiguration other) => (m_Resolution == other.m_Resolution) && (framerate == other.framerate) && (m_NativeConfigurationHandle == other.m_NativeConfigurationHandle);
+
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XRCameraConfiguration)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XRCameraConfiguration lhs, XRCameraConfiguration rhs) => lhs.Equals(rhs);
+
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XRCameraConfiguration)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XRCameraConfiguration lhs, XRCameraConfiguration rhs) => !lhs.Equals(rhs);
     }
 }

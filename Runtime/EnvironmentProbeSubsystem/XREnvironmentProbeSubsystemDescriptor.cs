@@ -71,40 +71,67 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool supportsEnvironmentTextureHDR { get; set; }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="other">The other <see cref="XREnvironmentProbeSubsystemCinfo"/> to compare against.</param>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XREnvironmentProbeSubsystemCinfo"/>, otherwise false.</returns>
         public bool Equals(XREnvironmentProbeSubsystemCinfo other)
         {
-            return (id.Equals(other.id)
-                    && implementationType.Equals(other.implementationType)
-                    && supportsManualPlacement.Equals(other.supportsManualPlacement)
-                    && supportsRemovalOfManual.Equals(other.supportsRemovalOfManual)
-                    && supportsAutomaticPlacement.Equals(other.supportsAutomaticPlacement)
-                    && supportsRemovalOfAutomatic.Equals(other.supportsRemovalOfAutomatic)
-                    && supportsEnvironmentTexture.Equals(other.supportsEnvironmentTexture)
-                    && supportsEnvironmentTextureHDR.Equals(other.supportsEnvironmentTextureHDR));
+            return ReferenceEquals(id, other.id)
+                   && ReferenceEquals(implementationType, other.implementationType)
+                   && supportsManualPlacement.Equals(other.supportsManualPlacement)
+                   && supportsRemovalOfManual.Equals(other.supportsRemovalOfManual)
+                   && supportsAutomaticPlacement.Equals(other.supportsAutomaticPlacement)
+                   && supportsRemovalOfAutomatic.Equals(other.supportsRemovalOfAutomatic)
+                   && supportsEnvironmentTexture.Equals(other.supportsEnvironmentTexture)
+                   && supportsEnvironmentTextureHDR.Equals(other.supportsEnvironmentTextureHDR);
         }
 
+        /// <summary>
+        /// Tests for equality.
+        /// </summary>
+        /// <param name="obj">The `object` to compare against.</param>
+        /// <returns>`True` if <paramref name="obj"/> is of type <see cref="XREnvironmentProbeSubsystemCinfo"/> and
+        /// <see cref="Equals(XREnvironmentProbeSubsystemCinfo)"/> also returns `true`; otherwise `false`.</returns>
         public override bool Equals(System.Object obj)
         {
             return ((obj is XREnvironmentProbeSubsystemCinfo) && Equals((XREnvironmentProbeSubsystemCinfo)obj));
         }
 
+        /// <summary>
+        /// Tests for equality. Same as <see cref="Equals(XREnvironmentProbeSubsystemCinfo)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator ==(XREnvironmentProbeSubsystemCinfo lhs, XREnvironmentProbeSubsystemCinfo rhs)
         {
             return lhs.Equals(rhs);
         }
 
+        /// <summary>
+        /// Tests for inequality. Same as `!`<see cref="Equals(XREnvironmentProbeSubsystemCinfo)"/>.
+        /// </summary>
+        /// <param name="lhs">The left-hand side of the comparison.</param>
+        /// <param name="rhs">The right-hand side of the comparison.</param>
+        /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
         public static bool operator !=(XREnvironmentProbeSubsystemCinfo lhs, XREnvironmentProbeSubsystemCinfo rhs)
         {
             return !(lhs == rhs);
         }
 
+        /// <summary>
+        /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
+        /// </summary>
+        /// <returns>A hash code generated from this object's fields.</returns>
         public override int GetHashCode()
         {
             int hashCode = 486187739;
             unchecked
             {
-                hashCode = (hashCode * 486187739) + id.GetHashCode();
-                hashCode = (hashCode * 486187739) + implementationType.GetHashCode();
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
                 hashCode = (hashCode * 486187739) + supportsManualPlacement.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsRemovalOfManual.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAutomaticPlacement.GetHashCode();
