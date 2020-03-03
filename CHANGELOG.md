@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2020-03-03
+### Improvements
+- Added X icon to thumbnails of image tracking reference images.
+
 ## [2.1.1] - 2019-06-25
 ### Improvements
 - Fix `CameraFocusMode` handling in `XRCameraSubsystem`.  This fixes an issue when running on a provider that does not set the default focus mode to `CameraFocusMode.Fixed`.
