@@ -173,6 +173,18 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
+            /// Method to be implemented by the provider to get the enabled and disabled shader keywords for the
+            /// material.
+            /// </summary>
+            /// <param name="enabledKeywords">The keywords to enable for the material.</param>
+            /// <param name="disabledKeywords">The keywords to disable for the material.</param>
+            public virtual void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
+            {
+                enabledKeywords = null;
+                disabledKeywords = null;
+            }
+
+            /// <summary>
             /// Method to be implemented by the provider to query for the latest native camera image.
             /// </summary>
             /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCameraImage"/></param>
@@ -564,6 +576,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if camera permission has been granted. Otherwise, <c>false</c>.
         /// </value>
         public bool permissionGranted => m_Provider.permissionGranted;
+
+        /// <summary>
+        /// Get the enabled and disabled shader keywords for the material.
+        /// </summary>
+        /// <param name="enabledKeywords">The keywords to enable for the material.</param>
+        /// <param name="disabledKeywords">The keywords to disable for the material.</param>
+        public void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
+            => m_Provider.GetMaterialKeywords(out enabledKeywords, out disabledKeywords);
 
         /// <summary>
         /// Attempt to get the latest camera image. This provides directly access to the raw pixel data, as well as

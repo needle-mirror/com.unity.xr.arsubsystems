@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine.Rendering;
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -18,13 +17,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// The timestamp of the frame is included.
         /// </summary>
         [Description("Timestamp")]
-        Timestamp = (1 << 0),
+        Timestamp               = (1 << 0),
 
         /// <summary>
         /// The average brightness of the frame is included.
         /// </summary>
         [Description("AverageBrightness")]
-        AverageBrightness = (1 << 1),
+        AverageBrightness       = (1 << 1),
 
         /// <summary>
         /// The average color temperature of the frame is included.
@@ -42,19 +41,19 @@ namespace UnityEngine.XR.ARSubsystems
         /// The project matrix for the frame is included.
         /// </summary>
         [Description("ProjectionMatrix")]
-        ProjectionMatrix = (1 << 4),
+        ProjectionMatrix        = (1 << 4),
 
         /// <summary>
         /// The display matrix for the frame is included.
         /// </summary>
         [Description("DisplayMatrix")]
-        DisplayMatrix = (1 << 5),
+        DisplayMatrix           = (1 << 5),
 
         /// <summary>
         /// The average intensity in lumens is included.
         /// </summary>
         [Description("AverageIntensityInLumens")]
-        AverageIntensityInLumens = (1 << 6),
+        AverageIntensityInLumens      = (1 << 6),
 
         /// <summary>
         /// The camera exposure duration is included.
@@ -67,30 +66,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         [Description("ExposureOffset")]
         ExposureOffset = (1 << 8),
-
-        /// <summary>
-        /// The estimated scene main light direction is included.
-        /// </summary>
-        [Description("MainLightDirection")]
-        MainLightDirection = (1 << 9),
-
-        /// <summary>
-        /// The estimated scene main light color is included.
-        /// </summary>
-        [Description("MainLightColor")]
-        MainLightColor = (1 << 10),
-
-        /// <summary>
-        /// The estimated scene main light intensity in lumens is included.
-        /// </summary>
-        [Description("MainLightIntensityLumens")]
-        MainLightIntensityLumens = (1 << 11),
-
-        /// <summary>
-        /// Ambient spherical harmonics are included.
-        /// </summary>
-        [Description("AmbientSphericalHarmonics")]
-        AmbientSphericalHarmonics = (1 << 12),
     }
 
     /// <summary>
@@ -105,7 +80,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The timestamp, in nanoseconds, associated with this frame.
         /// </value>
-        public long timestampNs => m_TimestampNs;
+        public long timestampNs
+        {
+            get { return m_TimestampNs; }
+        }
         long m_TimestampNs;
 
         /// <summary>
@@ -114,7 +92,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The estimated brightness of the scene.
         /// </value>
-        public float averageBrightness => m_AverageBrightness;
+        public float averageBrightness
+        {
+            get { return m_AverageBrightness; }
+        }
         float m_AverageBrightness;
 
         /// <summary>
@@ -123,7 +104,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The estimated color temperature of the scene.
         /// </value>
-        public float averageColorTemperature => m_AverageColorTemperature;
+        public float averageColorTemperature
+        {
+            get { return m_AverageColorTemperature; }
+        }
         float m_AverageColorTemperature;
 
         /// <summary>
@@ -132,7 +116,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The estimated color correction value of the scene.
         /// </value>
-        public Color colorCorrection => m_ColorCorrection;
+        public Color colorCorrection
+        {
+            get { return m_ColorCorrection; }
+        }
         Color m_ColorCorrection;
 
         /// <summary>
@@ -141,7 +128,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The 4x4 projection matrix for the camera frame.
         /// </value>
-        public Matrix4x4 projectionMatrix => m_ProjectionMatrix;
+        public Matrix4x4 projectionMatrix
+        {
+            get { return m_ProjectionMatrix; }
+        }
         Matrix4x4 m_ProjectionMatrix;
 
         /// <summary>
@@ -150,7 +140,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The 4x4 display matrix for the camera frame.
         /// </value>
-        public Matrix4x4 displayMatrix => m_DisplayMatrix;
+        public Matrix4x4 displayMatrix
+        {
+            get { return m_DisplayMatrix; }
+        }
         Matrix4x4 m_DisplayMatrix;
 
         /// <summary>
@@ -159,7 +152,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The tracking state associated with the camera.
         /// </value>
-        public TrackingState trackingState => m_TrackingState;
+        public TrackingState trackingState
+        {
+            get { return m_TrackingState; }
+        }
         TrackingState m_TrackingState;
 
         /// <summary>
@@ -169,7 +165,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The native pointer associated with this frame.
         /// </value>
-        public IntPtr nativePtr => m_NativePtr;
+        public IntPtr nativePtr
+        {
+            get { return m_NativePtr; }
+        }
         IntPtr m_NativePtr;
 
         /// <summary>
@@ -178,7 +177,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The set of all flags indicating which properties are included in the frame.
         /// </value>
-        public XRCameraFrameProperties properties => m_Properties;
+        public XRCameraFrameProperties properties
+        {
+            get { return m_Properties; }
+        }
         XRCameraFrameProperties m_Properties;
 
         /// <summary>
@@ -187,7 +189,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The estimated intensity, in lumens, of the scene.
         /// </value>
-        public float averageIntensityInLumens => m_AverageIntensityInLumens;
+        public float averageIntensityInLumens
+        {
+            get { return m_AverageIntensityInLumens; }
+        }
         float m_AverageIntensityInLumens;
 
         /// <summary>
@@ -196,7 +201,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The camera exposure duration, in seconds with sub-millisecond precision, of the scene.
         /// </value>
-        public double exposureDuration => m_ExposureDuration;
+        public double exposureDuration
+        {
+            get => m_ExposureDuration;
+        }
         double m_ExposureDuration;
 
         /// <summary>
@@ -205,55 +213,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The camera exposure offset of the scene for lighting scaling
         /// </value>
-        public float exposureOffset => m_ExposureOffset;
+        public float exposureOffset
+        {
+            get => m_ExposureOffset;
+        }
         float m_ExposureOffset;
 
         /// <summary>
-        /// The estimated, intensity in lumens of the most influential, real-world light in the scene.
-        /// </summary>
-        /// <value>
-        /// The estimated, intensity in lumens of the most influential, real-world light in the scene.
-        /// </value>
-        public float mainLightIntensityLumens => m_MainLightIntensityLumens;
-        float m_MainLightIntensityLumens;
-
-        /// <summary>
-        /// The estimated, color of the most influential, real-world light in the scene.
-        /// </summary>
-        /// <value>
-        /// The estimated, color of the most influential, real-world light in the scene.
-        /// </value>
-        public Color mainLightColor => m_MainLightColor;
-        Color m_MainLightColor;
-
-        /// <summary>
-        /// The estimated direction of the most influential, real-world light in the scene.
-        /// </summary>
-        /// <value>
-        /// The estimated direction of the most influential, real-world light in the scene.
-        /// </value>
-        public Vector3 mainLightDirection => m_MainLightDirection;
-        Vector3 m_MainLightDirection;
-
-        /// <summary>
-        /// The ambient spherical harmonic coefficients that represent lighting in the real-world.
-        /// </summary>
-        /// <value>
-        /// The ambient spherical harmonic coefficients that represent lighting in the real-world.
-        /// </value>
-        /// <remarks>
-        /// See <see href="https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html">here</see> for further details.
-        /// </remarks>
-        public SphericalHarmonicsL2 ambientSphericalHarmonics => m_AmbientSphericalHarmonics;
-        SphericalHarmonicsL2 m_AmbientSphericalHarmonics;
-
-        /// <summary>
         /// Whether the frame has a timestamp.
         /// </summary>
         /// <value>
         /// Whether the frame has a timestamp.
         /// </value>
-        public bool hasTimestamp => (m_Properties & XRCameraFrameProperties.Timestamp) != 0;
+        public bool hasTimestamp
+        {
+            get { return (m_Properties & XRCameraFrameProperties.Timestamp) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has an average brightness.
@@ -261,7 +236,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has an average brightness.
         /// </value>
-        public bool hasAverageBrightness => (m_Properties & XRCameraFrameProperties.AverageBrightness) != 0;
+        public bool hasAverageBrightness
+        {
+            get { return (m_Properties & XRCameraFrameProperties.AverageBrightness) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has an average color temperature.
@@ -269,7 +247,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has an average color temperature.
         /// </value>
-        public bool hasAverageColorTemperature => (m_Properties & XRCameraFrameProperties.AverageColorTemperature) != 0;
+        public bool hasAverageColorTemperature
+        {
+            get { return (m_Properties & XRCameraFrameProperties.AverageColorTemperature) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has a color correction value.
@@ -277,7 +258,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has a color correction value.
         /// </value>
-        public bool hasColorCorrection => (m_Properties & XRCameraFrameProperties.ColorCorrection) != 0;
+        public bool hasColorCorrection
+        {
+            get { return (m_Properties & XRCameraFrameProperties.ColorCorrection) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has a projection matrix.
@@ -285,7 +269,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has a projection matrix.
         /// </value>
-        public bool hasProjectionMatrix => (m_Properties & XRCameraFrameProperties.ProjectionMatrix) != 0;
+        public bool hasProjectionMatrix
+        {
+            get { return (m_Properties & XRCameraFrameProperties.ProjectionMatrix) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has a display matrix.
@@ -293,7 +280,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has a display matrix.
         /// </value>
-        public bool hasDisplayMatrix => (m_Properties & XRCameraFrameProperties.DisplayMatrix) != 0;
+        public bool hasDisplayMatrix
+        {
+            get { return (m_Properties & XRCameraFrameProperties.DisplayMatrix) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has an average intensity in lumens.
@@ -301,7 +291,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has an average intensity in lumens.
         /// </value>
-        public bool hasAverageIntensityInLumens => (m_Properties & XRCameraFrameProperties.AverageIntensityInLumens) != 0;
+        public bool hasAverageIntensityInLumens
+        {
+            get { return (m_Properties & XRCameraFrameProperties.AverageIntensityInLumens) != 0; }
+        }
 
         /// <summary>
         /// Whether the frame has an exposure duration in seconds with sub-millisecond precision.
@@ -309,7 +302,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has an exposure duration in seconds with sub-millisecond precision.
         /// </value>
-        public bool hasExposureDuration => (m_Properties & XRCameraFrameProperties.ExposureDuration) != 0;
+        public bool hasExposureDuration
+        {
+            get => (m_Properties & XRCameraFrameProperties.ExposureDuration) != 0;
+        }
 
         /// <summary>
         /// Whether the frame has an exposure offset for scaling lighting.
@@ -317,39 +313,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Whether the frame has an exposure offset for scaling lighting.
         /// </value>
-        public bool hasExposureOffset => (m_Properties & XRCameraFrameProperties.ExposureOffset) != 0;
-
-        /// <summary>
-        /// Whether the frame has the estimated main light channel-wise intensity of the scene.
-        /// </summary>
-        /// <value>
-        /// Whether the frame has the estimated main light channel-wise intensity of the scene.
-        /// </value>
-        public bool hasMainLightIntensityLumens => (m_Properties & XRCameraFrameProperties.MainLightIntensityLumens) != 0;
-
-        /// <summary>
-        /// Whether the frame has the estimated main light color of the scene.
-        /// </summary>
-        /// <value>
-        /// Whether the frame has the estimated main light color of the scene.
-        /// </value>
-        public bool hasMainLightColor => (m_Properties & XRCameraFrameProperties.MainLightColor) != 0;
-
-        /// <summary>
-        /// Whether the frame has the estimated main light direction of the scene.
-        /// </summary>
-        /// <value>
-        /// Whether the frame has the estimated main light direction of the scene.
-        /// </value>
-        public bool hasMainLightDirection => (m_Properties & XRCameraFrameProperties.MainLightDirection) != 0;
-
-        /// <summary>
-        /// Whether the frame has the ambient spherical harmonics coefficients of the scene.
-        /// </summary>
-        /// <value>
-        /// Whether the frame has the ambient spherical harmonics coefficients of the scene.
-        /// </value>
-        public bool hasAmbientSphericalHarmonics => (m_Properties & XRCameraFrameProperties.AmbientSphericalHarmonics) != 0;
+        public bool hasExposureOffset
+        {
+            get => (m_Properties & XRCameraFrameProperties.ExposureOffset) != 0;
+        }
 
         /// <summary>
         /// Provides timestamp of the camera frame.
@@ -443,10 +410,6 @@ namespace UnityEngine.XR.ARSubsystems
                     && m_AverageIntensityInLumens.Equals(other.m_AverageIntensityInLumens)
                     && m_ExposureDuration.Equals(other.m_ExposureDuration)
                     && m_ExposureOffset.Equals(other.m_ExposureOffset)
-                    && m_MainLightDirection.Equals(other.m_MainLightDirection)
-                    && m_MainLightIntensityLumens.Equals(other.m_MainLightIntensityLumens)
-                    && m_MainLightColor.Equals(other.m_MainLightColor)
-                    && m_AmbientSphericalHarmonics.Equals(other.m_AmbientSphericalHarmonics)
                     && m_Properties.Equals(other.m_Properties));
         }
 
@@ -502,10 +465,6 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_AverageIntensityInLumens.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_ExposureDuration.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_ExposureOffset.GetHashCode();
-                hashCode = (hashCode * 486187739) + m_MainLightDirection.GetHashCode();
-                hashCode = (hashCode * 486187739) + m_MainLightColor.GetHashCode();
-                hashCode = (hashCode * 486187739) + m_AmbientSphericalHarmonics.GetHashCode();
-                hashCode = (hashCode * 486187739) + m_MainLightIntensityLumens.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_NativePtr.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_Properties.GetHashCode();
             }
@@ -514,13 +473,20 @@ namespace UnityEngine.XR.ARSubsystems
 
         public override string ToString()
         {
-            return $"properties:{m_Properties}\n   timestamp:{m_TimestampNs}ns\n   avgBrightness:{m_AverageBrightness.ToString("0.000")}\n"
-                + $"   avgColorTemp:{m_AverageColorTemperature.ToString("0.000")}\n   colorCorrection:{m_ColorCorrection}\n"
-                + $"   projection:\n{m_ProjectionMatrix.ToString("0.000")}\n   display:\n{m_DisplayMatrix.ToString("0.000")}\n"
-                + $"   exposureDuration: {m_ExposureDuration.ToString("0.000")}sec\n   exposureOffset:{m_ExposureOffset}\n"
-                + $"   mainLightDirection: {m_MainLightDirection.ToString("0.000")}\n   mainLightIntensityLumens: {m_MainLightIntensityLumens.ToString("0.000")}\n"
-                + $"   MainLightColor: {m_MainLightColor.ToString("0.000")}\n   ambientSphericalHarmonics: \n{m_AmbientSphericalHarmonics}\n"
-                + $"   nativePtr: {m_NativePtr.ToString("X16")}\n";
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendFormat("properties:{0}\n   timestamp:{1}ns\n   avgBrightness:{2}\n"
+                                       + "   avgColorTemp:{3}\n   colorCorrection:{4}\n   projection:\n{5}\n   display:\n{6}\n"
+                                       + "   nativePtr{7}\n",
+                                       m_Properties.ToString(), m_TimestampNs.ToString(),
+                                       m_AverageBrightness.ToString("0.000"),
+                                       m_AverageColorTemperature.ToString("0.000"),
+                                       m_ColorCorrection.ToString(),
+                                       m_ProjectionMatrix.ToString("0.000"), m_DisplayMatrix.ToString("0.000"),
+                                       m_AverageIntensityInLumens.ToString("0.000"),
+                                       m_NativePtr.ToString("X16"));
+
+            return stringBuilder.ToString();
         }
     }
 }

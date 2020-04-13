@@ -18,11 +18,5 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         [Description("AmbientIntensity")]
         AmbientIntensity = 1,
-
-        /// <summary>
-        /// Scene lighting will be estimated using Environmental HDR.
-        /// </summary>
-        [Description("EnvironmentalHDR")]
-        EnvironmentalHDR = 2,
     }
 }
