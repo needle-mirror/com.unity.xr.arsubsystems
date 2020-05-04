@@ -1,10 +1,19 @@
 using NUnit.Framework;
+using Unity.Collections;
 
 namespace UnityEngine.XR.ARSubsystems.Tests
 {
     public class XRRaycastSubsystemImpl : XRRaycastSubsystem
     {
-        protected override Provider CreateProvider() => new Provider();
+        class MockProvider : Provider
+        {
+            public override TrackableChanges<XRRaycast> GetChanges(XRRaycast defaultRaycast, Allocator allocator)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+        
+        protected override Provider CreateProvider() => new MockProvider();
     }
 
     [TestFixture]

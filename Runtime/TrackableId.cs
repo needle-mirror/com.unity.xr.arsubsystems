@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -17,6 +18,12 @@ namespace UnityEngine.XR.ARSubsystems
     [StructLayout(LayoutKind.Sequential)]
     public struct TrackableId : IEquatable<TrackableId>
     {
+        /// <summary>
+        /// Regular expression that matches a valid trackable identifier.
+        /// </summary>
+        static readonly Regex s_TrackableIdRegex = new Regex(@"^(?<part1>[a-fA-F\d]{16})-(?<part2>[a-fA-F\d]{16})$",
+                                                             RegexOptions.Compiled|RegexOptions.CultureInvariant|RegexOptions.Singleline|RegexOptions.ExplicitCapture);
+
         /// <summary>
         /// Get the invalid id.
         /// </summary>
@@ -49,6 +56,30 @@ namespace UnityEngine.XR.ARSubsystems
         {
             m_SubId1 = subId1;
             m_SubId2 = subId2;
+        }
+
+        /// <summary>
+        /// Construct a trackable identifier by parsing the given identifier string.
+        /// </summary>
+        /// <param name="idString">An identifier string.</param>
+        /// <exception cref="System.FormatException">Thrown if the given identifier string cannot be parsed.</exception>
+        public TrackableId(string idString)
+        {
+            var regexMatch = s_TrackableIdRegex.Match(idString);
+            if (!regexMatch.Success)
+            {
+                throw new FormatException($"trackable ID '{idString}' does not match expected format");
+            }
+
+            try
+            {
+                m_SubId1 = ulong.Parse(regexMatch.Groups["part1"].Value, System.Globalization.NumberStyles.HexNumber);
+                m_SubId2 = ulong.Parse(regexMatch.Groups["part2"].Value, System.Globalization.NumberStyles.HexNumber);
+            }
+            catch (Exception e)
+            {
+                throw new FormatException($"cannot parse trackable ID '{idString}'", e);
+            }
         }
 
         /// <summary>

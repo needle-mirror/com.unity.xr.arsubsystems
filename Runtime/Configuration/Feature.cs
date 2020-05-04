@@ -133,6 +133,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// A value with all light estimation related bits set.
         /// </summary>
         AnyLightEstimation = LightEstimationAmbientIntensity | LightEstimationAmbientColor | LightEstimationAmbientSphericalHarmonics | LightEstimationMainLightDirection | LightEstimationMainLightIntensity,
+
+        /// <summary>
+        /// Instant and Tracked raycast.
+        /// </summary>
+        Raycast = 1 << 21,
     }
 
     /// <summary>
@@ -333,6 +338,9 @@ namespace UnityEngine.XR.ARSubsystems
                         break;
                     case Feature.LightEstimationMainLightIntensity:
                         names.Add("Light Estimation (Main Light Intensity)");
+                        break;
+                    case Feature.Raycast:
+                        names.Add("Raycast");
                         break;
                     default:
                         names.Add(feature.ToString());

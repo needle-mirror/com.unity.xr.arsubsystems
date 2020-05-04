@@ -4,11 +4,29 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.0-preview.3] - 2020-05-04
+### New
+- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](../api/UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.html#UnityEngine_XR_ARSubsystems_XRRaycastSubsystem_TryAddRaycast).
+- Added a constructor to create a TrackableId from parsing a string.
+
 ## [4.0.0-preview.1] - 2020-02-26
 ### Breaking Changes
 - Several subsystem properties have been broken into 'current' and 'requested' properties. See the [ARFoundation Migration Guide](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/migration-guide-3.html) for more details.
 
-## [3.1.0-preview.4] - 2019-01-08
+## [3.1.3] - 2020-04-13
+### New
+- Adding the API updater files required to update from `XRReferencePoint*` to `XRAnchor*`.
+- Adding new methods to the `XRCameraSubsystem` to query the list of enabled & disabled material keywords for the shader.
+
+## [3.1.0-preview.8] - 2020-03-12
+
+## [3.1.0-preview.7] - 2020-02-27
+
+## [3.1.0-preview.6] - 2020-02-18
+### Fixes
+- Added fix to `XRCameraConfiguration` that adds `nativeConfigurationHandle` to equality checks between `XRCameraConfiguration`s.
+
+## [3.1.0-preview.4] - 2020-01-08
 ### Fixes
 - Fixes an issue with the 2D joint positions from human body tracking.
 - Fixes an issue where the equality comparison for XRCameraConfiguration did not take `nativeConfigurationHandle` into account
@@ -23,6 +41,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated documentation links to point to the 3.1 version of the documentation.
 
 ## [3.1.0-preview.1] - 2019-11-21
+
+## [3.0.2] - 2020-03-18
+### Fixes
+- Fixed "X" (remove reference image) icon in the `XRReferenceImageLibrary` inspector.
+
+## [3.0.0] - 2019-11-05
 ### Breaking changes
 - Renaming the concept of `Reference Points` to `Anchors`. The Unity script updater should convert any references to `XRReferencePointSubsystem`, `XRReferencePoint`, and `XRReferencePointSubsystemDescriptor` the next time the project is loaded into the Editor.
 

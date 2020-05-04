@@ -38,21 +38,22 @@ namespace UnityEngine.XR.ARSubsystems
             public TrackableType supportedTrackableTypes { get; set; }
 
             /// <summary>
+            /// Whether "tracked" raycasts are supported. A tracked raycast is repeated
+            /// over time and the results are updated automatically.
+            /// </summary>
+            public bool supportsTrackedRaycasts { get; set; }
+
+            /// <summary>
             /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
             /// </summary>
             /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    var hash = HashCode.ReferenceHash(id);
-                    hash = hash * 486187739 + HashCode.ReferenceHash(subsystemImplementationType);
-                    hash = hash * 486187739 + supportsViewportBasedRaycast.GetHashCode();
-                    hash = hash * 486187739 + supportsWorldBasedRaycast.GetHashCode();
-                    hash = hash * 486187739 + ((int)supportedTrackableTypes).GetHashCode();
-                    return hash;
-                }
-            }
+            public override int GetHashCode() => HashCode.Combine(
+                HashCode.ReferenceHash(id),
+                HashCode.ReferenceHash(subsystemImplementationType),
+                supportsViewportBasedRaycast.GetHashCode(),
+                supportsWorldBasedRaycast.GetHashCode(),
+                ((int)supportedTrackableTypes).GetHashCode(),
+                supportsTrackedRaycasts.GetHashCode());
 
             /// <summary>
             /// Tests for equality.
@@ -120,6 +121,12 @@ namespace UnityEngine.XR.ARSubsystems
         public TrackableType supportedTrackableTypes { get; private set; }
 
         /// <summary>
+        /// Whether "tracked" raycasts are supported. A tracked raycast is repeated
+        /// over time and the results are updated automatically.
+        /// </summary>
+        public bool supportsTrackedRaycasts { get; set; }
+
+        /// <summary>
         /// Registers a new descriptor. Should be called by provider implementations.
         /// </summary>
         /// <param name="cinfo"></param>
@@ -135,6 +142,7 @@ namespace UnityEngine.XR.ARSubsystems
             supportsViewportBasedRaycast = cinfo.supportsViewportBasedRaycast;
             supportsWorldBasedRaycast = cinfo.supportsWorldBasedRaycast;
             supportedTrackableTypes = cinfo.supportedTrackableTypes;
+            supportsTrackedRaycasts = cinfo.supportsTrackedRaycasts;
         }
     }
 }

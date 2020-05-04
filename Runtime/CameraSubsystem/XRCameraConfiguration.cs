@@ -110,7 +110,7 @@ namespace UnityEngine.XR.ARSubsystems
                 var hash = m_NativeConfigurationHandle.GetHashCode();
                 hash = hash * 486187739 + m_Resolution.GetHashCode();
                 hash = hash * 486187739 + framerate.GetHashCode();
-                return hash * 486187739 + m_NativeConfigurationHandle.GetHashCode();
+                return hash;
             }
         }
 
