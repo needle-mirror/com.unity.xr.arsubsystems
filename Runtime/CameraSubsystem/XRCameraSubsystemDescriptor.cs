@@ -1,5 +1,9 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -14,6 +18,24 @@ namespace UnityEngine.XR.ARSubsystems
         /// The identifier for the provider implementation of the subsystem.
         /// </value>
         public string id { get; set; }
+        
+#if UNITY_2020_2_OR_NEWER
+        /// <summary>
+        /// Specifies the provider implementation type to use for instantiation.
+        /// </summary>
+        /// <value>
+        /// The provider implementation type to use for instantiation.
+        /// </value>
+        public Type providerType { get; set; }
+
+        /// <summary>
+        /// Specifies the <c>XRCameraSubsystem</c>-derived type that forwards casted calls to its provider.
+        /// </summary>
+        /// <value>
+        /// The type of the subsystem to use for instantiation. If null, <c>XRCameraSubsystem</c> will be instantiated.
+        /// </value>
+        public Type subsystemTypeOverride { get; set; }
+#endif
 
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
@@ -21,6 +43,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The provider implementation type to use for instantiation.
         /// </value>
+#if UNITY_2020_2_OR_NEWER
+        [Obsolete("XRCameraSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
         public Type implementationType { get; set; }
 
         /// <summary>
@@ -118,6 +143,11 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsFocusModes { get; set; }
 
         /// <summary>
+        /// Specifies whether the subsystem supports camera grain effect.
+        /// </summary>
+        public bool supportsCameraGrain { get; set; }
+
+        /// <summary>
         /// Tests for equality.
         /// </summary>
         /// <param name="other">The other <see cref="XRCameraSubsystemCinfo"/> to compare against.</param>
@@ -125,8 +155,13 @@ namespace UnityEngine.XR.ARSubsystems
         public bool Equals(XRCameraSubsystemCinfo other)
         {
             return
-                   (id == other.id)
-                && (implementationType == other.implementationType)
+                ReferenceEquals(id, other.id)
+#if UNITY_2020_2_OR_NEWER
+                && ReferenceEquals(providerType, other.providerType)
+                && ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride)
+#else
+                && ReferenceEquals(implementationType, other.implementationType)
+#endif
                 && supportsAverageBrightness.Equals(other.supportsAverageBrightness)
                 && supportsAverageColorTemperature.Equals(other.supportsAverageColorTemperature)
                 && supportsDisplayMatrix.Equals(other.supportsDisplayMatrix)
@@ -135,7 +170,12 @@ namespace UnityEngine.XR.ARSubsystems
                 && supportsCameraConfigurations.Equals(other.supportsCameraConfigurations)
                 && supportsCameraImage.Equals(other.supportsCameraImage)
                 && supportsAverageIntensityInLumens.Equals(other.supportsAverageIntensityInLumens)
-                && supportsFocusModes.Equals(other.supportsFocusModes);
+                && supportsFaceTrackingAmbientIntensityLightEstimation.Equals(other.supportsFaceTrackingAmbientIntensityLightEstimation)
+                && supportsFaceTrackingHDRLightEstimation.Equals(other.supportsFaceTrackingHDRLightEstimation)
+                && supportsWorldTrackingAmbientIntensityLightEstimation.Equals(other.supportsWorldTrackingAmbientIntensityLightEstimation)
+                && supportsWorldTrackingHDRLightEstimation.Equals(other.supportsWorldTrackingHDRLightEstimation)
+                && supportsFocusModes.Equals(other.supportsFocusModes)
+                && supportsCameraGrain.Equals(other.supportsCameraGrain);
         }
 
         /// <summary>
@@ -174,8 +214,13 @@ namespace UnityEngine.XR.ARSubsystems
             int hashCode = 486187739;
             unchecked
             {
-                hashCode = (hashCode * 486187739) + (ReferenceEquals(id, null) ? 0 : id.GetHashCode());
-                hashCode = (hashCode * 486187739) + (ReferenceEquals(implementationType, null) ? 0 : implementationType.GetHashCode());
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
+#endif
                 hashCode = (hashCode * 486187739) + supportsAverageBrightness.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageColorTemperature.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsDisplayMatrix.GetHashCode();
@@ -184,7 +229,12 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + supportsCameraConfigurations.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsCameraImage.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageIntensityInLumens.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsFaceTrackingAmbientIntensityLightEstimation.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsFaceTrackingHDRLightEstimation.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsWorldTrackingAmbientIntensityLightEstimation.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsWorldTrackingHDRLightEstimation.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsFocusModes.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsCameraGrain.GetHashCode();
             }
             return hashCode;
         }
@@ -194,7 +244,12 @@ namespace UnityEngine.XR.ARSubsystems
     /// Specifies a functionality description that may be registered for each implementation that provides the
     /// <see cref="XRCameraSubsystem"/> interface.
     /// </summary>
-    public sealed class XRCameraSubsystemDescriptor : SubsystemDescriptor<XRCameraSubsystem>
+    public sealed class XRCameraSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRCameraSubsystem, XRCameraSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRCameraSubsystem>
+#endif
     {
         /// <summary>
         /// Constructs a <c>XRCameraSubsystemDescriptor</c> based on the given parameters.
@@ -203,7 +258,12 @@ namespace UnityEngine.XR.ARSubsystems
         XRCameraSubsystemDescriptor(XRCameraSubsystemCinfo cameraSubsystemParams)
         {
             id = cameraSubsystemParams.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = cameraSubsystemParams.providerType;
+            subsystemTypeOverride = cameraSubsystemParams.subsystemTypeOverride;
+#else
             subsystemImplementationType = cameraSubsystemParams.implementationType;
+#endif
             supportsAverageBrightness = cameraSubsystemParams.supportsAverageBrightness;
             supportsAverageColorTemperature = cameraSubsystemParams.supportsAverageColorTemperature;
             supportsDisplayMatrix = cameraSubsystemParams.supportsDisplayMatrix;
@@ -213,6 +273,11 @@ namespace UnityEngine.XR.ARSubsystems
             supportsCameraImage = cameraSubsystemParams.supportsCameraImage;
             supportsAverageIntensityInLumens = cameraSubsystemParams.supportsAverageIntensityInLumens;
             supportsFocusModes = cameraSubsystemParams.supportsFocusModes;
+            supportsFaceTrackingAmbientIntensityLightEstimation = cameraSubsystemParams.supportsFaceTrackingAmbientIntensityLightEstimation;
+            supportsFaceTrackingHDRLightEstimation = cameraSubsystemParams.supportsFaceTrackingHDRLightEstimation;
+            supportsWorldTrackingAmbientIntensityLightEstimation = cameraSubsystemParams.supportsWorldTrackingAmbientIntensityLightEstimation;
+            supportsWorldTrackingHDRLightEstimation = cameraSubsystemParams.supportsWorldTrackingHDRLightEstimation;
+            supportsCameraGrain = cameraSubsystemParams.supportsCameraGrain;
         }
 
         /// <summary>
@@ -305,6 +370,11 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsWorldTrackingHDRLightEstimation { get; private set; }
 
         /// <summary>
+        /// Specifies whether the subsystem supports camera grain effect.
+        /// </summary>
+        public bool supportsCameraGrain { get; private set; }
+
+        /// <summary>
         /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters validating that the
         /// <see cref="XRCameraSubsystemCinfo.id"/> and <see cref="XRCameraSubsystemCinfo.implementationType"/>
         /// properties are properly specified.
@@ -337,12 +407,26 @@ namespace UnityEngine.XR.ARSubsystems
                                             "cameraSubsystemParams");
             }
 
+#if UNITY_2020_2_OR_NEWER
+            if (cameraSubsystemParams.providerType == null
+                || !cameraSubsystemParams.providerType.IsSubclassOf(typeof(XRCameraSubsystem.Provider)))
+            {
+                throw new ArgumentException("Cannot create camera subsystem descriptor because providerType is invalid", "cameraSubsystemParams");
+            }
+
+            if (cameraSubsystemParams.subsystemTypeOverride != null
+                && !cameraSubsystemParams.subsystemTypeOverride.IsSubclassOf(typeof(XRCameraSubsystem)))
+            {
+                throw new ArgumentException("Cannot create camera subsystem descriptor because subsystemTypeOverride is invalid", "cameraSubsystemParams");
+            }
+#else
             if ((cameraSubsystemParams.implementationType == null)
                 || !cameraSubsystemParams.implementationType.IsSubclassOf(typeof(XRCameraSubsystem)))
             {
                 throw new ArgumentException("Cannot create camera subsystem descriptor because implementationType is invalid",
                                             "cameraSubsystemParams");
             }
+#endif
 
             return new XRCameraSubsystemDescriptor(cameraSubsystemParams);
         }

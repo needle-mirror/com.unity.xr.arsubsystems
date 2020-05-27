@@ -2,20 +2,32 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Defines an interface for interacting with occlusion functionality.
     /// </summary>
-    public abstract class XROcclusionSubsystem : XRSubsystem<XROcclusionSubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XROcclusionSubsystem
+        : SubsystemWithProvider<XROcclusionSubsystem, XROcclusionSubsystemDescriptor, XROcclusionSubsystem.Provider>
+#else
+    public abstract class XROcclusionSubsystem
+        : XRSubsystem<XROcclusionSubsystemDescriptor>
+#endif
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// The implementation specific provider of occlusion functionality.
         /// </summary>
         /// <value>
         /// The implementation specific provider of occlusion functionality.
         /// </value>
-        Provider m_Provider;
+        Provider provider;
+#endif
 
         /// <summary>
         /// Specifies the human segmentation stencil mode.
@@ -27,14 +39,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// enabled if the implementation does not support human segmentation.</exception>
         public HumanSegmentationStencilMode requestedHumanStencilMode
         {
-            get => m_Provider.requestedHumanStencilMode;
-            set => m_Provider.requestedHumanStencilMode = value;
+            get => provider.requestedHumanStencilMode;
+            set => provider.requestedHumanStencilMode = value;
         }
 
         /// <summary>
         /// Get the current segmentation stencil mode in use by the subsystem.
         /// </summary>
-        public HumanSegmentationStencilMode currentHumanStencilMode => m_Provider.currentHumanStencilMode;
+        public HumanSegmentationStencilMode currentHumanStencilMode => provider.currentHumanStencilMode;
 
         /// <summary>
         /// Specifies the human segmentation depth mode.
@@ -46,34 +58,41 @@ namespace UnityEngine.XR.ARSubsystems
         /// enabled if the implementation does not support human segmentation.</exception>
         public HumanSegmentationDepthMode requestedHumanDepthMode
         {
-            get => m_Provider.requestedHumanDepthMode;
-            set => m_Provider.requestedHumanDepthMode = value;
+            get => provider.requestedHumanDepthMode;
+            set => provider.requestedHumanDepthMode = value;
         }
 
         /// <summary>
         /// Get the human segmentation depth mode currently in use by the provider.
         /// </summary>
-        public HumanSegmentationDepthMode currentHumanDepthMode => m_Provider.currentHumanDepthMode;
+        public HumanSegmentationDepthMode currentHumanDepthMode => provider.currentHumanDepthMode;
 
         /// <summary>
         /// Construct the subsystem by creating the functionality provider.
         /// </summary>
-        public XROcclusionSubsystem() => m_Provider = CreateProvider();
+        public XROcclusionSubsystem()
+        {
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
+        }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Start the subsystem by starting the provider.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stop the subsystem by stopping the provider.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
-        /// Destroy the subsystem by desstroying the provider.
+        /// Destroy the subsystem by destroying the provider.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Gets the human stencil texture descriptor.
@@ -86,7 +105,49 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human stencil
         /// texture.</exception>
         public bool TryGetHumanStencil(out XRTextureDescriptor humanStencilDescriptor)
-            => m_Provider.TryGetHumanStencil(out humanStencilDescriptor);
+            => provider.TryGetHumanStencil(out humanStencilDescriptor);
+
+        /// <summary>
+        /// Tries to acquire the latest human stencil CPU image.
+        /// </summary>
+        /// <param name="cpuImage">If this method returns `true`, an acquired <see cref="XRCpuImage"/>. The CPU image
+        /// must be disposed by the caller.</param>
+        /// <returns>Returns `true` if an <see cref="XRCpuImage"/> was successfully acquired.
+        /// Returns `false` otherwise.</returns>
+        public bool TryAcquireHumanStencilCpuImage(out XRCpuImage cpuImage)
+        {
+            if (provider.humanStencilCpuImageApi != null && provider.TryAcquireHumanStencilCpuImage(out var cinfo))
+            {
+                cpuImage = new XRCpuImage(provider.humanStencilCpuImageApi, cinfo);
+                return true;
+            }
+            else
+            {
+                cpuImage = default;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to acquire the latest human depth CPU image.
+        /// </summary>
+        /// <param name="cpuImage">If this method returns `true`, an acquired <see cref="XRCpuImage"/>. The CPU image
+        /// must be disposed by the caller.</param>
+        /// <returns>Returns `true` if an <see cref="XRCpuImage"/> was successfully acquired.
+        /// Returns `false` otherwise.</returns>
+        public bool TryAcquireHumanDepthCpuImage(out XRCpuImage cpuImage)
+        {
+            if (provider.humanDepthCpuImageApi != null && provider.TryAcquireHumanDepthCpuImage(out var cinfo))
+            {
+                cpuImage = new XRCpuImage(provider.humanDepthCpuImageApi, cinfo);
+                return true;
+            }
+            else
+            {
+                cpuImage = default;
+                return false;
+            }
+        }
 
         /// <summary>
         /// Gets the human depth texture descriptor.
@@ -99,7 +160,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human depth
         /// texture.</exception>
         public bool TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor)
-            => m_Provider.TryGetHumanDepth(out humanDepthDescriptor);
+            => provider.TryGetHumanDepth(out humanDepthDescriptor);
 
         /// <summary>
         /// Gets the occlusion texture descriptors associated with the current AR frame.
@@ -110,7 +171,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The caller owns the returned <c>NativeArray</c> and is responsible for calling <c>Dispose</c> on it.
         /// </remarks>
         public NativeArray<XRTextureDescriptor> GetTextureDescriptors(Allocator allocator)
-            => m_Provider.GetTextureDescriptors(default(XRTextureDescriptor), allocator);
+            => provider.GetTextureDescriptors(default(XRTextureDescriptor), allocator);
 
         /// <summary>
         /// Get the enabled and disabled shader keywords for the material.
@@ -118,8 +179,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="enabledKeywords">The keywords to enable for the material.</param>
         /// <param name="disabledKeywords">The keywords to disable for the material.</param>
         public void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
-            => m_Provider.GetMaterialKeywords(out enabledKeywords, out disabledKeywords);
+            => provider.GetMaterialKeywords(out enabledKeywords, out disabledKeywords);
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Create the implementation specific functionality provider.
         /// </summary>
@@ -127,6 +189,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The implementation specific functionality provider.
         /// </returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// Register the descriptor for the occlusion subsystem implementation.
@@ -139,15 +202,23 @@ namespace UnityEngine.XR.ARSubsystems
         public static bool Register(XROcclusionSubsystemCinfo occlusionSubsystemCinfo)
         {
             XROcclusionSubsystemDescriptor occlusionSubsystemDescriptor = XROcclusionSubsystemDescriptor.Create(occlusionSubsystemCinfo);
-
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(occlusionSubsystemDescriptor);
+            return true;
+#else
             return SubsystemRegistration.CreateDescriptor(occlusionSubsystemDescriptor);
+#endif
         }
 
         /// <summary>
         /// The provider which will service the <see cref="XROcclusionSubsystem"/>.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XROcclusionSubsystem>
+#endif
         {
+#if !UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Method to be implemented by the provider to start the functionality.
             /// </summary>
@@ -162,6 +233,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Method to be implemented by the provider to destroy itself and release any resources.
             /// </summary>
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Property to be implemented by the provider to get/set the requested human segmentation stencil mode.
@@ -230,6 +302,23 @@ namespace UnityEngine.XR.ARSubsystems
                 => throw new NotSupportedException("human stencil texture is not supported by this implementation");
 
             /// <summary>
+            /// Tries to acquire the latest human stencil CPU image.
+            /// </summary>
+            /// <param name="cinfo">If this method returns `true`, this should be populated with construction
+            /// information for an <see cref="XRCpuImage"/>.</param>
+            /// <returns>Returns `true` if the human stencil CPU image was acquired. Returns `false` otherwise.</returns>
+            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human
+            /// stencil CPU images.</exception>
+            public virtual bool TryAcquireHumanStencilCpuImage(out XRCpuImage.Cinfo cinfo)
+                => throw new NotSupportedException("Human stencil CPU images are not supported by this implementation.");
+
+            /// <summary>
+            /// The <see cref="XRCpuImage.Api"/> for interacting with an <see cref="XRCpuImage"/> acquired with
+            /// <see cref="TryAcquireHumanStencilCpuImage"/>.
+            /// </summary>
+            public virtual XRCpuImage.Api humanStencilCpuImageApi => null;
+
+            /// <summary>
             /// Method to be implemented by the provider to get the human depth texture descriptor.
             /// </summary>
             /// <param name="humanDepthDescriptor">The human depth texture descriptor to be populated, if available.
@@ -242,6 +331,23 @@ namespace UnityEngine.XR.ARSubsystems
             /// depth texture.</exception>
             public virtual bool TryGetHumanDepth(out XRTextureDescriptor humanDepthDescriptor)
                 => throw new NotSupportedException("human depth texture is not supported by this implementation");
+
+            /// <summary>
+            /// Tries to acquire the latest human depth CPU image.
+            /// </summary>
+            /// <param name="cinfo">If this method returns `true`, this should be populated with construction
+            /// information for an <see cref="XRCpuImage"/>.</param>
+            /// <returns>Returns `true` if the human depth CPU image was acquired. Returns `false` otherwise.</returns>
+            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human
+            /// depth CPU images.</exception>
+            public virtual bool TryAcquireHumanDepthCpuImage(out XRCpuImage.Cinfo cinfo)
+                => throw new NotSupportedException("Human depth CPU images are not supported by this implementation.");
+
+            /// <summary>
+            /// The <see cref="XRCpuImage.Api"/> for interacting with an <see cref="XRCpuImage"/> acquired with
+            /// <see cref="TryAcquireHumanDepthCpuImage"/>.
+            /// </summary>
+            public virtual XRCpuImage.Api humanDepthCpuImageApi => null;
 
             /// <summary>
             /// Method to be implemented by the provider to get the occlusion texture descriptors associated with the

@@ -1,11 +1,20 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Descriptor for the <see cref="XRSessionSubsystem"/> describing capabilities which may vary by implementation.
     /// </summary>
-    public sealed class XRSessionSubsystemDescriptor : SubsystemDescriptor<XRSessionSubsystem>
+    public sealed class XRSessionSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRSessionSubsystem, XRSessionSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRSessionSubsystem>
+#endif
     {
         /// <summary>
         /// Whether the session supports the update or installation of session software.
@@ -39,9 +48,30 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Specifies the provider implementation type to use for instantiation.
+            /// </summary>
+            /// <value>
+            /// The provider implementation type to use for instantiation.
+            /// </value>
+            public Type providerType { get; set; }
+
+            /// <summary>
+            /// Specifies the <c>XRAnchorSubsystem</c>-derived type that forwards casted calls to its provider.
+            /// </summary>
+            /// <value>
+            /// The type of the subsystem to use for instantiation. If null, <c>XRAnchorSubsystem</c> will be instantiated.
+            /// </value>
+            public Type subsystemTypeOverride { get; set; }
+#endif
+
             /// <summary>
             /// The <c>Type</c> of the implementation.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            [Obsolete("XRSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
@@ -52,8 +82,13 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    var hash = (id != null) ? id.GetHashCode() : 0;
-                    hash = hash * 486187739 + ((subsystemImplementationType != null) ? subsystemImplementationType.GetHashCode() : 0);
+                    int hash = HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                    hash = hash * 486187739 + HashCode.ReferenceHash(providerType);
+                    hash = hash * 486187739 + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
+                    hash = hash * 486187739 + HashCode.ReferenceHash(subsystemImplementationType);
+#endif
                     hash = hash * 486187739 + supportsInstall.GetHashCode();
                     hash = hash * 486187739 + supportsMatchFrameRate.GetHashCode();
                     return hash;
@@ -69,9 +104,14 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 return
                     string.Equals(id, other.id) &&
-                    (subsystemImplementationType == other.subsystemImplementationType) &&
-                    (supportsInstall == other.supportsInstall) &&
-                    (supportsMatchFrameRate == other.supportsMatchFrameRate);
+#if UNITY_2020_2_OR_NEWER
+                    ReferenceEquals(providerType, other.providerType) &&
+                    ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride) &&
+#else
+                    ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType) &&
+#endif
+                    supportsInstall == other.supportsInstall &&
+                    supportsMatchFrameRate == other.supportsMatchFrameRate;
             }
 
             /// <summary>
@@ -105,13 +145,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="cinfo">Information used to construct the descriptor.</param>
         public static void RegisterDescriptor(Cinfo cinfo)
         {
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(new XRSessionSubsystemDescriptor(cinfo));
+#else
             SubsystemRegistration.CreateDescriptor(new XRSessionSubsystemDescriptor(cinfo));
+#endif
         }
 
         XRSessionSubsystemDescriptor(Cinfo cinfo)
         {
             id = cinfo.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = cinfo.providerType;
+            subsystemTypeOverride = cinfo.subsystemTypeOverride;
+#else
             subsystemImplementationType = cinfo.subsystemImplementationType;
+#endif
             supportsInstall = cinfo.supportsInstall;
             supportsMatchFrameRate = cinfo.supportsMatchFrameRate;
         }

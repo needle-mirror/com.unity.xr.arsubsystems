@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -11,45 +15,61 @@ namespace UnityEngine.XR.ARSubsystems
     /// The <c>XRCameraSubsystem</c> links a Unity <c>Camera</c> to a device camera for video overlay (pass-thru
     /// rendering). It also allows developers to query for environmental light estimation, when available.
     /// </remarks>
+#if UNITY_2020_2_OR_NEWER
+    public class XRCameraSubsystem : SubsystemWithProvider<XRCameraSubsystem, XRCameraSubsystemDescriptor, XRCameraSubsystem.Provider>
+#else
     public abstract class XRCameraSubsystem : XRSubsystem<XRCameraSubsystemDescriptor>
+#endif
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// The provider created by the implementation that contains the required camera functionality.
         /// </summary>
         /// <value>
         /// The provider created by the implementation that contains the required camera functionality.
         /// </value>
-        Provider m_Provider;
+        Provider provider;
+#endif
 
         /// <summary>
         /// Construct the <c>XRCameraSubsystem</c>.
         /// </summary>
         public XRCameraSubsystem()
         {
-            m_Provider = CreateProvider();
-            Debug.Assert(m_Provider != null, "camera functionality provider cannot be null");
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+            Debug.Assert(provider != null, "camera functionality provider cannot be null");
+#endif
         }
 
         /// <summary>
         /// Gets the camera currently in use.
         /// </summary>
         /// <returns></returns>
-        public Feature currentCamera => m_Provider.currentCamera.Cameras();
+        public Feature currentCamera => provider.currentCamera.Cameras();
 
         /// <summary>
         /// Get or set the requested camera, i.e., the <see cref="Feature.AnyCamera"/> bits.
         /// </summary>
         public Feature requestedCamera
         {
-            get => m_Provider.requestedCamera;
-            set => m_Provider.requestedCamera = value.Cameras();
+            get => provider.requestedCamera;
+            set => provider.requestedCamera = value.Cameras();
         }
 
         /// <summary>
         /// Interface for providing camera functionality for the implementation.
         /// </summary>
-        protected class Provider
+        public class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRCameraSubsystem>
+#endif
         {
+            /// <summary>
+            /// An instance of the <see cref="XRCpuImage.Api"/> used to operate on <see cref="XRCpuImage"/> objects.
+            /// </summary>
+            public virtual XRCpuImage.Api cpuImageApi => null;
+
             /// <summary>
             /// Property to be implemented by the provder to get the material used by <c>XRCameraSubsystem</c> to
             /// render the camera texture.
@@ -91,17 +111,29 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Method to be implemented by provider to start the camera for the subsystem.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Start() { }
+#else
             public virtual void Start() { }
+#endif
 
             /// <summary>
             /// Method to be implemented by provider to stop the camera for the subsystem.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Stop() { }
+#else
             public virtual void Stop() { }
+#endif
 
             /// <summary>
             /// Method to be implemented by provider to destroy the camera for the subsystem.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Destroy() { }
+#else
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Method to be implemented by provider to get the camera frame for the subsystem.
@@ -144,7 +176,7 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual Feature requestedLightEstimation
             {
                 get => Feature.None;
-                set {}
+                set { }
             }
 
             /// <summary>
@@ -227,198 +259,15 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Method to be implemented by the provider to query for the latest native camera image.
             /// </summary>
-            /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCameraImage"/></param>
+            /// <param name="cameraImageCinfo">The metadata required to construct a <see cref="XRCpuImage"/></param>
             /// <returns>
             /// <c>true</c> if the camera image is acquired. Otherwise, <c>false</c>.
             /// </returns>
             /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
             /// image.</exception>
-            public virtual bool TryAcquireLatestImage(out CameraImageCinfo cameraImageCinfo)
+            public virtual bool TryAcquireLatestCpuImage(out XRCpuImage.Cinfo cameraImageCinfo)
             {
                 throw new NotSupportedException("getting camera image is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to get the status of an existing asynchronous conversion
-            /// request.
-            /// </summary>
-            /// <param name="requestId">The unique identifier associated with a request.</param>
-            /// <returns>The state of the request.</returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            /// <seealso cref="ConvertAsync(int, XRCameraImageConversionParams)"/>
-            public virtual AsyncCameraImageConversionStatus GetAsyncRequestStatus(int requestId)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to dispose an existing native image identified by
-            /// <paramref name="nativeHandle"/>.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for this camera image.</param>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            /// <seealso cref="TryAcquireLatestImage"/>
-            public virtual void DisposeImage(int nativeHandle)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to dispose an existing async conversion request.
-            /// </summary>
-            /// <param name="requestId">A unique identifier for the request.</param>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            /// <seealso cref="ConvertAsync(int, XRCameraImageConversionParams)"/>
-            public virtual void DisposeAsyncRequest(int requestId)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to get information about an image plane from a native image
-            /// handle by index.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for this camera image.</param>
-            /// <param name="planeIndex">The index of the plane to get.</param>
-            /// <param name="planeCinfo">The returned camera plane information if successful.</param>
-            /// <returns>
-            /// <c>true</c> if the image plane was acquired. Otherwise, <c>false</c>.
-            /// </returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            /// <seealso cref="TryAcquireLatestImage"/>
-            public virtual bool TryGetPlane(
-                int nativeHandle,
-                int planeIndex,
-                out CameraImagePlaneCinfo planeCinfo)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to determine whether a native image handle returned by
-            /// <see cref="TryAcquireLatestImage"/> is currently valid. An image may become invalid if it has been
-            /// disposed.
-            /// </summary>
-            /// <remarks>
-            /// If a handle is valid, <see cref="TryConvert"/> and <see cref="TryGetConvertedDataSize"/> should not fail.
-            /// </remarks>
-            /// <param name="nativeHandle">A unique identifier for the camera image in question.</param>
-            /// <returns><c>true</c>, if it is a valid handle. Otherwise, <c>false</c>.</returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            /// <seealso cref="DisposeImage"/>
-            public virtual bool NativeHandleValid(
-                int nativeHandle)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to get the number of bytes required to store an image with the
-            /// given dimensions and <c>TextureFormat</c>.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="dimensions">The dimensions of the output image.</param>
-            /// <param name="format">The <c>TextureFormat</c> for the image.</param>
-            /// <param name="size">The number of bytes required to store the converted image.</param>
-            /// <returns><c>true</c> if the output <paramref name="size"/> was set.</returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            public virtual bool TryGetConvertedDataSize(
-                int nativeHandle,
-                Vector2Int dimensions,
-                TextureFormat format,
-                out int size)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to convert the image with handle
-            /// <paramref name="nativeHandle"/> using the provided <paramref cref="conversionParams"/>.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="conversionParams">The parameters to use during the conversion.</param>
-            /// <param name="destinationBuffer">A buffer to write the converted image to.</param>
-            /// <param name="bufferLength">The number of bytes available in the buffer.</param>
-            /// <returns>
-            /// <c>true</c> if the image was converted and stored in <paramref name="destinationBuffer"/>.
-            /// </returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            public virtual bool TryConvert(
-                int nativeHandle,
-                XRCameraImageConversionParams conversionParams,
-                IntPtr destinationBuffer,
-                int bufferLength)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to create an asynchronous request to convert a camera image,
-            /// similar to <see cref="TryConvert"/> except the conversion should happen on a thread other than the
-            /// calling (main) thread.
-            /// </summary>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="conversionParams">The parameters to use during the conversion.</param>
-            /// <returns>A unique identifier for this request.</returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            public virtual int ConvertAsync(
-                int nativeHandle,
-                XRCameraImageConversionParams conversionParams)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to get a pointer to the image data from a completed
-            /// asynchronous request. This method should only succeed if <see cref="GetAsyncRequestStatus"/> returns
-            /// <see cref="AsyncCameraImageConversionStatus.Ready"/>.
-            /// </summary>
-            /// <param name="requestId">The unique identifier associated with a request.</param>
-            /// <param name="dataPtr">A pointer to the native buffer containing the data.</param>
-            /// <param name="dataLength">The number of bytes in <paramref name="dataPtr"/>.</param>
-            /// <returns><c>true</c> if <paramref name="dataPtr"/> and <paramref name="dataLength"/> were set and point
-            ///  to the image data.</returns>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            public virtual bool TryGetAsyncRequestData(int requestId, out IntPtr dataPtr, out int dataLength)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
-            }
-
-            /// <summary>
-            /// Method to be implemented by the provider to similar to
-            /// <see cref="ConvertAsync(int, XRCameraImageConversionParams)"/> but takes a delegate to invoke when the
-            /// request is complete, rather than returning a request id.
-            /// </summary>
-            /// <remarks>
-            /// If the first parameter to <paramref name="callback"/> is
-            /// <see cref="AsyncCameraImageConversionStatus.Ready"/> then the <c>dataPtr</c> parameter must be valid
-            /// for the duration of the invocation. The data may be destroyed immediately upon return. The
-            /// <paramref name="context"/> parameter must be passed back to the <paramref name="callback"/>.
-            /// </remarks>
-            /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-            /// <param name="conversionParams">The parameters to use during the conversion.</param>
-            /// <param name="callback">A delegate which must be invoked when the request is complete, whether the
-            /// conversion was successfully or not.</param>
-            /// <param name="context">A native pointer which must be passed back unaltered to
-            /// <paramref name="callback"/>.</param>
-            /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera
-            /// image.</exception>
-            public virtual void ConvertAsync(
-                int nativeHandle,
-                XRCameraImageConversionParams conversionParams,
-                OnImageRequestCompleteDelegate callback,
-                IntPtr context)
-            {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -449,12 +298,21 @@ namespace UnityEngine.XR.ARSubsystems
 
                 return material;
             }
+
+            /// <summary>
+            /// Method to be implemented by the provider to handle any required platform-specifc functionality 
+            /// immediately before rendering the camera background. This method will always be called on the render
+            /// thread and should only be called by the code responsible for executing background rendering on
+            /// mobile AR platforms.
+            /// </summary>
+            /// <param name="id">Platform specific identifier.</param>
+            public virtual void OnBeforeBackgroundRender(int id) {}
         }
 
         /// <summary>
         /// Get the current focus mode in use by the provider.
         /// </summary>
-        public bool autoFocusEnabled => m_Provider.autoFocusEnabled;
+        public bool autoFocusEnabled => provider.autoFocusEnabled;
 
         /// <summary>
         /// Get or set the focus mode for the camera.
@@ -464,15 +322,15 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool autoFocusRequested
         {
-            get => m_Provider.autoFocusRequested;
-            set => m_Provider.autoFocusRequested = value;
+            get => provider.autoFocusRequested;
+            set => provider.autoFocusRequested = value;
         }
 
         /// <summary>
         /// Returns the current light estimation mode in use by the provider.
         /// </summary>
         /// <seealso cref="requestedLightEstimation"/>
-        public Feature currentLightEstimation => m_Provider.currentLightEstimation.LightEstimation();
+        public Feature currentLightEstimation => provider.currentLightEstimation.LightEstimation();
 
         /// <summary>
         /// Get or set the requested light estimation mode.
@@ -482,24 +340,26 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public Feature requestedLightEstimation
         {
-            get => m_Provider.requestedLightEstimation.LightEstimation();
-            set => m_Provider.requestedLightEstimation = value.LightEstimation();
+            get => provider.requestedLightEstimation.LightEstimation();
+            set => provider.requestedLightEstimation = value.LightEstimation();
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Start the camera subsystem.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stop the camera subsystem.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
         /// Destroy the camera subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Gets the <see cref="XRTextureDescriptor"/>s associated with the
@@ -512,7 +372,7 @@ namespace UnityEngine.XR.ARSubsystems
         public NativeArray<XRTextureDescriptor> GetTextureDescriptors(
             Allocator allocator)
         {
-            return m_Provider.GetTextureDescriptors(
+            return provider.GetTextureDescriptors(
                 default(XRTextureDescriptor),
                 allocator);
         }
@@ -523,7 +383,19 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The material to render the camera texture.
         /// </value>
-        public Material cameraMaterial => m_Provider.cameraMaterial;
+        public Material cameraMaterial => provider.cameraMaterial;
+
+        /// <summary>
+        /// Method to be called on the render thread to handle any required platform-specifc functionality 
+        /// immediately before rendering the camera background. This method will always be called on the render
+        /// thread and should only be called by the code responsible for executing background rendering on
+        /// mobile AR platforms.
+        /// </summary>
+        /// <param name="id">Platform specific identifier.</param>
+        public void OnBeforeBackgroundRender(int id)
+        {
+            provider.OnBeforeBackgroundRender(id);
+        }
 
         /// <summary>
         /// Returns the camera intrinsics information.
@@ -534,7 +406,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public bool TryGetIntrinsics(out XRCameraIntrinsics cameraIntrinsics)
         {
-            return m_Provider.TryGetIntrinsics(out cameraIntrinsics);
+            return provider.TryGetIntrinsics(out cameraIntrinsics);
         }
 
         /// <summary>
@@ -546,7 +418,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public NativeArray<XRCameraConfiguration> GetConfigurations(Allocator allocator)
         {
-            return m_Provider.GetConfigurations(default(XRCameraConfiguration), allocator);
+            return provider.GetConfigurations(default(XRCameraConfiguration), allocator);
         }
 
         /// <summary>
@@ -565,7 +437,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// implementation is unable to set the current camera configuration.</exception>
         public virtual XRCameraConfiguration? currentConfiguration
         {
-            get => m_Provider.currentConfiguration;
+            get => provider.currentConfiguration;
             set
             {
                 if (value == null)
@@ -573,7 +445,7 @@ namespace UnityEngine.XR.ARSubsystems
                     throw new ArgumentNullException("value", "cannot set the camera configuration to null");
                 }
 
-                m_Provider.currentConfiguration = value;
+                provider.currentConfiguration = value;
             }
         }
 
@@ -581,8 +453,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// Whether to invert the culling mode during rendering. Some front-facing
         /// camera modes may require this.
         /// </summary>
-        public bool invertCulling => m_Provider.invertCulling;
+        public bool invertCulling => provider.invertCulling;
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Method for the implementation to create the camera functionality provider.
         /// </summary>
@@ -590,6 +463,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The camera functionality provider.
         /// </returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// Get the latest frame from the provider.
@@ -604,7 +478,7 @@ namespace UnityEngine.XR.ARSubsystems
             XRCameraParams cameraParams,
             out XRCameraFrame frame)
         {
-            if (running && m_Provider.TryGetFrame(cameraParams, out frame))
+            if (running && provider.TryGetFrame(cameraParams, out frame))
             {
                 return true;
             }
@@ -619,7 +493,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if camera permission has been granted. Otherwise, <c>false</c>.
         /// </value>
-        public bool permissionGranted => m_Provider.permissionGranted;
+        public bool permissionGranted => provider.permissionGranted;
 
         /// <summary>
         /// Get the enabled and disabled shader keywords for the material.
@@ -627,36 +501,44 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="enabledKeywords">The keywords to enable for the material.</param>
         /// <param name="disabledKeywords">The keywords to disable for the material.</param>
         public void GetMaterialKeywords(out List<string> enabledKeywords, out List<string> disabledKeywords)
-            => m_Provider.GetMaterialKeywords(out enabledKeywords, out disabledKeywords);
+            => provider.GetMaterialKeywords(out enabledKeywords, out disabledKeywords);
 
         /// <summary>
-        /// Attempt to get the latest camera image. This provides directly access to the raw pixel data, as well as
-        /// utilities to convert to RGB and Grayscale formats.
+        /// Attempts to acquire the latest camera image. This provides direct access to the raw pixel data, as well as
+        /// to utilities to convert to RGB and Grayscale formats. This method is obsolete. Use
+        /// <see cref="TryAcquireLatestCpuImage"/> instead.
         /// </summary>
         /// <remarks>
-        /// The returned <see cref="XRCameraImage"/> must be disposed to avoid resource leaks.
+        /// The returned <see cref="XRCpuImage"/> must be disposed to avoid resource leaks.
         /// </remarks>
-        /// <param name="cameraImage">A valid <see cref="XRCameraImage"/> if this method returns <c>true</c>.</param>
-        /// <returns>
-        /// <c>true</c> if the image was acquired. Otherwise, <c>false</c>.
-        /// </returns>
+        /// <param name="cpuImage">A valid <see cref="XRCpuImage"/> if this method returns <c>true</c>.</param>
+        /// <returns>Returns `true` if the image was acquired. Returns `false` otherwise.</returns>
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
         /// </exception>
-        public bool TryGetLatestImage(out XRCameraImage cameraImage)
+        [Obsolete("Use TryAcquireLatestCpuImage instead. (2020-05-19")]
+        public bool TryGetLatestImage(out XRCpuImage cpuImage) => TryAcquireLatestCpuImage(out cpuImage);
+
+        /// <summary>
+        /// Attempts to acquire the latest camera image. This provides direct access to the raw pixel data, as well as
+        /// to utilities to convert to RGB and Grayscale formats.
+        /// </summary>
+        /// <remarks>
+        /// The returned <see cref="XRCpuImage"/> must be disposed to avoid resource leaks.
+        /// </remarks>
+        /// <param name="cpuImage">A valid <see cref="XRCpuImage"/> if this method returns <c>true</c>.</param>
+        /// <returns>Returns `true` if the image was acquired. Returns `false` otherwise.</returns>
+        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
+        /// </exception>
+        public bool TryAcquireLatestCpuImage(out XRCpuImage cpuImage)
         {
-            CameraImageCinfo cameraImageCinfo;
-            if (m_Provider.TryAcquireLatestImage(out cameraImageCinfo))
+            if (provider.cpuImageApi != null && provider.TryAcquireLatestCpuImage(out var cinfo))
             {
-                cameraImage = new XRCameraImage(this, cameraImageCinfo.nativeHandle, cameraImageCinfo.dimensions,
-                                                cameraImageCinfo.planeCount, cameraImageCinfo.timestamp,
-                                                cameraImageCinfo.format);
+                cpuImage = new XRCpuImage(provider.cpuImageApi, cinfo);
                 return true;
             }
-            else
-            {
-                cameraImage = default(XRCameraImage);
-                return false;
-            }
+
+            cpuImage = default;
+            return false;
         }
 
         /// <summary>
@@ -686,440 +568,12 @@ namespace UnityEngine.XR.ARSubsystems
         public static bool Register(XRCameraSubsystemCinfo cameraSubsystemParams)
         {
             XRCameraSubsystemDescriptor cameraSubsystemDescriptor = XRCameraSubsystemDescriptor.Create(cameraSubsystemParams);
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(cameraSubsystemDescriptor);
+            return true;
+#else
             return SubsystemRegistration.CreateDescriptor(cameraSubsystemDescriptor);
-        }
-
-        /// <summary>
-        /// Get the status of an existing asynchronous conversion request.
-        /// </summary>
-        /// <param name="requestId">The unique identifier associated with a request.</param>
-        /// <returns>The state of the request.</returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        /// <seealso cref="ConvertAsync(int, XRCameraImageConversionParams)"/>
-        internal AsyncCameraImageConversionStatus GetAsyncRequestStatus(int requestId)
-        {
-            return m_Provider.GetAsyncRequestStatus(requestId);
-        }
-
-        /// <summary>
-        /// Dispose an existing native image identified by <paramref name="nativeHandle"/>.
-        /// </summary>
-        /// <param name="nativeHandle">A unique identifier for this camera image.</param>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        /// <seealso cref="Provider.TryAcquireLatestImage"/>
-        internal void DisposeImage(int nativeHandle) => m_Provider.DisposeImage(nativeHandle);
-
-        /// <summary>
-        /// Dispose an existing async conversion request.
-        /// </summary>
-        /// <param name="requestId">A unique identifier for the request.</param>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        /// <seealso cref="Provider.ConvertAsync(int, XRCameraImageConversionParams)"/>
-        internal void DisposeAsyncRequest(int requestId) => m_Provider.DisposeAsyncRequest(requestId);
-
-        /// <summary>
-        /// Attempt to get information about an image plane from a native image by index.
-        /// </summary>
-        /// <param name="nativeHandle">A unique identifier for this camera image.</param>
-        /// <param name="planeIndex">The index of the plane to get.</param>
-        /// <param name="planeCinfo">The returned camera plane information if successful.</param>
-        /// <returns>
-        /// <c>true</c> if the image plane is successfully acquired. Otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        /// <seealso cref="Provider.TryAcquireLatestImage"/>
-        internal bool TryGetPlane(
-            int nativeHandle,
-            int planeIndex,
-            out CameraImagePlaneCinfo planeCinfo)
-        {
-            return m_Provider.TryGetPlane(nativeHandle, planeIndex, out planeCinfo);
-        }
-
-        /// <summary>
-        /// Determine whether a native image handle returned by <see cref="Provider.TryAcquireLatestImage"/> is
-        /// currently valid. An image may become invalid if it has been disposed.
-        /// </summary>
-        /// <remarks>
-        /// If a handle is valid, <see cref="TryConvert"/> and <see cref="TryGetConvertedDataSize"/> should not fail.
-        /// </remarks>
-        /// <param name="nativeHandle">A unique identifier for the camera image in question.</param>
-        /// <returns><c>true</c> if it is a valid handle, <c>false</c> otherwise.</returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        /// <seealso cref="DisposeImage"/>
-        internal bool NativeHandleValid(int nativeHandle) => m_Provider.NativeHandleValid(nativeHandle);
-
-        /// <summary>
-        /// Get the number of bytes required to store an image with the given dimensions and <c>TextureFormat</c>.
-        /// </summary>
-        /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-        /// <param name="dimensions">The dimensions of the output image.</param>
-        /// <param name="format">The <c>TextureFormat</c> for the image.</param>
-        /// <param name="size">The number of bytes required to store the converted image.</param>
-        /// <returns><c>true</c> if the output <paramref name="size"/> was set.</returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        internal bool TryGetConvertedDataSize(
-            int nativeHandle,
-            Vector2Int dimensions,
-            TextureFormat format,
-            out int size)
-        {
-            return m_Provider.TryGetConvertedDataSize(nativeHandle, dimensions, format, out size);
-        }
-
-        /// <summary>
-        /// Convert the image with handle <paramref name="nativeHandle"/> using the provided
-        /// <see cref="XRCameraImageConversionParams"/>.
-        /// </summary>
-        /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-        /// <param name="conversionParams">The parameters to use during the conversion.</param>
-        /// <param name="destinationBuffer">A buffer to write the converted image to.</param>
-        /// <param name="bufferLength">The number of bytes available in the buffer.</param>
-        /// <returns>
-        /// <c>true</c> if the image was converted and stored in <paramref name="destinationBuffer"/>.
-        /// </returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        internal bool TryConvert(
-            int nativeHandle,
-            XRCameraImageConversionParams conversionParams,
-            IntPtr destinationBuffer,
-            int bufferLength)
-        {
-            return m_Provider.TryConvert(nativeHandle, conversionParams, destinationBuffer, bufferLength);
-        }
-
-        /// <summary>
-        /// Create an asynchronous request to convert a camera image, similar to <see cref="TryConvert"/> except the
-        /// conversion should happen on a thread other than the calling (main) thread.
-        /// </summary>
-        /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-        /// <param name="conversionParams">The parameters to use during the conversion.</param>
-        /// <returns>A unique identifier for this request.</returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        internal int ConvertAsync(
-            int nativeHandle,
-            XRCameraImageConversionParams conversionParams)
-        {
-            return m_Provider.ConvertAsync(nativeHandle, conversionParams);
-        }
-
-        /// <summary>
-        /// Get a pointer to the image data from a completed asynchronous request. This method should only succeed if
-        /// <see cref="GetAsyncRequestStatus"/> returns <see cref="AsyncCameraImageConversionStatus.Ready"/>.
-        /// </summary>
-        /// <param name="requestId">The unique identifier associated with a request.</param>
-        /// <param name="dataPtr">A pointer to the native buffer containing the data.</param>
-        /// <param name="dataLength">The number of bytes in <paramref name="dataPtr"/>.</param>
-        /// <returns><c>true</c> if <paramref name="dataPtr"/> and <paramref name="dataLength"/> were set and point to
-        /// the image data.</returns>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        internal bool TryGetAsyncRequestData(int requestId, out IntPtr dataPtr, out int dataLength)
-        {
-            return m_Provider.TryGetAsyncRequestData(requestId, out dataPtr, out dataLength);
-        }
-
-        /// <summary>
-        /// Callback from native code for when the asychronous conversion is complete.
-        /// </summary>
-        /// <param name="status">The status of the conversion operation.</param>
-        /// <param name="conversionParams">The parameters for the conversion.</param>
-        /// <param name="dataPtr">The native pointer to the converted data.</param>
-        /// <param name="dataLength">The memory size of the converted data.</param>
-        /// <param name="context">The native context for the conversion operation.</param>
-        protected internal delegate void OnImageRequestCompleteDelegate(
-            AsyncCameraImageConversionStatus status,
-            XRCameraImageConversionParams conversionParams,
-            IntPtr dataPtr,
-            int dataLength,
-            IntPtr context);
-
-        /// <summary>
-        /// Similar to <see cref="ConvertAsync(int, XRCameraImageConversionParams)"/> but takes a delegate to invoke
-        /// when the request is complete, rather than returning a request id.
-        /// </summary>
-        /// <remarks>
-        /// If the first parameter to <paramref name="callback"/> is
-        /// <see cref="AsyncCameraImageConversionStatus.Ready"/> then the <c>dataPtr</c> parameter must be valid for
-        /// the duration of the invocation. The data may be destroyed immediately upon return. The
-        /// <paramref name="context"/> parameter must be passed back to the <paramref name="callback"/>.
-        /// </remarks>
-        /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
-        /// <param name="conversionParams">The parameters to use during the conversion.</param>
-        /// <param name="callback">A delegate which must be invoked when the request is complete, whether the
-        /// conversion was successfully or not.</param>
-        /// <param name="context">A native pointer which must be passed back unaltered to <paramref name="callback"/>.
-        /// </param>
-        /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
-        /// </exception>
-        internal void ConvertAsync(
-            int nativeHandle,
-            XRCameraImageConversionParams conversionParams,
-            OnImageRequestCompleteDelegate callback,
-            IntPtr context)
-        {
-            m_Provider.ConvertAsync(nativeHandle, conversionParams, callback, context);
-        }
-
-        /// <summary>
-        /// Container for native camera image construction metadata.
-        /// </summary>
-        protected struct CameraImageCinfo : IEquatable<CameraImageCinfo>
-        {
-            /// <summary>
-            /// The handle representing the camera image on the native level.
-            /// </summary>
-            /// <value>
-            /// The handle representing the camera image on the native level.
-            /// </value>
-            public int nativeHandle => m_NativeHandle;
-            int m_NativeHandle;
-
-            /// <summary>
-            /// The dimensions of the camera image.
-            /// </summary>
-            /// <value>
-            /// The dimensions of the camera image.
-            /// </value>
-            public Vector2Int dimensions => m_Dimensions;
-            Vector2Int m_Dimensions;
-
-            /// <summary>
-            /// The number of video planes in the camera image.
-            /// </summary>
-            /// <value>
-            /// The number of video planes in the camera image.
-            /// </value>
-            public int planeCount => m_PlaneCount;
-            int m_PlaneCount;
-
-            /// <summary>
-            /// The timestamp for when the camera image was captured.
-            /// </summary>
-            /// <value>
-            /// The timestamp for when the camera image was captured.
-            /// </value>
-            public double timestamp => m_Timestamp;
-            double m_Timestamp;
-
-            /// <summary>
-            /// The format of the camera image.
-            /// </summary>
-            /// <value>
-            /// The format of the camera image.
-            /// </value>
-            public CameraImageFormat format => m_Format;
-            CameraImageFormat m_Format;
-
-            /// <summary>
-            /// Constructs the camera image cinfo.
-            /// </summary>
-            /// <param name="nativeHandle">The handle representing the camera image on the native level.</param>
-            /// <param name="dimensions">The dimensions of the camera image.</param>
-            /// <param name="planeCount">The number of video planes in the camera image.</param>
-            /// <param name="timestamp">The timestamp for when the camera image was captured.</param>
-            /// <param name="format">The format of the camera image.</param>
-            public CameraImageCinfo(int nativeHandle, Vector2Int dimensions, int planeCount, double timestamp,
-                                    CameraImageFormat format)
-            {
-                this.m_NativeHandle = nativeHandle;
-                this.m_Dimensions = dimensions;
-                this.m_PlaneCount = planeCount;
-                this.m_Timestamp = timestamp;
-                this.m_Format = format;
-            }
-
-            /// <summary>
-            /// Tests for equality.
-            /// </summary>
-            /// <param name="other">The other <see cref="CameraImageCinfo"/> to compare against.</param>
-            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="CameraImageCinfo"/>, otherwise false.</returns>
-            public bool Equals(CameraImageCinfo other)
-            {
-                return (nativeHandle.Equals(other.nativeHandle) && dimensions.Equals(other.dimensions)
-                        && planeCount.Equals(other.planeCount) && timestamp.Equals(other.timestamp)
-                        && (format == other.format));
-            }
-
-            /// <summary>
-            /// Tests for equality.
-            /// </summary>
-            /// <param name="obj">The `object` to compare against.</param>
-            /// <returns>`True` if <paramref name="obj"/> is of type <see cref="CameraImageCinfo"/> and
-            /// <see cref="Equals(CameraImageCinfo)"/> also returns `true`; otherwise `false`.</returns>
-            public override bool Equals(System.Object obj) => (obj is CameraImageCinfo) && Equals((CameraImageCinfo)obj);
-
-            /// <summary>
-            /// Tests for equality. Same as <see cref="Equals(CameraImageCinfo)"/>.
-            /// </summary>
-            /// <param name="lhs">The left-hand side of the comparison.</param>
-            /// <param name="rhs">The right-hand side of the comparison.</param>
-            /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
-            public static bool operator ==(CameraImageCinfo lhs, CameraImageCinfo rhs) => lhs.Equals(rhs);
-
-            /// <summary>
-            /// Tests for inequality. Same as `!`<see cref="Equals(CameraImageCinfo)"/>.
-            /// </summary>
-            /// <param name="lhs">The left-hand side of the comparison.</param>
-            /// <param name="rhs">The right-hand side of the comparison.</param>
-            /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
-            public static bool operator !=(CameraImageCinfo lhs, CameraImageCinfo rhs) => !(lhs == rhs);
-
-            /// <summary>
-            /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
-            /// </summary>
-            /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode()
-            {
-                int hashCode = 486187739;
-                unchecked
-                {
-                    hashCode = (hashCode * 486187739) + nativeHandle.GetHashCode();
-                    hashCode = (hashCode * 486187739) + dimensions.GetHashCode();
-                    hashCode = (hashCode * 486187739) + planeCount.GetHashCode();
-                    hashCode = (hashCode * 486187739) + timestamp.GetHashCode();
-                    hashCode = (hashCode * 486187739) + ((int)format).GetHashCode();
-                }
-                return hashCode;
-            }
-
-            /// <summary>
-            /// Generates a string representation of this object suitable for debugging.
-            /// </summary>
-            /// <returns>A string representation of this <see cref="CameraImageCinfo"/>.</returns>
-            public override string ToString()
-            {
-                return string.Format("nativeHandle: {0} dimensions:{1} planes:{2} timestamp:{3} format:{4}",
-                                     nativeHandle.ToString(), dimensions.ToString(), planeCount.ToString(),
-                                     timestamp.ToString(), format.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Container for the metadata describing access to the raw camera image plane data.
-        /// </summary>
-        protected internal struct CameraImagePlaneCinfo : IEquatable<CameraImagePlaneCinfo>
-        {
-            /// <summary>
-            /// The pointer to the raw native image data.
-            /// </summary>
-            /// <value>
-            /// The pointer to the raw native image data.
-            /// </value>
-            public IntPtr dataPtr => m_DataPtr;
-            IntPtr m_DataPtr;
-
-            /// <summary>
-            /// The length of the native image data.
-            /// </summary>
-            /// <value>
-            /// The length of the native image data.
-            /// </value>
-            public int dataLength => m_DataLength;
-            int m_DataLength;
-
-            /// <summary>
-            /// The stride for iterating through the rows of the native image data.
-            /// </summary>
-            /// <value>
-            /// The stride for iterating through the rows of the native image data.
-            /// </value>
-            public int rowStride => m_RowStride;
-            int m_RowStride;
-
-            /// <summary>
-            /// The stride for iterating through the pixels of the native image data.
-            /// </summary>
-            /// <value>
-            /// The stride for iterating through the pixels of the native image data.
-            /// </value>
-            public int pixelStride => m_PixelStride;
-            int m_PixelStride;
-
-            /// <summary>
-            /// Constructs the camera image plane cinfo.
-            /// </summary>
-            /// <param name="dataPtr">The pointer to the raw native image data.</param>
-            /// <param name="dataLength">The length of the native image data.</param>
-            /// <param name="rowStride">The stride for iterating through the rows of the native image data.</param>
-            /// <param name="pixelStride">The stride for iterating through the pixels of the native image data.</param>
-            public CameraImagePlaneCinfo(IntPtr dataPtr, int dataLength, int rowStride, int pixelStride)
-            {
-                this.m_DataPtr = dataPtr;
-                this.m_DataLength = dataLength;
-                this.m_RowStride = rowStride;
-                this.m_PixelStride = pixelStride;
-            }
-
-            /// <summary>
-            /// Tests for equality.
-            /// </summary>
-            /// <param name="other">The other <see cref="CameraImagePlaneCinfo"/> to compare against.</param>
-            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="CameraImagePlaneCinfo"/>, otherwise false.</returns>
-            public bool Equals(CameraImagePlaneCinfo other)
-            {
-                return (dataPtr.Equals(other.dataPtr) && dataLength.Equals(other.dataLength)
-                        && rowStride.Equals(other.rowStride) && pixelStride.Equals(other.pixelStride));
-            }
-
-            /// <summary>
-            /// Tests for equality.
-            /// </summary>
-            /// <param name="obj">The `object` to compare against.</param>
-            /// <returns>`True` if <paramref name="obj"/> is of type <see cref="CameraImagePlaneCinfo"/> and
-            /// <see cref="Equals(CameraImagePlaneCinfo)"/> also returns `true`; otherwise `false`.</returns>
-            public override bool Equals(System.Object obj) => (obj is CameraImagePlaneCinfo) && Equals((CameraImagePlaneCinfo)obj);
-
-            /// <summary>
-            /// Tests for equality. Same as <see cref="Equals(CameraImagePlaneCinfo)"/>.
-            /// </summary>
-            /// <param name="lhs">The left-hand side of the comparison.</param>
-            /// <param name="rhs">The right-hand side of the comparison.</param>
-            /// <returns>`True` if <paramref name="lhs"/> is equal to <paramref name="rhs"/>, otherwise `false`.</returns>
-            public static bool operator ==(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs) => lhs.Equals(rhs);
-
-            /// <summary>
-            /// Tests for inequality. Same as `!`<see cref="Equals(CameraImagePlaneCinfo)"/>.
-            /// </summary>
-            /// <param name="lhs">The left-hand side of the comparison.</param>
-            /// <param name="rhs">The right-hand side of the comparison.</param>
-            /// <returns>`True` if <paramref name="lhs"/> is not equal to <paramref name="rhs"/>, otherwise `false`.</returns>
-            public static bool operator !=(CameraImagePlaneCinfo lhs, CameraImagePlaneCinfo rhs) => !(lhs == rhs);
-
-            /// <summary>
-            /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
-            /// </summary>
-            /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode()
-            {
-                int hashCode = 486187739;
-                unchecked
-                {
-                    hashCode = (hashCode * 486187739) + dataPtr.GetHashCode();
-                    hashCode = (hashCode * 486187739) + dataLength.GetHashCode();
-                    hashCode = (hashCode * 486187739) + rowStride.GetHashCode();
-                    hashCode = (hashCode * 486187739) + pixelStride.GetHashCode();
-                }
-                return hashCode;
-            }
-
-            /// <summary>
-            /// Generates a string suitable for debugging.
-            /// </summary>
-            /// <returns>A string representation of this <see cref="CameraImagePlaneCinfo"/>.</returns>
-            public override string ToString()
-            {
-                return string.Format("dataPtr: {0} length:{1} rowStride:{2} pixelStride:{3}", dataPtr.ToString(),
-                                     dataLength.ToString(), rowStride.ToString(), pixelStride.ToString());
-            }
+#endif
         }
     }
 }

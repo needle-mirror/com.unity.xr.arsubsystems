@@ -25,7 +25,7 @@ namespace UnityEngine.XR.ARSubsystems
         UserFacingCamera = 1 << 1,
 
         /// <summary>
-        /// Both cameras (world and user-facing).
+        /// Either camera (<see cref="WorldFacingCamera"/> or <see cref="UserFacingCamera"/>).
         /// </summary>
         AnyCamera = WorldFacingCamera | UserFacingCamera,
 
@@ -40,9 +40,9 @@ namespace UnityEngine.XR.ARSubsystems
         PositionAndRotation = 1 << 3,
 
         /// <summary>
-        /// All tracking modes (see above).
+        /// Any tracking mode (<see cref="RotationOnly"/> or <see cref="PositionAndRotation"/>).
         /// </summary>
-        AnyTracking = RotationOnly | PositionAndRotation,
+        AnyTrackingMode = RotationOnly | PositionAndRotation,
 
         /// <summary>
         /// Face detection. See <see cref="XRFaceSubsystem"/>.
@@ -135,9 +135,24 @@ namespace UnityEngine.XR.ARSubsystems
         AnyLightEstimation = LightEstimationAmbientIntensity | LightEstimationAmbientColor | LightEstimationAmbientSphericalHarmonics | LightEstimationMainLightDirection | LightEstimationMainLightIntensity,
 
         /// <summary>
-        /// Instant and Tracked raycast.
+        /// Instant and Tracked raycasts.
         /// </summary>
         Raycast = 1 << 21,
+
+        /// <summary>
+        /// A feature describing real-time meshing capability.
+        /// </summary>
+        Meshing = 1 << 22,
+
+        /// <summary>
+        /// A feature describing classification for <see cref="Meshing"/>.
+        /// </summary>
+        MeshClassification = 1 << 23,
+
+        /// <summary>
+        /// A feature describing the ability to surface point clouds.
+        /// </summary>
+        PointCloud = 1 << 24,
     }
 
     /// <summary>
@@ -234,8 +249,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
         /// <returns>The tracking-related <see cref="Feature"/> flags from <paramref name="self"/>.</returns>
-        /// <seealso cref="Feature.AnyTracking"/>
-        public static Feature TrackingModes(this Feature self) => self.Intersection(Feature.AnyTracking);
+        /// <seealso cref="Feature.AnyTrackingMode"/>
+        public static Feature TrackingModes(this Feature self) => self.Intersection(Feature.AnyTrackingMode);
 
         /// <summary>
         /// Filters just the light estimation related <see cref="Feature"/> flags.
@@ -250,8 +265,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
         /// <returns><paramref name="self"/> with camera and tracking-related bits removed.</returns>
         /// <seealso cref="Feature.AnyCamera"/>
-        /// <seealso cref="Feature.AnyTracking"/>
-        public static Feature WithoutCameraOrTracking(this Feature self) => self.SetDifference(Feature.AnyCamera.Union(Feature.AnyTracking));
+        /// <seealso cref="Feature.AnyTrackingMode"/>
+        public static Feature WithoutCameraOrTracking(this Feature self) => self.SetDifference(Feature.AnyCamera.Union(Feature.AnyTrackingMode));
 
         static Feature LowestBit(this Feature self)
         {
@@ -341,6 +356,15 @@ namespace UnityEngine.XR.ARSubsystems
                         break;
                     case Feature.Raycast:
                         names.Add("Raycast");
+                        break;
+                    case Feature.Meshing:
+                        names.Add("Meshing");
+                        break;
+                    case Feature.MeshClassification:
+                        names.Add("Mesh Classification");
+                        break;
+                    case Feature.PointCloud:
+                        names.Add("Point Cloud");
                         break;
                     default:
                         names.Add(feature.ToString());

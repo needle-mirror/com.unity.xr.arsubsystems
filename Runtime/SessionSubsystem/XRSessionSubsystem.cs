@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -8,17 +12,23 @@ namespace UnityEngine.XR.ARSubsystems
     /// particularly those that have non-XR modes, need to be able to turn the
     /// session on and off to enter and exit XR mode(s) of operation.
     /// </summary>
-    public abstract class XRSessionSubsystem : XRSubsystem<XRSessionSubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XRSessionSubsystem
+        : SubsystemWithProvider<XRSessionSubsystem, XRSessionSubsystemDescriptor, XRSessionSubsystem.Provider>
+#else
+    public abstract class XRSessionSubsystem
+        : XRSubsystem<XRSessionSubsystemDescriptor>
+#endif
     {
         /// <summary>
         /// Returns an implementation-defined pointer associated with the session.
         /// </summary>
-        public IntPtr nativePtr => m_Provider.nativePtr;
+        public IntPtr nativePtr => provider.nativePtr;
 
         /// <summary>
         /// Returns a unique session identifier for this session.
         /// </summary>
-        public Guid sessionId => m_Provider.sessionId;
+        public Guid sessionId => provider.sessionId;
 
         /// <summary>
         /// Asynchronously retrieves the <see cref="SessionAvailability"/>. Used to determine whether
@@ -29,7 +39,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         /// <returns>A <see cref="Promise{SessionAvailability}"/> which can be used to determine when the
         /// availability has been determined and retrieve the result.</returns>
-        public Promise<SessionAvailability> GetAvailabilityAsync() => m_Provider.GetAvailabilityAsync();
+        public Promise<SessionAvailability> GetAvailabilityAsync() => provider.GetAvailabilityAsync();
 
         /// <summary>
         /// Asynchronously attempts to install XR software on the current device.
@@ -42,10 +52,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// installation completes and retrieve the result.</returns>
         public Promise<SessionInstallationStatus> InstallAsync()
         {
-            if (!SubsystemDescriptor.supportsInstall)
+            if (!subsystemDescriptor.supportsInstall)
                 throw new NotSupportedException("InstallAsync is not supported on this platform.");
 
-            return m_Provider.InstallAsync();
+            return provider.InstallAsync();
         }
 
         /// <summary>
@@ -53,31 +63,36 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public XRSessionSubsystem()
         {
-            m_Provider = CreateProvider();
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
             m_ConfigurationChooser = m_DefaultConfigurationChooser;
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Starts or resumes the session.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Resume();
+        protected sealed override void OnStart() => provider.Resume();
+#endif
 
         /// <summary>
         /// Restarts a session. <see cref="Stop"/> and <see cref="Start"/> pause and resume
         /// a session, respectively. <c>Restart</c> resets the session state and clears
         /// and any detected trackables.
         /// </summary>
-        public void Reset() => m_Provider.Reset();
+        public void Reset() => provider.Reset();
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Pauses the session.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Pause();
-
+        protected sealed override void OnStop() => provider.Pause();
         /// <summary>
         /// Destroys the session.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Determines the <see cref="Configuration"/> the session will use given the requested <paramref name="features"/>.
@@ -141,11 +156,11 @@ namespace UnityEngine.XR.ARSubsystems
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                 DebugPrintConfigurationChange(currentConfiguration.Value, requestedFeatures);
 #endif
-                m_Provider.Update(updateParams, currentConfiguration.Value);
+                provider.Update(updateParams, currentConfiguration.Value);
             }
             else
             {
-                m_Provider.Update(updateParams);
+                provider.Update(updateParams);
             }
         }
 
@@ -190,7 +205,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Get the requested <see cref="Feature"/>s. These are used to determine the session's <see cref="Configuration"/>.
         /// </summary>
         /// <seealso cref="XRSessionSubsystem.DetermineConfiguration(Feature)"/>
-        public Feature requestedFeatures => m_Provider.requestedFeatures;
+        public Feature requestedFeatures => provider.requestedFeatures;
 
         /// <summary>
         /// Get the list of supported configuration descriptors. The session may have multiple, discrete "modes" of operation.
@@ -205,36 +220,36 @@ namespace UnityEngine.XR.ARSubsystems
         /// and populates it with descriptors describing the supported configuration(s). The caller
         /// owns the memory and is responsible for [Dispose](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.Dispose.html)'ing
         /// of the <c>NativeArray</c>.</returns>
-        public NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator) => m_Provider.GetConfigurationDescriptors(allocator);
+        public NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator) => provider.GetConfigurationDescriptors(allocator);
 
         /// <summary>
         /// Should be invoked when the application is paused.
         /// </summary>
-        public void OnApplicationPause() =>  m_Provider.OnApplicationPause();
+        public void OnApplicationPause() =>  provider.OnApplicationPause();
 
         /// <summary>
         /// Should be invoked when the application is resumed.
         /// </summary>
-        public void OnApplicationResume() => m_Provider.OnApplicationResume();
+        public void OnApplicationResume() => provider.OnApplicationResume();
 
         /// <summary>
         /// Gets the <see cref="TrackingState"/> for the session.
         /// </summary>
-        public TrackingState trackingState => m_Provider.trackingState;
+        public TrackingState trackingState => provider.trackingState;
 
         /// <summary>
         /// Get or set the desired <see cref="TrackingMode"/>. Query for support with <c>SubsystemDescriptor.supportedTrackingModes</c>.
         /// </summary>
         public Feature requestedTrackingMode
         {
-            get => m_Provider.requestedTrackingMode.TrackingModes();
-            set => m_Provider.requestedTrackingMode = value.TrackingModes();
+            get => provider.requestedTrackingMode.TrackingModes();
+            set => provider.requestedTrackingMode = value.TrackingModes();
         }
 
         /// <summary>
         /// Get the current tracking mode in use by the subsystem.
         /// </summary>
-        public Feature currentTrackingMode => m_Provider.currentTrackingMode.TrackingModes();
+        public Feature currentTrackingMode => provider.currentTrackingMode.TrackingModes();
 
         /// <summary>
         /// Get or set the <see cref="ConfigurationChooser"/> used by
@@ -264,7 +279,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Gets the <see cref="NotTrackingReason"/> for the session.
         /// </summary>
-        public NotTrackingReason notTrackingReason => m_Provider.notTrackingReason;
+        public NotTrackingReason notTrackingReason => provider.notTrackingReason;
 
         /// <summary>
         /// Whether the AR session update is synchronized with the Unity frame rate.
@@ -273,7 +288,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/> is <c>False</c>.</exception>
         public bool matchFrameRateEnabled
         {
-            get => m_Provider.matchFrameRateEnabled;
+            get => provider.matchFrameRateEnabled;
         }
 
         /// <summary>
@@ -283,29 +298,45 @@ namespace UnityEngine.XR.ARSubsystems
         /// <seealso cref="matchFrameRateEnabled"/>
         public bool matchFrameRateRequested
         {
-            get => m_Provider.matchFrameRateRequested;
-            set => m_Provider.matchFrameRateRequested = value;
+            get => provider.matchFrameRateRequested;
+            set => provider.matchFrameRateRequested = value;
         }
 
         /// <summary>
         /// The native update rate of the AR Session.
         /// </summary>
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/> is <c>False</c>.</exception>
-        public int frameRate => m_Provider.frameRate;
+        public int frameRate => provider.frameRate;
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Implement this to provide this class with an interface to
         /// platform specific implementations.
         /// </summary>
         /// <returns>An implementation specific provider.</returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// The API this subsystem uses to interop with
         /// different provider implementations.
         /// </summary>
-        protected class Provider
+        public class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRSessionSubsystem>
+#endif
         {
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Invoked to start or resume a session. This is different from <see cref="OnApplicationResume"/>.
+            /// </summary>
+            public override void Start() {}
+
+            /// <summary>
+            /// Invoked to pause a running session. This is different from <see cref="OnApplicationPause"/>.
+            /// </summary>
+            public override void Stop() {}
+#else
             /// <summary>
             /// Invoked to start or resume a session. This is different from <see cref="OnApplicationResume"/>.
             /// </summary>
@@ -315,11 +346,12 @@ namespace UnityEngine.XR.ARSubsystems
             /// Invoked to pause a running session. This is different from <see cref="OnApplicationPause"/>.
             /// </summary>
             public virtual void Pause() { }
+#endif
 
             /// <summary>
             /// Perform any per-frame update logic here.
             /// </summary>
-            /// <param name="updateParams">Paramters about the current state that may be needed to inform the session.</param>
+            /// <param name="updateParams">Parameters about the current state that may be needed to inform the session.</param>
             public virtual void Update(XRSessionUpdateParams updateParams) { }
 
             /// <summary>
@@ -327,7 +359,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <paramref name="configuration.descriptor.identifier"/>, which should be one of the ones returned
             /// by <see cref="GetConfigurationDescriptors(Unity.Collections.Allocator)"/>.
             /// </summary>
-            /// <param name="updateParams">Paramters about the current state that may be needed to inform the session.</param>
+            /// <param name="updateParams">Parameters about the current state that may be needed to inform the session.</param>
             /// <param name="configuration">The configuration the session should use.</param>
             public virtual void Update(XRSessionUpdateParams updateParams, Configuration configuration) { }
 
@@ -337,7 +369,7 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual Feature requestedFeatures => Feature.None;
 
             /// <summary>
-            /// Get or set the requested tracking mode, e.g., the <see cref="Feature.AnyTracking"/> bits.
+            /// Get or set the requested tracking mode, e.g., the <see cref="Feature.AnyTrackingMode"/> bits.
             /// </summary>
             public virtual Feature requestedTrackingMode
             {
@@ -346,7 +378,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Get the current tracking mode, e.g., the <see cref="Feature.AnyTracking"/> bits.
+            /// Get the current tracking mode, e.g., the <see cref="Feature.AnyTrackingMode"/> bits.
             /// </summary>
             public virtual Feature currentTrackingMode => Feature.None;
 
@@ -363,7 +395,11 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Stop the session and destroy all associated resources.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Destroy() { }
+#else
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Reset the session. The behavior should be equivalent to destroying and recreating the session.
@@ -454,6 +490,9 @@ namespace UnityEngine.XR.ARSubsystems
                 throw new NotSupportedException("Querying the frame rate is not supported by this session subsystem.");
         }
 
-        Provider m_Provider;
+#if !UNITY_2020_2_OR_NEWER
+        Provider provider;
+        XRSessionSubsystemDescriptor subsystemDescriptor => SubsystemDescriptor;
+#endif
     }
 }

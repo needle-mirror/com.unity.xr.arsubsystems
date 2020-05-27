@@ -29,8 +29,8 @@ namespace UnityEngine.XR.ARSubsystems
             if (descriptors.Length == 0)
                 throw new ArgumentException("No configuration descriptors to choose from.", nameof(descriptors));
 
-            if (requestedFeatures.Intersection(Feature.AnyTracking).Count() > 1)
-                throw new ArgumentException($"Zero or one tracking mode must be requested. Requested tracking modes => {requestedFeatures.Intersection(Feature.AnyTracking).ToStringList()}", nameof(requestedFeatures));
+            if (requestedFeatures.Intersection(Feature.AnyTrackingMode).Count() > 1)
+                throw new ArgumentException($"Zero or one tracking mode must be requested. Requested tracking modes => {requestedFeatures.Intersection(Feature.AnyTrackingMode).ToStringList()}", nameof(requestedFeatures));
 
             if (requestedFeatures.Intersection(Feature.AnyCamera).Count() > 1)
                 throw new ArgumentException($"Zero or one camera mode must be requested. Requested camera modes => {requestedFeatures.Intersection(Feature.AnyCamera).ToStringList()}", nameof(requestedFeatures));

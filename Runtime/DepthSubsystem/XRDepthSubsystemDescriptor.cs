@@ -1,5 +1,9 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -10,7 +14,12 @@ namespace UnityEngine.XR.ARSubsystems
     /// register one of these from each depth data provider.
     /// </remarks>
     /// <seealso cref="XRDepthSubsystem"/>
-    public class XRDepthSubsystemDescriptor : SubsystemDescriptor<XRDepthSubsystem>
+    public class XRDepthSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRDepthSubsystem, XRDepthSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRDepthSubsystem>
+#endif
     {
         /// <summary>
         /// Describes the capabilities of an <see cref="XRDepthSubsystem"/>.
@@ -53,9 +62,30 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id;
 
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Specifies the provider implementation type to use for instantiation.
+            /// </summary>
+            /// <value>
+            /// The provider implementation type to use for instantiation.
+            /// </value>
+            public Type providerType { get; set; }
+
+            /// <summary>
+            /// Specifies the <c>XRDepthSubsystem</c>-derived type that forwards casted calls to its provider.
+            /// </summary>
+            /// <value>
+            /// The type of the subsystem to use for instantiation. If null, <c>XRDepthSubsystem</c> will be instantiated.
+            /// </value>
+            public Type subsystemTypeOverride { get; set; }
+#endif
+
             /// <summary>
             /// The concrete <c>Type</c> which will be instantiated if <c>Create</c> is called on this subsystem descriptor.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            [Obsolete("XRDepthSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
             public Type implementationType;
 
             /// <summary>
@@ -127,7 +157,15 @@ namespace UnityEngine.XR.ARSubsystems
             /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Cinfo"/>, otherwise false.</returns>
             public bool Equals(Cinfo other)
             {
-                return capabilities == other.capabilities && id.Equals(other.id) && implementationType == other.implementationType;
+                return
+                    capabilities == other.capabilities &&
+                    id == other.id &&
+#if UNITY_2020_2_OR_NEWER
+                    providerType == other.providerType &&
+                    subsystemTypeOverride == other.subsystemTypeOverride;
+#else
+                    implementationType == other.implementationType;
+#endif
             }
 
             /// <summary>
@@ -146,9 +184,14 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    var hashCode = id.GetHashCode();
-                    hashCode = (hashCode * 486187739) + implementationType.GetHashCode();
-                    hashCode = (hashCode * 486187739) + ((int)capabilities).GetHashCode();
+                    int hashCode = HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                    hashCode = 486187739 * hashCode + HashCode.ReferenceHash(providerType);
+                    hashCode = 486187739 * hashCode + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
+                    hashCode = 486187739 * hashCode + HashCode.ReferenceHash(implementationType);
+#endif
+                    hashCode = 486187739 * hashCode + ((int)capabilities).GetHashCode();
                     return hashCode;
                 }
             }
@@ -173,7 +216,12 @@ namespace UnityEngine.XR.ARSubsystems
         XRDepthSubsystemDescriptor(Cinfo descriptorParams)
         {
             id = descriptorParams.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = descriptorParams.providerType;
+            subsystemTypeOverride = descriptorParams.subsystemTypeOverride;
+#else
             subsystemImplementationType = descriptorParams.implementationType;
+#endif
             supportsFeaturePoints = descriptorParams.supportsFeaturePoints;
             supportsUniqueIds = descriptorParams.supportsUniqueIds;
             supportsConfidence = descriptorParams.supportsConfidence;
@@ -201,7 +249,11 @@ namespace UnityEngine.XR.ARSubsystems
         public static void RegisterDescriptor(Cinfo descriptorParams)
         {
             var descriptor = new XRDepthSubsystemDescriptor(descriptorParams);
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(descriptor);
+#else
             SubsystemRegistration.CreateDescriptor(descriptor);
+#endif
         }
     }
 }

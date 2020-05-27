@@ -1,32 +1,49 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Subsystem for managing the participants in a multi-user collaborative session.
     /// </summary>
-    public abstract class XRParticipantSubsystem : TrackingSubsystem<XRParticipant, XRParticipantSubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XRParticipantSubsystem
+        : TrackingSubsystem<XRParticipant, XRParticipantSubsystem, XRParticipantSubsystemDescriptor, XRParticipantSubsystem.Provider>
+#else
+    public abstract class XRParticipantSubsystem
+        : TrackingSubsystem<XRParticipant, XRParticipantSubsystemDescriptor>
+#endif
     {
         /// <summary>
         /// Do not call this directly. Call create on a valid <see cref="XRParticipantSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRParticipantSubsystem() => m_Provider = CreateProvider();
+        public XRParticipantSubsystem()
+        {
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
+        }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Starts the participant subsystem.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stops the participant subsystem.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
         /// Destroys the participant subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Get the changed (added, updated, and removed) participants since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -38,24 +55,30 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<XRParticipant> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(XRParticipant.defaultParticipant, allocator);
+            var changes = provider.GetChanges(XRParticipant.defaultParticipant, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
             return changes;
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Implement this to provide this class with an interface to platform specific implementations.
         /// </summary>
         /// <returns>An implementation specific provider.</returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// The API this subsystem uses to interop with different provider implementations.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRParticipantSubsystem>
+#endif
         {
+#if !UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Invoked to start the participant subsystem.
             /// </summary>
@@ -75,6 +98,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public virtual void Destroy()
             { }
+#endif
 
             /// <summary>
             /// Get the changed (added, updated, and removed) participants since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -94,7 +118,9 @@ namespace UnityEngine.XR.ARSubsystems
                 Allocator allocator);
         }
 
-        Provider m_Provider;
+#if !UNITY_2020_2_OR_NEWER
+        Provider provider;
+#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRParticipant> m_ValidationUtility = new ValidationUtility<XRParticipant>();

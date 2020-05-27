@@ -1,12 +1,22 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Describes the capabilities of an <see cref="XRReferencePointSubsystem"/>.
     /// </summary>
-    [Obsolete("XRReferencePointSubsystemDescriptor has been deprecated. Use XRAnchorSubsystemDescriptor instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystemDescriptor", true)]
-    public class XRReferencePointSubsystemDescriptor : SubsystemDescriptor<XRReferencePointSubsystem>
+    [Obsolete("XRReferencePointSubsystemDescriptor has been deprecated. Use XRAnchorSubsystemDescriptor instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystemDescriptor", false)]
+#if UNITY_2020_2_OR_NEWER
+    public class XRReferencePointSubsystemDescriptor
+        : SubsystemDescriptorWithProvider<XRReferencePointSubsystem, XRReferencePointSubsystem.Provider>
+#else
+    public class XRReferencePointSubsystemDescriptor
+        : SubsystemDescriptor<XRReferencePointSubsystem>
+#endif
     {
         /// <summary>
         /// <c>true</c> if the subsystem supports attachments, i.e., the ability to attach a reference point to a trackable.
@@ -23,9 +33,30 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Specifies the provider implementation type to use for instantiation.
+            /// </summary>
+            /// <value>
+            /// The provider implementation type to use for instantiation.
+            /// </value>
+            public Type providerType { get; set; }
+
+            /// <summary>
+            /// Specifies the <c>XRReferencePointSubsystem</c>-derived type that forwards casted calls to its provider.
+            /// </summary>
+            /// <value>
+            /// The type of the subsystem to use for instantiation. If null, <c>XRAnchorSubsystem</c> will be instantiated.
+            /// </value>
+            public Type subsystemTypeOverride { get; set; }
+#endif
+
             /// <summary>
             /// The concrete <c>Type</c> of the subsystem which will be instantiated if a subsystem is created from this descriptor.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            [Obsolete("XRReferencePointSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
@@ -41,8 +72,13 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    var hash = HashCode.ReferenceHash(id);
+                    int hash = HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                    hash = hash * 486187739 + HashCode.ReferenceHash(providerType);
+                    hash = hash * 486187739 + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
                     hash = hash * 486187739 + HashCode.ReferenceHash(subsystemImplementationType);
+#endif
                     return hash;
                 }
             }
@@ -70,7 +106,12 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 return
                     String.Equals(id, other.id) &&
-                    subsystemImplementationType == other.subsystemImplementationType;
+#if UNITY_2020_2_OR_NEWER
+                    ReferenceEquals(providerType, other.providerType) &&
+                    ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride);
+#else
+                    ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType);
+#endif
             }
 
             /// <summary>
@@ -96,13 +137,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="cinfo">Constructor info describing the descriptor to create.</param>
         public static void Create(Cinfo cinfo)
         {
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(new XRReferencePointSubsystemDescriptor(cinfo));
+#else
             SubsystemRegistration.CreateDescriptor(new XRReferencePointSubsystemDescriptor(cinfo));
+#endif
         }
 
         XRReferencePointSubsystemDescriptor(Cinfo cinfo)
         {
             id = cinfo.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = cinfo.providerType;
+            subsystemTypeOverride = cinfo.subsystemTypeOverride;
+#else
             subsystemImplementationType = cinfo.subsystemImplementationType;
+#endif
             supportsTrackableAttachments = cinfo.supportsTrackableAttachments;
         }
     }

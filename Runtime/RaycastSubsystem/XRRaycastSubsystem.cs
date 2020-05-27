@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -10,29 +14,42 @@ namespace UnityEngine.XR.ARSubsystems
     /// This abstract class should be implemented by an XR provider and instantiated using the <c>SubsystemManager</c>
     /// to enumerate the available <see cref="XRRaycastSubsystemDescriptor"/>s.
     /// </remarks>
-    public abstract class XRRaycastSubsystem : TrackingSubsystem<XRRaycast, XRRaycastSubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XRRaycastSubsystem
+        : TrackingSubsystem<XRRaycast, XRRaycastSubsystem, XRRaycastSubsystemDescriptor, XRRaycastSubsystem.Provider>
+#else
+    public abstract class XRRaycastSubsystem
+        : TrackingSubsystem<XRRaycast, XRRaycastSubsystemDescriptor>
+#endif
     {
         /// <summary>
         /// Constructor. Do not invoke directly; use the <c>SubsystemManager</c>
         /// to enumerate the available <see cref="XRRaycastSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRRaycastSubsystem() => m_Provider = CreateProvider();
+        public XRRaycastSubsystem()
+        {
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
+        }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Starts the subsystem.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stops the subsystem.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Get the changes (arrays of added, updated and removed) to the tracked raycasts since the last call to this
@@ -44,7 +61,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// for calling <see cref="TrackableChanges{T}.Dispose"/> on it.</returns>
         public override TrackableChanges<XRRaycast> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(XRRaycast.defaultValue, allocator);
+            var changes = provider.GetChanges(XRRaycast.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -61,7 +78,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// human height might be used to estimate the distance to the floor.</param>
         /// <param name="raycast">The newly added raycast. All spatial data is relative to the session origin.</param>
         /// <returns>`True` if the raycast was successfully added, or `false` otherwise.</returns>
-        public bool TryAddRaycast(Vector2 screenPoint, float estimatedDistance, out XRRaycast raycast) => m_Provider.TryAddRaycast(screenPoint, estimatedDistance, out raycast);
+        public bool TryAddRaycast(Vector2 screenPoint, float estimatedDistance, out XRRaycast raycast) => provider.TryAddRaycast(screenPoint, estimatedDistance, out raycast);
 
         /// <summary>
         /// Attempts to add a new persistent raycast. The raycast will be updated automatically until
@@ -73,13 +90,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// human height might be used to estimate the distance to the floor.</param>
         /// <param name="raycast">The newly added raycast. All spatial data is relative to the session origin.</param>
         /// <returns>`True` if the raycast was successfully added, or `false` otherwise.</returns>
-        public bool TryAddRaycast(Ray ray, float estimatedDistance, out XRRaycast raycast) => m_Provider.TryAddRaycast(ray, estimatedDistance, out raycast);
+        public bool TryAddRaycast(Ray ray, float estimatedDistance, out XRRaycast raycast) => provider.TryAddRaycast(ray, estimatedDistance, out raycast);
 
         /// <summary>
         /// Removes an existing raycast by its <see cref="TrackableId"/>.
         /// </summary>
         /// <param name="trackableId">The unique identifier for the raycast to remove.</param>
-        public void RemoveRaycast(TrackableId trackableId) => m_Provider.RemoveRaycast(trackableId);
+        public void RemoveRaycast(TrackableId trackableId) => provider.RemoveRaycast(trackableId);
 
         /// <summary>
         /// Casts <paramref name="ray"/> against trackables specified with <paramref name="trackableTypeMask"/>.
@@ -93,7 +110,7 @@ namespace UnityEngine.XR.ARSubsystems
             TrackableType trackableTypeMask,
             Allocator allocator)
         {
-            return m_Provider.Raycast(XRRaycastHit.defaultValue, ray, trackableTypeMask, allocator);
+            return provider.Raycast(XRRaycastHit.defaultValue, ray, trackableTypeMask, allocator);
         }
 
         /// <summary>
@@ -108,34 +125,51 @@ namespace UnityEngine.XR.ARSubsystems
             TrackableType trackableTypeMask,
             Allocator allocator)
         {
-            return m_Provider.Raycast(XRRaycastHit.defaultValue, screenPoint, trackableTypeMask, allocator);
+            return provider.Raycast(XRRaycastHit.defaultValue, screenPoint, trackableTypeMask, allocator);
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Should return an instance of <see cref="Provider"/>.
         /// </summary>
         /// <returns>The interface to the implementation-specific provider.</returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// An interface to be implemented by providers of this subsystem.
         /// </summary>
-        protected class Provider
+        public class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRRaycastSubsystem>
+#endif
         {
             /// <summary>
             /// Called when the subsystem is started. Will not be called again until <see cref="Stop"/>.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Start() { }
+#else
             public virtual void Start() { }
+#endif
 
             /// <summary>
             /// Called when the subsystem is stopped. Will not be called before <see cref="Start"/>.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Stop() { }
+#else
             public virtual void Stop() { }
+#endif
 
             /// <summary>
             /// Called when the subsystem is destroyed. <see cref="Stop"/> will be called first if the subsystem is running.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Destroy() { }
+#else
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Adds a new persistent raycast. Persistent raycasts should be updated automatically until this
@@ -227,7 +261,9 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-        Provider m_Provider;
+#if !UNITY_2020_2_OR_NEWER
+        Provider provider;
+#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRRaycast> m_ValidationUtility = new ValidationUtility<XRRaycast>();

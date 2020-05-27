@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -104,6 +105,33 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
+        /// This specifies the depth dimension of the native texture. For a 3D texture, depth would be greater than zero.
+        /// For any other kind of valid texture, depth is one.
+        /// </summary>
+        /// <value>
+        /// The depth dimension of the native texture object.
+        /// </value>
+        public int depth
+        {
+            get => m_Depth;
+            private set => m_Depth = value;
+        }
+        int m_Depth;
+
+        /// <summary>
+        /// Specifies the [texture dimension](https://docs.unity3d.com/ScriptReference/Rendering.TextureDimension.html) of the native texture object.
+        /// </summary>
+        /// <value>
+        /// The texture dimension of the native texture object.
+        /// </value>
+        public TextureDimension dimension
+        {
+            get => m_Dimension;
+            private set => m_Dimension = value;
+        }
+        TextureDimension m_Dimension;
+
+        /// <summary>
         /// Determines whether the given texture descriptor has identical texture metadata (dimension, mipmap count,
         /// and format).
         /// </summary>
@@ -117,6 +145,8 @@ namespace UnityEngine.XR.ARSubsystems
             return
                 m_Width.Equals(other.m_Width) &&
                 m_Height.Equals(other.m_Height) &&
+                m_Depth.Equals(other.m_Depth) &&
+                m_Dimension == other.m_Dimension &&
                 m_MipmapCount.Equals(other.m_MipmapCount) &&
                 (m_Format == other.m_Format);
         }
@@ -129,6 +159,8 @@ namespace UnityEngine.XR.ARSubsystems
             m_NativeTexture = IntPtr.Zero;
             m_Width = 0;
             m_Height = 0;
+            m_Depth = 0;
+            m_Dimension = (TextureDimension)0;
             m_MipmapCount = 0;
             m_Format = (TextureFormat)0;
             m_PropertyNameId = 0;
@@ -192,6 +224,8 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_NativeTexture.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_Width.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_Height.GetHashCode();
+                hashCode = (hashCode * 486187739) + m_Depth.GetHashCode();
+                hashCode = (hashCode * 486187739) + ((int)m_Dimension).GetHashCode();
                 hashCode = (hashCode * 486187739) + m_MipmapCount.GetHashCode();
                 hashCode = (hashCode * 486187739) + ((int)m_Format).GetHashCode();
                 hashCode = (hashCode * 486187739) + m_PropertyNameId.GetHashCode();
@@ -205,9 +239,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>A string suitable for debug logging.</returns>
         public override string ToString()
         {
-            return string.Format("0x{0} {1}x{2}-{3} format:{4} propertyNameId:{5}", m_NativeTexture.ToString("X16"),
-                                 m_Width.ToString(), m_Height.ToString(), m_MipmapCount.ToString(),
-                                 m_Format.ToString(), m_PropertyNameId.ToString());
+            return $"0x{m_NativeTexture.ToString("X16")} {m_Width.ToString()}x{ m_Height.ToString()}"+
+                    $"x{m_Depth.ToString()}-{m_MipmapCount.ToString()} dimension:{m_Dimension.ToString()}"+
+                    $" format:{m_Format.ToString()} propertyNameId:{m_PropertyNameId.ToString()}";
         }
     }
 }

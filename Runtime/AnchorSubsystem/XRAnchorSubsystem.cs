@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -13,30 +17,42 @@ namespace UnityEngine.XR.ARSubsystems
     /// <para>This abstract class should be implemented by an XR provider and instantiated using the <c>SubsystemManager</c>
     /// to enumerate the available <see cref="XRAnchorSubsystemDescriptor"/>s.</para>
     /// </remarks>
+#if UNITY_2020_2_OR_NEWER
+    public class XRAnchorSubsystem
+        : TrackingSubsystem<XRAnchor, XRAnchorSubsystem, XRAnchorSubsystemDescriptor, XRAnchorSubsystem.Provider>
+#else
     public abstract class XRAnchorSubsystem
         : TrackingSubsystem<XRAnchor, XRAnchorSubsystemDescriptor>
+#endif
     {
         /// <summary>
         /// Constructor. Do not invoke directly; use the <c>SubsystemManager</c>
         /// to enumerate the available <see cref="XRAnchorSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRAnchorSubsystem() => m_Provider = CreateProvider();
+        public XRAnchorSubsystem()
+        {
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
+        }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Starts the subsystem.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stops the subsystem.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Get the changes (added, updated, and removed) anchors since the last call
@@ -47,9 +63,9 @@ namespace UnityEngine.XR.ARSubsystems
         public override TrackableChanges<XRAnchor> GetChanges(Allocator allocator)
         {
             if (!running)
-                throw new InvalidOperationException("Can't call \"GetChanges\" without \"Start\"ing the reference-point subsystem!");
+                throw new InvalidOperationException("Can't call \"GetChanges\" without \"Start\"ing the anchor subsystem!");
 
-            var changes = m_Provider.GetChanges(XRAnchor.defaultValue, allocator);
+            var changes = provider.GetChanges(XRAnchor.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -64,7 +80,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns><c>true</c> if the new anchor was added, otherwise <c>false</c>.</returns>
         public bool TryAddAnchor(Pose pose, out XRAnchor anchor)
         {
-            return m_Provider.TryAddAnchor(pose, out anchor);
+            return provider.TryAddAnchor(pose, out anchor);
         }
 
         /// <summary>
@@ -77,7 +93,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns><c>true</c> if the new anchor was added, otherwise <c>false</c>.</returns>
         public bool TryAttachAnchor(TrackableId trackableToAffix, Pose pose, out XRAnchor anchor)
         {
-            return m_Provider.TryAttachAnchor(trackableToAffix, pose, out anchor);
+            return provider.TryAttachAnchor(trackableToAffix, pose, out anchor);
         }
 
         /// <summary>
@@ -87,14 +103,18 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns><c>true</c> if the anchor was removed, otherwise <c>false</c>.</returns>
         public bool TryRemoveAnchor(TrackableId anchorId)
         {
-            return m_Provider.TryRemoveAnchor(anchorId);
+            return provider.TryRemoveAnchor(anchorId);
         }
 
         /// <summary>
-        /// An interface to be implemented by providers of this subsystem.
+        /// An abstract class to be implemented by providers of this subsystem.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRAnchorSubsystem>
+#endif
         {
+#if !UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Invoked when <c>Start</c> is called on the subsystem. This method is only called if the subsystem was not previously running.
             /// </summary>
@@ -109,6 +129,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Called when <c>Destroy</c> is called on the subsystem.
             /// </summary>
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Invoked to get the changes to anchors (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -160,13 +181,15 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual bool TryRemoveAnchor(TrackableId anchorId) => false;
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Should return an instance of <see cref="Provider"/>.
         /// </summary>
         /// <returns>The interface to the implementation-specific provider.</returns>
         protected abstract Provider CreateProvider();
 
-        Provider m_Provider;
+        Provider provider;
+#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRAnchor> m_ValidationUtility =

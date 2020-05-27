@@ -3,16 +3,16 @@ using System.Runtime.InteropServices;
 
 namespace UnityEngine.XR.ARSubsystems
 {
-    // Removing from summary of the configuration class because this has yet to be ported.
-    // The camera image configuration affects the resolution of the image
-    // returned by <see cref="XRCameraSubsystem.TryGetLatestImage(Experimental.XR.XRCameraSubsystem, out CameraImage)"/>.
-
-
     /// <summary>
-    /// Contains information regarding the camera configuration. Different
-    /// devices support different camera configurations. This includes
-    /// the resolution of the image and may include framerate on some platforms.
+    /// Contains information regarding the camera configuration.
     /// </summary>
+    /// <remarks>
+    /// Different devices support different camera configurations. This includes
+    /// the resolution of the image and may include framerate on some platforms.
+    ///
+    /// The camera image configuration affects the resolution of the image
+    /// returned by <see cref="XRCameraSubsystem.TryAcquireLatestCpuImage"/>.
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
     public struct XRCameraConfiguration : IEquatable<XRCameraConfiguration>
     {

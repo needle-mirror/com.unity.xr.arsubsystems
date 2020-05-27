@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -11,27 +15,35 @@ namespace UnityEngine.XR.ARSubsystems
     /// It can also be extended to provide an implementation of a provider which provides the depth detection data
     /// to the higher level code.
     /// </remarks>
-    public abstract class XRDepthSubsystem : TrackingSubsystem<XRPointCloud, XRDepthSubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XRDepthSubsystem
+        : TrackingSubsystem<XRPointCloud, XRDepthSubsystem, XRDepthSubsystemDescriptor, XRDepthSubsystem.Provider>
+#else
+    public abstract class XRDepthSubsystem
+        : TrackingSubsystem<XRPointCloud, XRDepthSubsystemDescriptor>
+#endif
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Constructs a depth subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRDepthSubsystemDescriptor"/> instead.
         /// </summary>
-        protected XRDepthSubsystem() => m_Provider = CreateProvider();
+        protected XRDepthSubsystem() => provider = CreateProvider();
 
         /// <summary>
         /// Start the depth subsystem, i.e., start collecting depth data.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Destroy the depth subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
 
         /// <summary>
         /// Stop the subsystem, i.e., stop collecting depth data.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
+#endif
 
         /// <summary>
         /// Get the changes (added, updated, and removed) point clouds since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -43,7 +55,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </returns>
         public override TrackableChanges<XRPointCloud> GetChanges(Allocator allocator)
         {
-            var changes = m_Provider.GetChanges(XRPointCloud.defaultValue, allocator);
+            var changes = provider.GetChanges(XRPointCloud.defaultValue, allocator);
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
@@ -71,34 +83,51 @@ namespace UnityEngine.XR.ARSubsystems
             if (allocator == Allocator.None)
                 throw new InvalidOperationException("Allocator.None is not a valid allocator.");
 
-            return m_Provider.GetPointCloudData(trackableId, allocator);
+            return provider.GetPointCloudData(trackableId, allocator);
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Implement this and return an instance of the <see cref="Provider"/>.
         /// </summary>
         /// <returns>An implementation of the <see cref="Provider"/>.</returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// The interface that each derived class must implement.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRDepthSubsystem>
+#endif
         {
             /// <summary>
             /// Called when the subsystem is started. Will not be called again until <see cref="Stop"/>.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Start() { }
+#else
             public virtual void Start() { }
+#endif
 
             /// <summary>
             /// Called when the subsystem is stopped. Will not be called before <see cref="Start"/>.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Stop() { }
+#else
             public virtual void Stop() { }
+#endif
 
             /// <summary>
             /// Called when the subsystem is destroyed. <see cref="Stop"/> will be called first if the subsystem is running.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Destroy() { }
+#else
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Get the changes (added, updated, and removed) planes since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -128,7 +157,9 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract XRPointCloudData GetPointCloudData(TrackableId trackableId, Allocator allocator);
         }
 
-        Provider m_Provider;
+#if !UNITY_2020_2_OR_NEWER
+        Provider provider;
+#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRPointCloud> m_ValidationUtility =

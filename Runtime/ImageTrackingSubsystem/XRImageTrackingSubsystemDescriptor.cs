@@ -1,11 +1,20 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Describes the capabilities of an <see cref="XRImageTrackingSubsystem"/>.
     /// </summary>
-    public class XRImageTrackingSubsystemDescriptor : SubsystemDescriptor<XRImageTrackingSubsystem>
+    public class XRImageTrackingSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRImageTrackingSubsystem, XRImageTrackingSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRImageTrackingSubsystem>
+#endif
     {
         /// <summary>
         /// Construction information for the <see cref="XRImageTrackingSubsystemDescriptor"/>.
@@ -17,9 +26,30 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Specifies the provider implementation type to use for instantiation.
+            /// </summary>
+            /// <value>
+            /// The provider implementation type to use for instantiation.
+            /// </value>
+            public Type providerType { get; set; }
+
+            /// <summary>
+            /// Specifies the <c>XRImageTrackingSubsystem</c>-derived type that forwards casted calls to its provider.
+            /// </summary>
+            /// <value>
+            /// The type of the subsystem to use for instantiation. If null, <c>XRImageTrackingSubsystem</c> will be instantiated.
+            /// </value>
+            public Type subsystemTypeOverride { get; set; }
+#endif
+
             /// <summary>
             /// The <c>System.Type</c> of the provider implementation, used to instantiate the class.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            [Obsolete("XRImageTrackingSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
@@ -59,8 +89,13 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    var hashCode = HashCode.ReferenceHash(id);
+                    int hashCode = HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                    hashCode = hashCode * 486187739 + HashCode.ReferenceHash(providerType);
+                    hashCode = hashCode * 486187739 + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
                     hashCode = hashCode * 486187739 + HashCode.ReferenceHash(subsystemImplementationType);
+#endif
                     hashCode = hashCode * 486187739 + supportsMovingImages.GetHashCode();
                     hashCode = hashCode * 486187739 + requiresPhysicalImageDimensions.GetHashCode();
                     hashCode = hashCode * 486187739 + supportsMutableLibrary.GetHashCode();
@@ -76,11 +111,16 @@ namespace UnityEngine.XR.ARSubsystems
             public bool Equals(Cinfo other)
             {
                 return
-                    (id == other.id) &&
-                    (subsystemImplementationType == subsystemImplementationType) &&
-                    (supportsMovingImages == other.supportsMovingImages) &&
-                    (requiresPhysicalImageDimensions == other.requiresPhysicalImageDimensions) &&
-                    (supportsMutableLibrary == other.supportsMutableLibrary);
+                    ReferenceEquals(id, other.id) &&
+#if UNITY_2020_2_OR_NEWER
+                    ReferenceEquals(providerType, other.providerType) &&
+                    ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride) &&
+#else
+                    ReferenceEquals(subsystemImplementationType, subsystemImplementationType) &&
+#endif
+                    supportsMovingImages == other.supportsMovingImages &&
+                    requiresPhysicalImageDimensions == other.requiresPhysicalImageDimensions &&
+                    supportsMutableLibrary == other.supportsMutableLibrary;
             }
 
             /// <summary>
@@ -134,13 +174,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="cinfo">The construction information for the new descriptor.</param>
         public static void Create(Cinfo cinfo)
         {
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(new XRImageTrackingSubsystemDescriptor(cinfo));
+#else
             SubsystemRegistration.CreateDescriptor(new XRImageTrackingSubsystemDescriptor(cinfo));
+#endif
         }
 
         XRImageTrackingSubsystemDescriptor(Cinfo cinfo)
         {
             this.id = cinfo.id;
+#if UNITY_2020_2_OR_NEWER
+            this.providerType = cinfo.providerType;
+            this.subsystemTypeOverride = cinfo.subsystemTypeOverride;
+#else
             this.subsystemImplementationType = cinfo.subsystemImplementationType;
+#endif
             this.supportsMovingImages = cinfo.supportsMovingImages;
             this.requiresPhysicalImageDimensions = cinfo.requiresPhysicalImageDimensions;
             this.supportsMutableLibrary = cinfo.supportsMutableLibrary;

@@ -1,20 +1,32 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Defines an interface for interacting with human body functionality.
     /// </summary>
-    public abstract class XRHumanBodySubsystem : TrackingSubsystem<XRHumanBody, XRHumanBodySubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XRHumanBodySubsystem
+        : TrackingSubsystem<XRHumanBody, XRHumanBodySubsystem, XRHumanBodySubsystemDescriptor, XRHumanBodySubsystem.Provider>
+#else
+    public abstract class XRHumanBodySubsystem
+        : TrackingSubsystem<XRHumanBody, XRHumanBodySubsystemDescriptor>
+#endif
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// The implementation specific provider of human body functionality.
         /// </summary>
         /// <value>
         /// The implementation specific provider of human body functionality.
         /// </value>
-        Provider m_Provider;
+        Provider provider;
+#endif
 
         /// <summary>
         /// Whether 2D human body pose estimation is requested.
@@ -24,8 +36,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool pose2DRequested
         {
-            get => m_Provider.pose2DRequested;
-            set => m_Provider.pose2DRequested = value;
+            get => provider.pose2DRequested;
+            set => provider.pose2DRequested = value;
         }
 
         /// <summary>
@@ -34,7 +46,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if 2D human body pose estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        public bool pose2DEnabled => m_Provider.pose2DEnabled;
+        public bool pose2DEnabled => provider.pose2DEnabled;
 
         /// <summary>
         /// Whether 3D human body pose estimation is requested.
@@ -44,8 +56,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool pose3DRequested
         {
-            get => m_Provider.pose3DRequested;
-            set => m_Provider.pose3DRequested = value;
+            get => provider.pose3DRequested;
+            set => provider.pose3DRequested = value;
         }
 
         /// <summary>
@@ -54,7 +66,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if 3D human body pose estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        public bool pose3DEnabled => m_Provider.pose3DEnabled;
+        public bool pose3DEnabled => provider.pose3DEnabled;
 
         /// <summary>
         /// Whether 3D human body scale estimation is requested.
@@ -64,8 +76,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public bool pose3DScaleEstimationRequested
         {
-            get => m_Provider.pose3DScaleEstimationRequested;
-            set => m_Provider.pose3DScaleEstimationRequested = value;
+            get => provider.pose3DScaleEstimationRequested;
+            set => provider.pose3DScaleEstimationRequested = value;
         }
 
         /// <summary>
@@ -74,27 +86,34 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// <c>true</c> if 3D human body scale estimation is enabled. Otherwise, <c>false</c>.
         /// </value>
-        public bool pose3DScaleEstimationEnabled => m_Provider.pose3DScaleEstimationEnabled;
+        public bool pose3DScaleEstimationEnabled => provider.pose3DScaleEstimationEnabled;
 
         /// <summary>
         /// Construct the subsystem by creating the functionality provider.
         /// </summary>
-        public XRHumanBodySubsystem() => m_Provider = CreateProvider();
+        public XRHumanBodySubsystem()
+        {
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
+        }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Start the subsystem by starting the provider.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stop the subsystem by stopping the provider.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
-        /// Destroy the subsystem by desstroying the provider.
+        /// Destroy the subsystem by destroying the provider.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Query the provider for the trackable changes.
@@ -104,7 +123,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The trackable human body changes.
         /// </returns>
         public override TrackableChanges<XRHumanBody> GetChanges(Allocator allocator)
-            => m_Provider.GetChanges(XRHumanBody.defaultValue, allocator);
+            => provider.GetChanges(XRHumanBody.defaultValue, allocator);
 
         /// <summary>
         /// Query the provider for the skeleton joints for the requested trackable identifier.
@@ -113,7 +132,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="allocator">The memory allocator to use for the returned arrays.</param>
         /// <param name="skeleton">The array of skeleton joints to update and returns.</param>
         public void GetSkeleton(TrackableId trackableId, Allocator allocator, ref NativeArray<XRHumanBodyJoint> skeleton)
-            => m_Provider.GetSkeleton(trackableId, allocator, ref skeleton);
+            => provider.GetSkeleton(trackableId, allocator, ref skeleton);
 
         /// <summary>
         /// Gets the human body pose 2D joints for the current frame.
@@ -129,9 +148,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support human body
         /// pose 2D.</exception>
         public NativeArray<XRHumanBodyPose2DJoint> GetHumanBodyPose2DJoints(Allocator allocator)
-            => m_Provider.GetHumanBodyPose2DJoints(default(XRHumanBodyPose2DJoint), Screen.width, Screen.height,
+            => provider.GetHumanBodyPose2DJoints(default(XRHumanBodyPose2DJoint), Screen.width, Screen.height,
                                                    Screen.orientation, allocator);
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Create the implementation specific functionality provider.
         /// </summary>
@@ -139,6 +159,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The implementation specific functionality provider.
         /// </returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// Register the descriptor for the human body subsystem implementation.
@@ -151,15 +172,23 @@ namespace UnityEngine.XR.ARSubsystems
         public static bool Register(XRHumanBodySubsystemCinfo humanBodySubsystemCinfo)
         {
             XRHumanBodySubsystemDescriptor humanBodySubsystemDescriptor = XRHumanBodySubsystemDescriptor.Create(humanBodySubsystemCinfo);
-
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(humanBodySubsystemDescriptor);
+            return true;
+#else
             return SubsystemRegistration.CreateDescriptor(humanBodySubsystemDescriptor);
+#endif
         }
 
         /// <summary>
         /// The provider which will service the <see cref="XRHumanBodySubsystem"/>.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRHumanBodySubsystem>
+#endif
         {
+#if !UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Method to be implemented by the provider to start the functionality.
             /// </summary>
@@ -174,6 +203,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Method to be implemented by the provider to destroy itself and release any resources.
             /// </summary>
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Property to be implemented by the provider to sets whether human body pose 2D estimation is requested.

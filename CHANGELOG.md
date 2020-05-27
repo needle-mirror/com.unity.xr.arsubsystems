@@ -4,6 +4,22 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2020-05-27
+### New
+- Added a method to XRCameraSubsystem that allows optional, platform-specific code to be called immediately before the camera background is rendered.
+- Added support for camera grain to `XRCameraSubsystem` through `XRCameraFrame`.
+- Added depth field and dimension field to `XRTextureDescriptor`. Depth indicates the size of the depth dimension in a 3D texture, and dimension indicates the type of texture. See the [TextureDimension docs](https://docs.unity3d.com/ScriptReference/Rendering.TextureDimension.html) for more details.
+- Added a method to XRCameraSubsystem that allows optional, platform-specific code to be called immediately before the camera background is rendered.
+- Added support for camera grain to `XRCameraSubsystem` through `XRCameraFrame`.
+- Added depth field and dimension field to `XRTextureDescriptor`. Depth indicates the size of the depth dimension in a 3D texture, and dimension indicates the type of texture. See the [TextureDimension docs](https://docs.unity3d.com/ScriptReference/Rendering.TextureDimension.html) for more details.
+- Added `XROcclusionSubsystem.TryAcquireHumanStencilCpuImage` and `XROcclusionSubsystem.TryAcquireHumanDepthCpuImage` which provides access to the raw texture data on the CPU.
+- Added meshing-related features to [`Feature` enum](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.Feature.html).
+- Added point cloud feature to [`Feature` enum](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.Feature.html).
+
+### Changes
+- Changed `XRCameraImage` to `XRCpuImage`. See the [ARFoundation migration guide](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@4.0/manual/migration-guide-3.html#xrcameraimage-is-now-xrcpuimage) for more details.
+- Renamed [`Feature.AnyTracking`](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.Feature.html#fields) to `Feature.AnyTrackingMode`.
+
 ## [4.0.0-preview.3] - 2020-05-04
 ### New
 - Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](../api/UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.html#UnityEngine_XR_ARSubsystems_XRRaycastSubsystem_TryAddRaycast).

@@ -1,5 +1,9 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -15,12 +19,33 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+        /// <summary>
+        /// Specifies the provider implementation type to use for instantiation.
+        /// </summary>
+        /// <value>
+        /// The provider implementation type to use for instantiation.
+        /// </value>
+        public Type providerType { get; set; }
+
+        /// <summary>
+        /// Specifies the <c>XREnvironmentProbeSubsystem</c>-derived type that forwards casted calls to its provider.
+        /// </summary>
+        /// <value>
+        /// The type of the subsystem to use for instantiation. If null, <c>XREnvironmentProbeSubsystem</c> will be instantiated.
+        /// </value>
+        public Type subsystemTypeOverride { get; set; }
+#endif
+
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
         /// </summary>
         /// <value>
         /// Specifies the provider implementation type to use for instantiation.
         /// </value>
+#if UNITY_2020_2_OR_NEWER
+        [Obsolete("XREnvironmentProbeSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
         public Type implementationType { get; set; }
 
         /// <summary>
@@ -78,14 +103,20 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XREnvironmentProbeSubsystemCinfo"/>, otherwise false.</returns>
         public bool Equals(XREnvironmentProbeSubsystemCinfo other)
         {
-            return ReferenceEquals(id, other.id)
-                   && ReferenceEquals(implementationType, other.implementationType)
-                   && supportsManualPlacement.Equals(other.supportsManualPlacement)
-                   && supportsRemovalOfManual.Equals(other.supportsRemovalOfManual)
-                   && supportsAutomaticPlacement.Equals(other.supportsAutomaticPlacement)
-                   && supportsRemovalOfAutomatic.Equals(other.supportsRemovalOfAutomatic)
-                   && supportsEnvironmentTexture.Equals(other.supportsEnvironmentTexture)
-                   && supportsEnvironmentTextureHDR.Equals(other.supportsEnvironmentTextureHDR);
+            return
+                ReferenceEquals(id, other.id)
+#if UNITY_2020_2_OR_NEWER
+                && ReferenceEquals(providerType, other.providerType)
+                && ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride)
+#else
+                && ReferenceEquals(implementationType, other.implementationType)
+#endif
+                && supportsManualPlacement.Equals(other.supportsManualPlacement)
+                && supportsRemovalOfManual.Equals(other.supportsRemovalOfManual)
+                && supportsAutomaticPlacement.Equals(other.supportsAutomaticPlacement)
+                && supportsRemovalOfAutomatic.Equals(other.supportsRemovalOfAutomatic)
+                && supportsEnvironmentTexture.Equals(other.supportsEnvironmentTexture)
+                && supportsEnvironmentTextureHDR.Equals(other.supportsEnvironmentTextureHDR);
         }
 
         /// <summary>
@@ -131,7 +162,12 @@ namespace UnityEngine.XR.ARSubsystems
             unchecked
             {
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
+#endif
                 hashCode = (hashCode * 486187739) + supportsManualPlacement.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsRemovalOfManual.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAutomaticPlacement.GetHashCode();
@@ -147,7 +183,12 @@ namespace UnityEngine.XR.ARSubsystems
     /// Specifies a functionality description that may be registered for each implementation that provides the
     /// <see cref="XREnvironmentProbeSubsystem"/> interface.
     /// </summary>
-    public class XREnvironmentProbeSubsystemDescriptor : SubsystemDescriptor<XREnvironmentProbeSubsystem>
+    public class XREnvironmentProbeSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XREnvironmentProbeSubsystem, XREnvironmentProbeSubsystem.Provider>
+#else
+        SubsystemDescriptor<XREnvironmentProbeSubsystem>
+#endif
     {
         /// <summary>
         /// Constructs a <c>XREnvironmentProbeSubsystemDescriptor</c> based on the given parameters.
@@ -156,7 +197,12 @@ namespace UnityEngine.XR.ARSubsystems
         XREnvironmentProbeSubsystemDescriptor(XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemCinfo)
         {
             id = environmentProbeSubsystemCinfo.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = environmentProbeSubsystemCinfo.providerType;
+            subsystemTypeOverride = environmentProbeSubsystemCinfo.subsystemTypeOverride;
+#else
             subsystemImplementationType = environmentProbeSubsystemCinfo.implementationType;
+#endif
             supportsManualPlacement = environmentProbeSubsystemCinfo.supportsManualPlacement;
             supportsRemovalOfManual = environmentProbeSubsystemCinfo.supportsRemovalOfManual;
             supportsAutomaticPlacement = environmentProbeSubsystemCinfo.supportsAutomaticPlacement;
@@ -246,12 +292,28 @@ namespace UnityEngine.XR.ARSubsystems
                                             "environmentProbeSubsystemCinfo");
             }
 
+#if UNITY_2020_2_OR_NEWER
+            if (environmentProbeSubsystemCinfo.providerType == null
+                || !environmentProbeSubsystemCinfo.providerType.IsSubclassOf(typeof(XREnvironmentProbeSubsystem.Provider)))
+            {
+                throw new ArgumentException("Cannot create environment probe subsystem descriptor because providerType is invalid",
+                                            "environmentProbeSubsystemCinfo");
+            }
+
+            if (environmentProbeSubsystemCinfo.subsystemTypeOverride != null
+                && !environmentProbeSubsystemCinfo.subsystemTypeOverride.IsSubclassOf(typeof(XREnvironmentProbeSubsystem)))
+            {
+                throw new ArgumentException("Cannot create environment probe subsystem descriptor because subsystemTypeOverride is invalid",
+                                            "environmentProbeSubsystemCinfo");
+            }
+#else
             if ((environmentProbeSubsystemCinfo.implementationType == null)
                 || !environmentProbeSubsystemCinfo.implementationType.IsSubclassOf(typeof(XREnvironmentProbeSubsystem)))
             {
                 throw new ArgumentException("Cannot create environment probe subsystem descriptor because implementationType is invalid",
                                             "environmentProbeSubsystemCinfo");
             }
+#endif
 
             return new XREnvironmentProbeSubsystemDescriptor(environmentProbeSubsystemCinfo);
         }

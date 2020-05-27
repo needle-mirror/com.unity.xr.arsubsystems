@@ -1,5 +1,9 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -15,12 +19,33 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+        /// <summary>
+        /// Specifies the provider implementation type to use for instantiation.
+        /// </summary>
+        /// <value>
+        /// The provider implementation type to use for instantiation.
+        /// </value>
+        public Type providerType { get; set; }
+
+        /// <summary>
+        /// Specifies the <c>XRAnchorSubsystem</c>-derived type that forwards casted calls to its provider.
+        /// </summary>
+        /// <value>
+        /// The type of the subsystem to use for instantiation. If null, <c>XRAnchorSubsystem</c> will be instantiated.
+        /// </value>
+        public Type subsystemTypeOverride { get; set; }
+#endif
+
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
         /// </summary>
         /// <value>
         /// Specifies the provider implementation type to use for instantiation.
         /// </value>
+#if UNITY_2020_2_OR_NEWER
+        [Obsolete("XROcclusionSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
         public Type implementationType { get; set; }
 
         /// <summary>
@@ -45,9 +70,18 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="other">The other <see cref="XROcclusionSubsystemCinfo"/> to compare against.</param>
         /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XROcclusionSubsystemCinfo"/>, otherwise false.</returns>
         public bool Equals(XROcclusionSubsystemCinfo other)
-            => (id.Equals(other.id) && implementationType.Equals(other.implementationType)
+        {
+            return
+                ReferenceEquals(id, other.id)
+#if UNITY_2020_2_OR_NEWER
+                && ReferenceEquals(providerType, other.providerType)
+                && ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride)
+#else
+                && ReferenceEquals(implementationType, other.implementationType)
+#endif
                 && supportsHumanSegmentationStencilImage.Equals(other.supportsHumanSegmentationStencilImage)
-                && supportsHumanSegmentationDepthImage.Equals(other.supportsHumanSegmentationDepthImage));
+                && supportsHumanSegmentationDepthImage.Equals(other.supportsHumanSegmentationDepthImage);
+        }
 
         /// <summary>
         /// Tests for equality.
@@ -83,7 +117,12 @@ namespace UnityEngine.XR.ARSubsystems
             unchecked
             {
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
+                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
+#endif
                 hashCode = (hashCode * 486187739) + supportsHumanSegmentationStencilImage.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanSegmentationDepthImage.GetHashCode();
             }
@@ -94,12 +133,22 @@ namespace UnityEngine.XR.ARSubsystems
     /// <summary>
     /// Descriptor for the XROcclusionSubsystem.
     /// </summary>
-    public class XROcclusionSubsystemDescriptor : SubsystemDescriptor<XROcclusionSubsystem>
+    public class XROcclusionSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XROcclusionSubsystem, XROcclusionSubsystem.Provider>
+#else
+        SubsystemDescriptor<XROcclusionSubsystem>
+#endif
     {
         XROcclusionSubsystemDescriptor(XROcclusionSubsystemCinfo occlusionSubsystemCinfo)
         {
             id = occlusionSubsystemCinfo.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = occlusionSubsystemCinfo.providerType;
+            subsystemTypeOverride = occlusionSubsystemCinfo.subsystemTypeOverride;
+#else
             subsystemImplementationType = occlusionSubsystemCinfo.implementationType;
+#endif
             supportsHumanSegmentationStencilImage = occlusionSubsystemCinfo.supportsHumanSegmentationStencilImage;
             supportsHumanSegmentationDepthImage = occlusionSubsystemCinfo.supportsHumanSegmentationDepthImage;
         }
@@ -132,12 +181,28 @@ namespace UnityEngine.XR.ARSubsystems
                                             "occlusionSubsystemCinfo");
             }
 
+#if UNITY_2020_2_OR_NEWER
+            if (occlusionSubsystemCinfo.providerType == null
+                || !occlusionSubsystemCinfo.providerType.IsSubclassOf(typeof(XROcclusionSubsystem.Provider)))
+            {
+                throw new ArgumentException("Cannot create occlusion subsystem descriptor because providerType is invalid",
+                                            "occlusionSubsystemCinfo");
+            }
+
+            if (occlusionSubsystemCinfo.subsystemTypeOverride == null
+                && !occlusionSubsystemCinfo.subsystemTypeOverride.IsSubclassOf(typeof(XROcclusionSubsystem)))
+            {
+                throw new ArgumentException("Cannot create occlusion subsystem descriptor because subsystemTypeOverride is invalid",
+                                            "occlusionSubsystemCinfo");
+            }
+#else
             if ((occlusionSubsystemCinfo.implementationType == null)
                 || !occlusionSubsystemCinfo.implementationType.IsSubclassOf(typeof(XROcclusionSubsystem)))
             {
                 throw new ArgumentException("Cannot create occlusion subsystem descriptor because implementationType is invalid",
                                             "occlusionSubsystemCinfo");
             }
+#endif
 
             return new XROcclusionSubsystemDescriptor(occlusionSubsystemCinfo);
         }

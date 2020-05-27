@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -13,31 +17,38 @@ namespace UnityEngine.XR.ARSubsystems
     /// <para>This abstract class should be implemented by an XR provider and instantiated using the <c>SubsystemManager</c>
     /// to enumerate the available <see cref="XRReferencePointSubsystemDescriptor"/>s.</para>
     /// </remarks>
-    [Obsolete("XRReferencePointSubsystem has been deprecated. Use XRAnchorSubsystem instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystem", true)]
+    [Obsolete("XRReferencePointSubsystem has been deprecated. Use XRAnchorSubsystem instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystem", false)]
+#if UNITY_2020_2_OR_NEWER
+    public class XRReferencePointSubsystem
+        : TrackingSubsystem<XRReferencePoint, XRReferencePointSubsystem, XRReferencePointSubsystemDescriptor, XRReferencePointSubsystem.Provider>
+#else
     public abstract class XRReferencePointSubsystem
         : TrackingSubsystem<XRReferencePoint, XRReferencePointSubsystemDescriptor>
+#endif
     {
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Constructor. Do not invoke directly; use the <c>SubsystemManager</c>
         /// to enumerate the available <see cref="XRReferencePointSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRReferencePointSubsystem() => m_Provider = CreateProvider();
+        public XRReferencePointSubsystem() => provider = CreateProvider();
 
         /// <summary>
         /// Starts the subsystem.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Stops the subsystem.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
 
         /// <summary>
         /// Destroys the subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
+#endif
 
         /// <summary>
         /// Get the changes (added, updated, and removed) reference points since the last call
@@ -50,7 +61,7 @@ namespace UnityEngine.XR.ARSubsystems
             if (!running)
                 throw new InvalidOperationException("Can't call \"GetChanges\" without \"Start\"ing the reference-point subsystem!");
 
-            var changes = m_Provider.GetChanges(XRReferencePoint.defaultValue, allocator);
+            var changes = provider.GetChanges(XRReferencePoint.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -66,7 +77,7 @@ namespace UnityEngine.XR.ARSubsystems
         [Obsolete("XRReferencePointSubsystem.TryAddReferencePoint() has been deprecated. Use XRAnchorSubsystem.TryAddAnchor() instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystem.TryAddAnchor(Pose, XRAnchor)", true)]
         public bool TryAddReferencePoint(Pose pose, out XRReferencePoint referencePoint)
         {
-            return m_Provider.TryAddReferencePoint(pose, out referencePoint);
+            return provider.TryAddReferencePoint(pose, out referencePoint);
         }
 
         /// <summary>
@@ -80,7 +91,7 @@ namespace UnityEngine.XR.ARSubsystems
         [Obsolete("XRReferencePointSubsystem.TryAttachReferencePoint() has been deprecated. Use XRAnchorSubsystem.TryAttachAnchor() instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystem.TryAttachAnchor(TrackableId, Pose, XRAnchor)", true)]
         public bool TryAttachReferencePoint(TrackableId trackableToAffix, Pose pose, out XRReferencePoint referencePoint)
         {
-            return m_Provider.TryAttachReferencePoint(trackableToAffix, pose, out referencePoint);
+            return provider.TryAttachReferencePoint(trackableToAffix, pose, out referencePoint);
         }
 
         /// <summary>
@@ -91,28 +102,43 @@ namespace UnityEngine.XR.ARSubsystems
         [Obsolete("XRReferencePointSubsystem.TryRemoveReferencePoint() has been deprecated. Use XRAnchorSubsystem.TryRemoveAnchor() instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchorSubsystem.TryRemoveAnchor(*)", true)]
         public bool TryRemoveReferencePoint(TrackableId referencePointId)
         {
-            return m_Provider.TryRemoveReferencePoint(referencePointId);
+            return provider.TryRemoveReferencePoint(referencePointId);
         }
 
         /// <summary>
         /// An interface to be implemented by providers of this subsystem.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRReferencePointSubsystem>
+#endif
         {
             /// <summary>
             /// Invoked when <c>Start</c> is called on the subsystem. This method is only called if the subsystem was not previously running.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Start() { }
+#else
             public virtual void Start() { }
+#endif
 
             /// <summary>
             /// Invoked when <c>Stop</c> is called on the subsystem. This method is only called if the subsystem was previously running.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Stop() { }
+#else
             public virtual void Stop() { }
+#endif
 
             /// <summary>
             /// Called when <c>Destroy</c> is called on the subsystem.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            public override void Destroy() { }
+#else
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Invoked to get the changes to reference points (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -164,13 +190,14 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual bool TryRemoveReferencePoint(TrackableId referencePointId) => false;
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Should return an instance of <see cref="IProvider"/>.
         /// </summary>
         /// <returns>The interface to the implementation-specific provider.</returns>
         protected abstract Provider CreateProvider();
-
-        Provider m_Provider;
+        Provider provider;
+#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRReferencePoint> m_ValidationUtility =

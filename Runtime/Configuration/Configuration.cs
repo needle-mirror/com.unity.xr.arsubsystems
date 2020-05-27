@@ -22,7 +22,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The specific <see cref="Feature"/>(s) that should be enabled by this configuration.
         /// </summary>
         /// <remarks>
-        /// Exaclty zero or one camera mode must be enabled (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
+        /// Exactly zero or one camera mode must be enabled (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
         /// If zero camera modes are enabled, no camera texture will be available. Some platforms may support a configuration that does
         /// not provide camera textures, which can be more performant if they are not necessary.
         /// All enabled features must be supported by the <see cref="descriptor"/>.
@@ -33,8 +33,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// Constructs a <see cref="Configuration"/>.
         /// </summary>
         /// <param name="descriptor">A <see cref="ConfigurationDescriptor"/> for this configuration.</param>
-        /// <param name="features">A set of <see cref="Feature"/>(s) that should be enabled for this configuraton.
-        /// Exaclty zero or one camera mode must be enabled (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
+        /// <param name="features">A set of <see cref="Feature"/>(s) that should be enabled for this configuration.
+        /// Exactly zero or one camera mode must be enabled (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
         /// If zero camera modes are enabled, no camera texture will be available. Some platforms may support a configuration that does
         /// not provide camera textures, which can be more performant if they are not necessary.
         /// All <paramref name="features"/> must be supported by the <paramref name="descriptor"/>.</param>

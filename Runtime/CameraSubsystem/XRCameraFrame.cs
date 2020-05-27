@@ -91,6 +91,18 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         [Description("AmbientSphericalHarmonics")]
         AmbientSphericalHarmonics = (1 << 12),
+        
+        /// <summary>
+        /// The camera grain texture is included.
+        /// </summary>
+        [Description("CameraGrain")]
+        CameraGrain = (1 << 13),
+
+        /// <summary>
+        /// The camera grain noise intensity is included.
+        /// </summary>
+        [Description("NoiseIntensity")]
+        NoiseIntensity = (1 << 14),
     }
 
     /// <summary>
@@ -246,6 +258,24 @@ namespace UnityEngine.XR.ARSubsystems
         /// </remarks>
         public SphericalHarmonicsL2 ambientSphericalHarmonics => m_AmbientSphericalHarmonics;
         SphericalHarmonicsL2 m_AmbientSphericalHarmonics;
+        
+        /// <summary>
+        /// A texture that simulates the camera's noise.
+        /// </summary>
+        /// <value>
+        /// A texture that simulates the camera's noise.
+        /// </value>
+        public XRTextureDescriptor cameraGrain => m_CameraGrain;
+        XRTextureDescriptor m_CameraGrain;
+
+        /// <summary>
+        /// The level of intensity of camera grain noise in a scene.
+        /// </summary>
+        /// <value>
+        /// The level of intensity of camera grain noise in a scene.
+        /// </value>
+        public float noiseIntensity => m_NoiseIntensity;
+        float m_NoiseIntensity;
 
         /// <summary>
         /// Whether the frame has a timestamp.
@@ -352,6 +382,22 @@ namespace UnityEngine.XR.ARSubsystems
         public bool hasAmbientSphericalHarmonics => (m_Properties & XRCameraFrameProperties.AmbientSphericalHarmonics) != 0;
 
         /// <summary>
+        /// Whether the frame has a camera grain texture.
+        /// </summary>
+        /// <value>
+        /// Whether the frame has a camera grain texture.
+        /// </value>
+        public bool hasCameraGrain => (m_Properties & XRCameraFrameProperties.CameraGrain) != 0;
+
+        /// <summary>
+        /// Whether the frame has a camera grain noise.
+        /// </summary>
+        /// <value>
+        /// Whether the frame has a camera grain noise.
+        /// </value>
+        public bool hasNoiseIntensity => (m_Properties & XRCameraFrameProperties.NoiseIntensity) != 0;
+
+        /// <summary>
         /// Provides timestamp of the camera frame.
         /// </summary>
         /// <param name="timestampNs">The timestamp of the camera frame.</param>
@@ -447,6 +493,8 @@ namespace UnityEngine.XR.ARSubsystems
                     && m_MainLightIntensityLumens.Equals(other.m_MainLightIntensityLumens)
                     && m_MainLightColor.Equals(other.m_MainLightColor)
                     && m_AmbientSphericalHarmonics.Equals(other.m_AmbientSphericalHarmonics)
+                    && m_CameraGrain.Equals(other.m_CameraGrain)
+                    && m_NoiseIntensity.Equals(other.m_NoiseIntensity)
                     && (m_Properties == other.m_Properties));
         }
 
@@ -506,6 +554,8 @@ namespace UnityEngine.XR.ARSubsystems
                 hashCode = (hashCode * 486187739) + m_MainLightColor.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_AmbientSphericalHarmonics.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_MainLightIntensityLumens.GetHashCode();
+                hashCode = (hashCode * 486187739) + m_CameraGrain.GetHashCode();
+                hashCode = (hashCode * 486187739) + m_NoiseIntensity.GetHashCode();
                 hashCode = (hashCode * 486187739) + m_NativePtr.GetHashCode();
                 hashCode = (hashCode * 486187739) + ((int)m_Properties).GetHashCode();
             }

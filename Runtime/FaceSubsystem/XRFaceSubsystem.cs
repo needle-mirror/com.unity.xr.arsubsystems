@@ -1,6 +1,10 @@
 using System;
 using Unity.Collections;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -11,27 +15,40 @@ namespace UnityEngine.XR.ARSubsystems
     /// It can also be extended to provide an implementation of a provider which provides the face tracking data
     /// to the higher level code.
     /// </remarks>
-    public abstract class XRFaceSubsystem : TrackingSubsystem<XRFace, XRFaceSubsystemDescriptor>
+#if UNITY_2020_2_OR_NEWER
+    public class XRFaceSubsystem
+        : TrackingSubsystem<XRFace, XRFaceSubsystem, XRFaceSubsystemDescriptor, XRFaceSubsystem.Provider>
+#else
+    public abstract class XRFaceSubsystem
+        : TrackingSubsystem<XRFace, XRFaceSubsystemDescriptor>
+#endif
     {
         /// <summary>
         /// Constructs a face subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRFaceSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRFaceSubsystem() => m_Provider = CreateProvider();
+        public XRFaceSubsystem()
+        {
+#if !UNITY_2020_2_OR_NEWER
+            provider = CreateProvider();
+#endif
+        }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Start the face subsystem, i.e., start tracking faces.
         /// </summary>
-        protected sealed override void OnStart() => m_Provider.Start();
+        protected sealed override void OnStart() => provider.Start();
 
         /// <summary>
         /// Destroy the face subsystem.
         /// </summary>
-        protected sealed override void OnDestroyed() => m_Provider.Destroy();
+        protected sealed override void OnDestroyed() => provider.Destroy();
 
         /// <summary>
         /// Stop the subsystem, i.e., stop tracking faces.
         /// </summary>
-        protected sealed override void OnStop() => m_Provider.Stop();
+        protected sealed override void OnStop() => provider.Stop();
+#endif
 
         /// <summary>
         /// Get or set the maximum number of faces to track simultaneously.
@@ -40,24 +57,24 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if the requested maximum face count is greater than one but the subsystem does not support tracking multiple faces.</exception>
         public int requestedMaximumFaceCount
         {
-            get => m_Provider.requestedMaximumFaceCount;
+            get => provider.requestedMaximumFaceCount;
             set
             {
                 if (value < 1)
                     throw new ArgumentOutOfRangeException("value", "Must track at least one face. Call Stop() if you wish to stop face tracking.");
-                m_Provider.requestedMaximumFaceCount = value;
+                provider.requestedMaximumFaceCount = value;
             }
         }
 
         /// <summary>
         /// Get the maximum number of faces the provider will simultaneously track.
         /// </summary>
-        public int currentMaximumFaceCount => m_Provider.currentMaximumFaceCount;
+        public int currentMaximumFaceCount => provider.currentMaximumFaceCount;
 
         /// <summary>
         /// Get the number of faces the subsystem is able to track simultaneously in its current configuration.
         /// </summary>
-        public int supportedFaceCount => m_Provider.supportedFaceCount;
+        public int supportedFaceCount => provider.supportedFaceCount;
 
         /// <summary>
         /// Get the changes (added, updated, and removed) faces since the last call to <see cref="GetChanges(Allocator)"/>.
@@ -71,7 +88,7 @@ namespace UnityEngine.XR.ARSubsystems
         {
             using (new ScopedProfiler("GetChanges"))
             {
-                var changes = m_Provider.GetChanges(XRFace.defaultValue, allocator);
+                var changes = provider.GetChanges(XRFace.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                 m_ValidationUtility.ValidateAndDisposeIfThrown(changes);
 #endif
@@ -97,20 +114,26 @@ namespace UnityEngine.XR.ARSubsystems
                 throw new InvalidOperationException("Allocator.None is not a valid allocator.");
 
             using (new ScopedProfiler("GetFaceMesh"))
-            m_Provider.GetFaceMesh(faceId, allocator, ref faceMesh);
+            provider.GetFaceMesh(faceId, allocator, ref faceMesh);
         }
 
+#if !UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Creates an instance of an implementation-specific <see cref="IProvider"/>.
         /// </summary>
         /// <returns>An implementation of the <see cref="IProvider"/> class.</returns>
         protected abstract Provider CreateProvider();
+#endif
 
         /// <summary>
         /// Class to be implemented by an implementor of the <see cref="XRFaceSubsystem"/>.
         /// </summary>
-        protected abstract class Provider
+        public abstract class Provider
+#if UNITY_2020_2_OR_NEWER
+            : SubsystemProvider<XRFaceSubsystem>
+#endif
         {
+#if !UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Called by <see cref="XRFaceSubsystem.Start"/>. Only invoked if not already running.
             /// </summary>
@@ -125,6 +148,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Called by <see cref="XRFaceSubsystem.Destroy"/> when the subsystem is destroyed.
             /// </summary>
             public virtual void Destroy() { }
+#endif
 
             /// <summary>
             /// Get the mesh data associated with the face with <paramref name="faceId"/>. The <paramref name="faceMesh"/>
@@ -194,7 +218,9 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual int currentMaximumFaceCount => 1;
         }
 
-        Provider m_Provider;
+#if !UNITY_2020_2_OR_NEWER
+        Provider provider;
+#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRFace> m_ValidationUtility =

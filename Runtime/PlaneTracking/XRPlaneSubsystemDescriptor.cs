@@ -1,11 +1,20 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Describes the capabilities of an <see cref="XRPlaneSubsystem"/>.
     /// </summary>
-    public class XRPlaneSubsystemDescriptor : SubsystemDescriptor<XRPlaneSubsystem>
+    public class XRPlaneSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRPlaneSubsystem, XRPlaneSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRPlaneSubsystem>
+#endif
     {
         /// <summary>
         /// <c>true</c> if the subsystem supports horizontal plane detection.
@@ -42,9 +51,30 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+            /// <summary>
+            /// Specifies the provider implementation type to use for instantiation.
+            /// </summary>
+            /// <value>
+            /// The provider implementation type to use for instantiation.
+            /// </value>
+            public Type providerType { get; set; }
+
+            /// <summary>
+            /// Specifies the <c>XRPlaneSubsystem</c>-derived type that forwards casted calls to its provider.
+            /// </summary>
+            /// <value>
+            /// The type of the subsystem to use for instantiation. If null, <c>XRPlaneSubsystem</c> will be instantiated.
+            /// </value>
+            public Type subsystemTypeOverride { get; set; }
+#endif
+
             /// <summary>
             /// The concrete <c>Type</c> which will be instantiated if <c>Create</c> is called on this subsystem descriptor.
             /// </summary>
+#if UNITY_2020_2_OR_NEWER
+            [Obsolete("XRPlaneSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
@@ -80,13 +110,18 @@ namespace UnityEngine.XR.ARSubsystems
             public bool Equals(Cinfo other)
             {
                 return
-                    id.Equals(other.id) &&
-                    (subsystemImplementationType == other.subsystemImplementationType) &&
-                    (supportsHorizontalPlaneDetection == other.supportsHorizontalPlaneDetection) &&
-                    (supportsVerticalPlaneDetection == other.supportsVerticalPlaneDetection) &&
-                    (supportsArbitraryPlaneDetection == other.supportsArbitraryPlaneDetection) &&
-                    (supportsClassification == other.supportsClassification) &&
-                    (supportsBoundaryVertices == other.supportsBoundaryVertices);
+                    ReferenceEquals(id, other.id) &&
+#if UNITY_2020_2_OR_NEWER
+                    ReferenceEquals(providerType, other.providerType) &&
+                    ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride) &&
+#else
+                    ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType) &&
+#endif
+                    supportsHorizontalPlaneDetection == other.supportsHorizontalPlaneDetection &&
+                    supportsVerticalPlaneDetection == other.supportsVerticalPlaneDetection &&
+                    supportsArbitraryPlaneDetection == other.supportsArbitraryPlaneDetection &&
+                    supportsClassification == other.supportsClassification &&
+                    supportsBoundaryVertices == other.supportsBoundaryVertices;
             }
 
             /// <summary>
@@ -111,8 +146,13 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    var hashCode = HashCode.ReferenceHash(id);
+                    int hashCode = HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                    hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
+                    hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
                     hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemImplementationType);
+#endif
                     hashCode = (hashCode * 486187739) + supportsHorizontalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsVerticalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsArbitraryPlaneDetection.GetHashCode();
@@ -146,13 +186,22 @@ namespace UnityEngine.XR.ARSubsystems
         public static void Create(Cinfo cinfo)
         {
             var descriptor = new XRPlaneSubsystemDescriptor(cinfo);
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(descriptor);
+#else
             SubsystemRegistration.CreateDescriptor(descriptor);
+#endif
         }
 
         XRPlaneSubsystemDescriptor(Cinfo cinfo)
         {
             id = cinfo.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = cinfo.providerType;
+            subsystemTypeOverride = cinfo.subsystemTypeOverride;
+#else
             subsystemImplementationType = cinfo.subsystemImplementationType;
+#endif
             supportsHorizontalPlaneDetection = cinfo.supportsHorizontalPlaneDetection;
             supportsVerticalPlaneDetection = cinfo.supportsVerticalPlaneDetection;
             supportsArbitraryPlaneDetection = cinfo.supportsArbitraryPlaneDetection;

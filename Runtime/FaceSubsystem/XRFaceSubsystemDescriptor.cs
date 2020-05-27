@@ -1,5 +1,9 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -54,9 +58,30 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public string id { get; set; }
 
+#if UNITY_2020_2_OR_NEWER
+        /// <summary>
+        /// Specifies the provider implementation type to use for instantiation.
+        /// </summary>
+        /// <value>
+        /// The provider implementation type to use for instantiation.
+        /// </value>
+        public Type providerType { get; set; }
+
+        /// <summary>
+        /// Specifies the <c>XRFaceSubsystem</c>-derived type that forwards casted calls to its provider.
+        /// </summary>
+        /// <value>
+        /// The type of the subsystem to use for instantiation. If null, <c>XRFaceSubsystem</c> will be instantiated.
+        /// </value>
+        public Type subsystemTypeOverride { get; set; }
+#endif
+
         /// <summary>
         /// The concrete <c>Type</c> which will be instantiated if <c>Create</c> is called on this subsystem descriptor.
         /// </summary>
+#if UNITY_2020_2_OR_NEWER
+        [Obsolete("XRFaceSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
+#endif
         public Type subsystemImplementationType { get; set; }
 
         /// <summary>
@@ -164,9 +189,14 @@ namespace UnityEngine.XR.ARSubsystems
         public bool Equals(FaceSubsystemParams other)
         {
             return
-                (m_Capabilities == other.m_Capabilities) &&
-                (id == other.id) &&
-                (subsystemImplementationType == other.subsystemImplementationType);
+                m_Capabilities == other.m_Capabilities &&
+                ReferenceEquals(id, other.id) &&
+#if UNITY_2020_2_OR_NEWER
+                ReferenceEquals(providerType, other.providerType) &&
+                ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride);
+#else
+                ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType);
+#endif
         }
 
         /// <summary>
@@ -185,9 +215,14 @@ namespace UnityEngine.XR.ARSubsystems
         {
             unchecked
             {
-                var hashCode = HashCode.ReferenceHash(id);
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemImplementationType);
-                hashCode = (hashCode * 486187739) + ((int)m_Capabilities).GetHashCode();
+                int hashCode = HashCode.ReferenceHash(id);
+#if UNITY_2020_2_OR_NEWER
+                hashCode = 486187739 * hashCode + HashCode.ReferenceHash(providerType);
+                hashCode = 486187739 * hashCode + HashCode.ReferenceHash(subsystemTypeOverride);
+#else
+                hashCode = 486187739 * hashCode + HashCode.ReferenceHash(subsystemImplementationType);
+#endif
+                hashCode = 486187739 * hashCode + ((int)m_Capabilities).GetHashCode();
                 return hashCode;
             }
         }
@@ -216,12 +251,22 @@ namespace UnityEngine.XR.ARSubsystems
     /// You use the <c>Create</c> factory method along with <see cref="FaceSubsystemParams"/> struct to construct and
     /// register one of these from each face tracking data provider.
     /// </remarks>
-    public class XRFaceSubsystemDescriptor : SubsystemDescriptor<XRFaceSubsystem>
+    public class XRFaceSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRFaceSubsystem, XRFaceSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRFaceSubsystem>
+#endif
     {
         XRFaceSubsystemDescriptor(FaceSubsystemParams descriptorParams)
         {
             id = descriptorParams.id;
+#if UNITY_2020_2_OR_NEWER
+            providerType = descriptorParams.providerType;
+            subsystemTypeOverride = descriptorParams.subsystemTypeOverride;
+#else
             subsystemImplementationType = descriptorParams.subsystemImplementationType;
+#endif
             supportsFacePose = descriptorParams.supportsFacePose;
             supportsFaceMeshVerticesAndIndices = descriptorParams.supportsFaceMeshVerticesAndIndices;
             supportsFaceMeshUVs = descriptorParams.supportsFaceMeshUVs;
@@ -261,7 +306,11 @@ namespace UnityEngine.XR.ARSubsystems
         public static void Create(FaceSubsystemParams descriptorParams)
         {
             var descriptor = new XRFaceSubsystemDescriptor(descriptorParams);
+#if UNITY_2020_2_OR_NEWER
+            SubsystemDescriptorStore.RegisterDescriptor(descriptor);
+#else
             SubsystemRegistration.CreateDescriptor(descriptor);
+#endif
         }
     }
 }

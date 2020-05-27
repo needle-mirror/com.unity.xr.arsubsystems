@@ -1,5 +1,9 @@
 using System;
 
+#if UNITY_2020_2_OR_NEWER
+using UnityEngine.SubsystemsImplementation;
+#endif
+
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
@@ -11,7 +15,12 @@ namespace UnityEngine.XR.ARSubsystems
     /// Subsystem implementors can register their subsystem with
     /// <see cref="XRObjectTrackingSubsystem.Register{T}(string, XRObjectTrackingSubsystemDescriptor.Capabilities)"/>.
     /// </remarks>
-    public class XRObjectTrackingSubsystemDescriptor : SubsystemDescriptor<XRObjectTrackingSubsystem>
+    public class XRObjectTrackingSubsystemDescriptor :
+#if UNITY_2020_2_OR_NEWER
+        SubsystemDescriptorWithProvider<XRObjectTrackingSubsystem, XRObjectTrackingSubsystem.Provider>
+#else
+        SubsystemDescriptor<XRObjectTrackingSubsystem>
+#endif
     {
         /// <summary>
         /// Describes the capabilities of an <see cref="XRObjectTrackingSubsystem"/> implementation.
@@ -61,10 +70,15 @@ namespace UnityEngine.XR.ARSubsystems
             public static bool operator !=(Capabilities lhs, Capabilities rhs) => !lhs.Equals(rhs);
         }
 
-        internal XRObjectTrackingSubsystemDescriptor(string id, Type implementationType, Capabilities capabilities)
+        internal XRObjectTrackingSubsystemDescriptor(string id, Type providerType, Type subsystemTypeOverride, Capabilities capabilities)
         {
             this.id = id;
-            this.subsystemImplementationType = implementationType;
+#if UNITY_2020_2_OR_NEWER
+            this.providerType = providerType;
+            this.subsystemTypeOverride = subsystemTypeOverride;
+#else
+            this.subsystemImplementationType = providerType;
+#endif
             this.capabilities = capabilities;
         }
     }

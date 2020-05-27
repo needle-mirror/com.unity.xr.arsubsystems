@@ -1,6 +1,6 @@
 namespace UnityEngine.XR.ARSubsystems
 {
-    internal static class HashCode
+    static class HashCode
     {
         public static int Combine(int hash1, int hash2)
         {
