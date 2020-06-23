@@ -1,8 +1,8 @@
 {
   "name": "com.unity.xr.arsubsystems",
   "displayName": "AR Subsystems",
-  "version": "4.0.1",
-  "unity": "2019.3",
+  "version": "4.1.0-preview.1",
+  "unity": "2019.4",
   "description": "Contains definitions for AR Subsystems. This package is a dependency of provider packages as well as AR Foundation",
   "keywords": [
     "subsystem",
@@ -13,11 +13,11 @@
     "com.unity.subsystemregistration": "1.0.6"
   },
   "upmCi": {
-    "footprint": "55d01a6b58145ad52b97493b7383da30df57155f"
+    "footprint": "f15e04f04d82444bb879d8a3a2e2c58e6d96c041"
   },
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.xr.arsubsystems.git",
     "type": "git",
-    "revision": "e71f93b2a5d8246248b59fb08002daf5aa907603"
+    "revision": "75598f20ec1b42d9cdfa2290c560fbffb0e4bf55"
   }
 }

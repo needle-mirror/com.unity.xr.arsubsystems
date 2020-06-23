@@ -65,6 +65,22 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsHumanSegmentationDepthImage { get; set; }
 
         /// <summary>
+        /// Query for whether the current subsystem supports environment depth image.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports environment depth image. Otherwise, <c>false</c>.
+        /// </value>
+        public XROcclusionSubsystemDescriptor.QueryForSupport queryForSupportsEnvironmentDepthImage { get; set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth confidence image.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports environment depth confidence image. Otherwise, <c>false</c>.
+        /// </value>
+        public XROcclusionSubsystemDescriptor.QueryForSupport queryForSupportsEnvironmentDepthConfidenceImage { get; set; }
+
+        /// <summary>
         /// Tests for equality.
         /// </summary>
         /// <param name="other">The other <see cref="XROcclusionSubsystemCinfo"/> to compare against.</param>
@@ -80,7 +96,9 @@ namespace UnityEngine.XR.ARSubsystems
                 && ReferenceEquals(implementationType, other.implementationType)
 #endif
                 && supportsHumanSegmentationStencilImage.Equals(other.supportsHumanSegmentationStencilImage)
-                && supportsHumanSegmentationDepthImage.Equals(other.supportsHumanSegmentationDepthImage);
+                && supportsHumanSegmentationDepthImage.Equals(other.supportsHumanSegmentationDepthImage)
+                && queryForSupportsEnvironmentDepthImage.Equals(other.queryForSupportsEnvironmentDepthImage)
+                && queryForSupportsEnvironmentDepthConfidenceImage.Equals(other.queryForSupportsEnvironmentDepthConfidenceImage);
         }
 
         /// <summary>
@@ -125,6 +143,8 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
                 hashCode = (hashCode * 486187739) + supportsHumanSegmentationStencilImage.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanSegmentationDepthImage.GetHashCode();
+                hashCode = (hashCode * 486187739) + queryForSupportsEnvironmentDepthImage.GetHashCode();
+                hashCode = (hashCode * 486187739) + queryForSupportsEnvironmentDepthConfidenceImage.GetHashCode();
             }
             return hashCode;
         }
@@ -140,6 +160,11 @@ namespace UnityEngine.XR.ARSubsystems
         SubsystemDescriptor<XROcclusionSubsystem>
 #endif
     {
+        /// <summary>
+        /// Dynamic query for whether a feature is supported.
+        /// </summary>
+        public delegate bool QueryForSupport();
+
         XROcclusionSubsystemDescriptor(XROcclusionSubsystemCinfo occlusionSubsystemCinfo)
         {
             id = occlusionSubsystemCinfo.id;
@@ -151,7 +176,31 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
             supportsHumanSegmentationStencilImage = occlusionSubsystemCinfo.supportsHumanSegmentationStencilImage;
             supportsHumanSegmentationDepthImage = occlusionSubsystemCinfo.supportsHumanSegmentationDepthImage;
+            m_QueryForSupportsEnvironmentDepthImage = occlusionSubsystemCinfo.queryForSupportsEnvironmentDepthImage;
+            m_QueryForSupportsEnvironmentDepthConfidenceImage = occlusionSubsystemCinfo.queryForSupportsEnvironmentDepthConfidenceImage;
         }
+
+        /// <summary>
+        /// Query for whether environment depth is supported.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports environment depth image. Otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// On some platforms, this is a runtime check that requires an active session.
+        /// </remarks>
+        QueryForSupport m_QueryForSupportsEnvironmentDepthImage;
+
+        /// <summary>
+        /// Query for whether environment depth confidence is supported.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports environment depth confidence image. Otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// On some platforms, this is a runtime check that requires an active session.
+        /// </remarks>
+        QueryForSupport m_QueryForSupportsEnvironmentDepthConfidenceImage;
 
         /// <summary>
         /// Specifies if the current subsystem supports human segmentation stencil image.
@@ -168,6 +217,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if the current subsystem supports human segmentation depth image. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsHumanSegmentationDepthImage { get; private set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth image.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports environment depth image. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsEnvironmentDepthImage => (m_QueryForSupportsEnvironmentDepthImage == null) ? false : m_QueryForSupportsEnvironmentDepthImage();
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth confidence image.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the current subsystem supports environment depth confidence image. Otherwise, <c>false</c>.
+        /// </value>
+        public bool supportsEnvironmentDepthConfidenceImage => (m_QueryForSupportsEnvironmentDepthConfidenceImage == null) ? false : m_QueryForSupportsEnvironmentDepthConfidenceImage();
 
         /// <summary>
         /// Creates the occlusion subsystem descriptor from the construction info.

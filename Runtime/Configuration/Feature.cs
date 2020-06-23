@@ -153,6 +153,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// A feature describing the ability to surface point clouds.
         /// </summary>
         PointCloud = 1 << 24,
+
+        /// <summary>
+        /// A feature allowing environment depth iomages to be captured.
+        /// </summary>
+        EnvironmentDepth = 1 << 25,
     }
 
     /// <summary>
@@ -365,6 +370,9 @@ namespace UnityEngine.XR.ARSubsystems
                         break;
                     case Feature.PointCloud:
                         names.Add("Point Cloud");
+                        break;
+                    case Feature.EnvironmentDepth:
+                        names.Add("Environment Depth");
                         break;
                     default:
                         names.Add(feature.ToString());

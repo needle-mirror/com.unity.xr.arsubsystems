@@ -10,7 +10,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// The format is unknown or could not be determined.
             /// </summary>
-            Unknown,
+            Unknown = 0,
 
             /// <summary>
             /// <para>Three-Plane YUV 420 format commonly used by Android. See
@@ -24,7 +24,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// v = VPlane[(y / 2) * rowStride + (x / 2) * pixelStride];
             /// </code></para>
             /// </summary>
-            AndroidYuv420_888,
+            AndroidYuv420_888 = 1,
 
             /// <summary>
             /// <para>Bi-Planar Component Y'CbCr 8-bit 4:2:0, full-range (luma=[0,255] chroma=[1,255]) commonly used by
@@ -45,17 +45,23 @@ namespace UnityEngine.XR.ARSubsystems
             /// v = UvPlane[(y >> 1) * rowStride + x | 1];
             /// </code></para>
             /// </summary>
-            IosYpCbCr420_8BiPlanarFullRange,
+            IosYpCbCr420_8BiPlanarFullRange = 2,
 
             /// <summary>
             /// A single channel image format with 8 bits per pixel.
             /// </summary>
-            OneComponent8,
+            OneComponent8 = 3,
 
             /// <summary>
             /// IEEE754-2008 binary32 float, describing the depth (distance to an object) in meters
             /// </summary>
-            DepthFloat32,
+            DepthFloat32 = 4,
+
+            /// <summary>
+            /// 16-bit unsigned integer, describing the depth (distance to an object) in millimeters.
+            /// Only the low 13 bits are used.
+            /// </summary>
+            DepthUint16 = 5,
         }
     }
 
@@ -76,6 +82,7 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 case XRCpuImage.Format.OneComponent8: return TextureFormat.R8;
                 case XRCpuImage.Format.DepthFloat32: return TextureFormat.RFloat;
+                case XRCpuImage.Format.DepthUint16: return TextureFormat.RFloat;
                 default: return 0;
             }
         }
