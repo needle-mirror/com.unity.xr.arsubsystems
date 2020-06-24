@@ -13,6 +13,8 @@ This package provides interfaces for the following subsystems:
 - [Face Tracking](face-tracking.md)
 - [Environment Probes](environment-probe-subsystem.md)
 - [Object Tracking](object-tracking.md)
+- [Occlusion](occlusion-subsystem.md)
+- [Meshes](mesh-subsystem.md)
 
 ## Installing AR Subsystems
 
