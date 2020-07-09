@@ -132,11 +132,12 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
 
             /// <summary>
-            /// Invoked to get the changes to anchors (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
+            /// Invoked to get the changes to anchors (added, updated, and removed) since the last call to
+            /// <see cref="GetChanges(XRAnchor,Allocator)"/>.
             /// </summary>
             /// <param name="defaultAnchor">The default anchor. This should be used to initialize the returned
             /// <c>NativeArray</c>s for backwards compatibility.
-            /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, T, int, Allocator)"/>.
+            /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, {T}, int, Unity.Collections.Allocator)"/>.
             /// </param>
             /// <param name="allocator">An allocator to use for the <c>NativeArray</c>s in <see cref="TrackableChanges{T}"/>.</param>
             /// <returns>Changes since the last call to <see cref="GetChanges"/>.</returns>
@@ -157,7 +158,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Should create a new anchor "attached" to the trackable with id <paramref name="trackableToAffix"/>.
             /// The behavior of the anchor depends on the type of trackable to which this anchor is attached and
-            /// may be implemenation-defined.
+            /// may be implementation-defined.
             /// </summary>
             /// <param name="trackableToAffix">The id of the trackable to which to attach.</param>
             /// <param name="pose">The pose, in session space, of the anchor to create.</param>

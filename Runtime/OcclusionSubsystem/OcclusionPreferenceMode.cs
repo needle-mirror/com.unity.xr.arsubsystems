@@ -3,7 +3,7 @@ using System.ComponentModel;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Represents the preference for how to occlucde.
+    /// Represents the preference for how to occlude.
     /// </summary>
     public enum OcclusionPreferenceMode
     {
