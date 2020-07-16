@@ -8,7 +8,6 @@ namespace UnityEngine.XR.ARSubsystems
     /// </summary>
     /// <seealso cref="XRRaycastSubsystem.Raycast(Ray, TrackableType, Unity.Collections.Allocator)"/>
     /// <seealso cref="XRRaycastSubsystem.Raycast(Vector2, TrackableType, Unity.Collections.Allocator)"/>
-    /// <seealso cref="XRRaycastSubsystem.RaycastAsync(Ray, TrackableType)"/>
     [StructLayout(LayoutKind.Sequential)]
     public struct XRRaycastHit : IEquatable<XRRaycastHit>
     {

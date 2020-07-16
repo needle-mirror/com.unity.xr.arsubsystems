@@ -53,8 +53,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Get or set the maximum number of faces to track simultaneously.
         /// </summary>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the requested maximum face count is less than one. To stop face tracking, call <see cref="Stop()"/>.</exception>
-        /// <exception cref="System.NotSupportedException">Thrown if the requested maximum face count is greater than one but the subsystem does not support tracking multiple faces.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the requested maximum face count is less than
+        ///     one. To stop face tracking, call <see cref="XRSubsystem{TSubsystemDescriptor}.Stop()"/>.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown if the requested maximum face count is greater than
+        ///     one but the subsystem does not support tracking multiple faces.</exception>
         public int requestedMaximumFaceCount
         {
             get => provider.requestedMaximumFaceCount;
@@ -119,9 +121,9 @@ namespace UnityEngine.XR.ARSubsystems
 
 #if !UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Creates an instance of an implementation-specific <see cref="IProvider"/>.
+        /// Creates an instance of an implementation-specific <see cref="Provider"/>.
         /// </summary>
-        /// <returns>An implementation of the <see cref="IProvider"/> class.</returns>
+        /// <returns>An implementation of the <see cref="Provider"/> class.</returns>
         protected abstract Provider CreateProvider();
 #endif
 
@@ -135,17 +137,17 @@ namespace UnityEngine.XR.ARSubsystems
         {
 #if !UNITY_2020_2_OR_NEWER
             /// <summary>
-            /// Called by <see cref="XRFaceSubsystem.Start"/>. Only invoked if not already running.
+            /// Called by <see cref="XRSubsystem{TSubsystemDescriptor}.OnStart()"/>. Only invoked if not already running.
             /// </summary>
             public virtual void Start() { }
 
             /// <summary>
-            /// Called by <see cref="XRFaceSubsystem.Stop"/>. Only invoked if current running.
+            /// Called by <see cref="XRSubsystem{TSubsystemDescriptor}.OnStop()"/>. Only invoked if current running.
             /// </summary>
             public virtual void Stop() { }
 
             /// <summary>
-            /// Called by <see cref="XRFaceSubsystem.Destroy"/> when the subsystem is destroyed.
+            /// Called by <see cref="XRSubsystem{TSubsystemDescriptor}.OnDestroy()"/> when the subsystem is destroyed.
             /// </summary>
             public virtual void Destroy() { }
 #endif
@@ -153,8 +155,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Get the mesh data associated with the face with <paramref name="faceId"/>. The <paramref name="faceMesh"/>
             /// should be reused if it is the correct size, otherwise, its arrays should be reallocated with <paramref name="allocator"/>.
-            /// Use <see cref="XRFaceMesh.Assign(XRFaceMesh)"/> to ensure unused <c>NativeArray</c>s are disposed properly and
-            /// <see cref="CreateOrResizeNativeArrayIfNecessary"/> to resize individual arrays.
+            /// Use <see cref="XRFaceMesh.Resize"/> to resize the containers for face mesh data.
             /// </summary>
             /// <param name="faceId">The <see cref="TrackableId"/> for a <see cref="XRFace"/>.</param>
             /// <param name="allocator">The allocator to use for the returned data if a resize is necessary.</param>
@@ -180,16 +181,16 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Get the changes (added, updated, and removed) faces since the last call to <see cref="GetChanges(Allocator)"/>.
+            /// Get the changes (added, updated, and removed) faces since the last call to <see cref="GetChanges(XRFace,Allocator)"/>.
             /// </summary>
             /// <param name="defaultFace">
             /// The default face. This should be used to initialize the returned <c>NativeArray</c>s for backwards compatibility.
-            /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, T, int, Allocator)"/>.
+            /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, T, int, Unity.Collections.Allocator)"/>.
             /// </param>
             /// <param name="allocator">An <c>Allocator</c> to use when allocating the returned <c>NativeArray</c>s.</param>
             /// <returns>
             /// <see cref="TrackableChanges{T}"/> describing the faces that have been added, updated, and removed
-            /// since the last call to <see cref="GetChanges(Allocator)"/>. The changes should be allocated using
+            /// since the last call to <see cref="GetChanges(XRFace,Allocator)"/>. The changes should be allocated using
             /// <paramref name="allocator"/>.
             /// </returns>
             public abstract TrackableChanges<XRFace> GetChanges(XRFace defaultFace, Allocator allocator);

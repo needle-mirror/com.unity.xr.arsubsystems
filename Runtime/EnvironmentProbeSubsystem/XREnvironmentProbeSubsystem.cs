@@ -39,7 +39,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         /// <remarks>
         /// If both manual and automatic placement of environment probes are supported, manually placed environment
-        /// probes may be specified via <see cref="AddEnvironmentProbe"/> regardless of whether automatic placement is
+        /// probes may be specified via <see cref="TryAddEnvironmentProbe"/> regardless of whether automatic placement is
         /// enabled or not.
         /// </remarks>
         /// <exception cref="System.NotSupportedException">Thrown when setting this value to <c>true</c> for
@@ -93,7 +93,8 @@ namespace UnityEngine.XR.ARSubsystems
 
 #if !UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Starts the subsystem. If <see cref="automaticPlacement"/> is <c>true</c>, environment probes will be created automatically.
+        /// Starts the subsystem. If <see cref="automaticPlacementEnabled"/> is `true`, environment probes will be
+        /// created automatically.
         /// </summary>
         protected sealed override void OnStart() => provider.Start();
 
@@ -166,7 +167,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Must create an implementation of <see cref="Provider"/>, the provider-specific implementation of this subsystem.
         /// </summary>
-        /// <returns>An instance of a derived <see cref="Provider"/>.</returns> 
+        /// <returns>An instance of a derived <see cref="Provider"/>.</returns>
         protected abstract Provider CreateProvider();
 #endif
 
@@ -180,12 +181,14 @@ namespace UnityEngine.XR.ARSubsystems
         {
 #if !UNITY_2020_2_OR_NEWER
             /// <summary>
-            /// Starts the subsystem. Will only be invoked if <see cref="running"/> is <c>false</c>.
+            /// Starts the subsystem. Will only be invoked if
+            /// <see cref="XRSubsystem{TSubsystemDescriptor}.running"/> is <c>false</c>.
             /// </summary>
             public virtual void Start() {}
 
             /// <summary>
-            /// Stops the subsystem. Will only be invoked if <see cref="running"/> is <c>true</c>.
+            /// Stops the subsystem. Will only be invoked if
+            /// <see cref="XRSubsystem{TSubsystemDescriptor}.running"/> is <c>true</c>.
             /// </summary>
             public virtual void Stop() {}
 
@@ -198,7 +201,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Overridden by the provider implementation to set the automatic placement request state for the environment probe subsystem.
             /// </summary>
-            /// <exception cref="System.NotSupportedException">Thrown in the defualt implementation if set to <c>true</c>.</exception>
+            /// <exception cref="System.NotSupportedException">Thrown in the default implementation if set to `true`.</exception>
             public virtual bool automaticPlacementRequested
             {
                 get => false;

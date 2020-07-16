@@ -211,7 +211,8 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Get the changes (added, updated, and removed) planes since the last call to <see cref="GetChanges(Allocator)"/>.
+            /// Get the changes (added, updated, and removed) planes since the last call to
+            /// <see cref="GetChanges(BoundedPlane,Allocator)"/>.
             /// </summary>
             /// <param name="defaultPlane">
             /// The default plane. This should be used to initialize the returned <c>NativeArray</c>s for backwards compatibility.
@@ -220,7 +221,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="allocator">An <c>Allocator</c> to use when allocating the returned <c>NativeArray</c>s.</param>
             /// <returns>
             /// <see cref="TrackableChanges{T}"/> describing the planes that have been added, updated, and removed
-            /// since the last call to <see cref="GetChanges(Allocator)"/>. The changes should be allocated using
+            /// since the last call to <see cref="GetChanges(BoundedPlane,Allocator)"/>. The changes should be allocated using
             /// <paramref name="allocator"/>.
             /// </returns>
             public abstract TrackableChanges<BoundedPlane> GetChanges(BoundedPlane defaultPlane, Allocator allocator);

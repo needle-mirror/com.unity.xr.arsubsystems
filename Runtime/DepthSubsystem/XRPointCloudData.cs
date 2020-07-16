@@ -109,7 +109,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Tests for equality. Same as <see cref="Equals(XRPointClofaceudData)"/>.
+        /// Tests for equality. Same as <see cref="Equals(XRPointCloudData)"/>.
         /// </summary>
         /// <param name="lhs">The left-hand side of the comparison.</param>
         /// <param name="rhs">The right-hand side of the comparison.</param>

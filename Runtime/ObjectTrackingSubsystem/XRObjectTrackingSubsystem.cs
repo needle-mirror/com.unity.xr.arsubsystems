@@ -27,10 +27,10 @@ namespace UnityEngine.XR.ARSubsystems
     {
 #if !UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Should create an instance of <see cref="IProvider"/>,
+        /// Should create an instance of <see cref="Provider"/>,
         /// which contains the implementation for a specific <see cref="XRObjectTrackingSubsystem"/>.
         /// </summary>
-        /// <returns>A new <see cref="IProvider"/> containing a concrete implementation of this API.</returns>
+        /// <returns>A new <see cref="Provider"/> containing a concrete implementation of this API.</returns>
         protected abstract Provider CreateProvider();
 #endif
 
@@ -102,7 +102,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// The library of reference objects for which to scan. This must be set to non-null
-        /// before calling <see cref="Start"/>.
+        /// before calling <see cref="OnStart"/>.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Thrown if you set the library to <c>null</c> while the subsystem is running.</exception>
         public XRReferenceObjectLibrary library

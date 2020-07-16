@@ -28,7 +28,7 @@ namespace UnityEngine.XR.ARSubsystems
             provider = CreateProvider();
 #endif
         }
-        
+
         /// <summary>
         /// Starts the subsystem, that is, start detecting images in the scene. <see cref="imageLibrary"/> must not be null.
         /// </summary>
@@ -73,8 +73,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <see cref="CreateRuntimeLibrary(XRReferenceImageLibrary"/>.
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">Thrown if the subsystem has been started, and you attempt to set the image library to null.</exception>
-        /// <seealso cref="Start"/>
-        /// <seealso cref="Stop"/>
+        /// <seealso cref="OnStart()"/>
+        /// <seealso cref="OnStop()"/>
         /// <seealso cref="XRReferenceImageLibrary"/>
         /// <seealso cref="MutableRuntimeReferenceImageLibrary"/>
         public RuntimeReferenceImageLibrary imageLibrary
@@ -86,7 +86,7 @@ namespace UnityEngine.XR.ARSubsystems
                     return;
 
                 if (running && value == null)
-                    throw new ArgumentNullException("Cannot set imageLibrary to null while subsystem is running.");
+                    throw new ArgumentNullException(nameof(value), "Cannot set imageLibrary to null while subsystem is running.");
 
                 m_ImageLibrary = value;
 

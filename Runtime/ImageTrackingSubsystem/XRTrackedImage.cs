@@ -76,7 +76,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The data pointed to by this pointer is implementation-defined.
         /// While its lifetime is also implementation-defined, it should be
         /// valid at least until the next call to
-        /// <see cref="XRImageTrackingSubsystem.GetChanges(Allocator)"/>.
+        /// <see cref="TrackingSubsystem{TTrackable,TSubsystemDescriptor}.GetChanges(Unity.Collections.Allocator)"/>.
         /// </summary>
         public IntPtr nativePtr => m_NativePtr;
 

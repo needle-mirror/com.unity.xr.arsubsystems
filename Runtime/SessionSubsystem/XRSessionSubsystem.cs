@@ -77,7 +77,7 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
 
         /// <summary>
-        /// Restarts a session. <see cref="Stop"/> and <see cref="Start"/> pause and resume
+        /// Restarts a session. <see cref="OnStop"/> and <see cref="OnStart"/> pause and resume
         /// a session, respectively. <c>Restart</c> resets the session state and clears
         /// and any detected trackables.
         /// </summary>
@@ -238,7 +238,7 @@ namespace UnityEngine.XR.ARSubsystems
         public TrackingState trackingState => provider.trackingState;
 
         /// <summary>
-        /// Get or set the desired <see cref="TrackingMode"/>. Query for support with <c>SubsystemDescriptor.supportedTrackingModes</c>.
+        /// The requested tracking mode. Query for support with <c>SubsystemDescriptor.supportedTrackingModes</c>.
         /// </summary>
         public Feature requestedTrackingMode
         {
@@ -458,13 +458,13 @@ namespace UnityEngine.XR.ARSubsystems
 
             /// <summary>
             /// Whether the AR session update is synchronized with the Unity frame rate.
-            /// If <c>true</c>, <see cref="Update(XRSessionSubsystem)"/> will block until the next AR frame is available.
+            /// If <c>true</c>, <see cref="Update(XRSessionUpdateParams)"/> will block until the next AR frame is available.
             /// </summary>
             public virtual bool matchFrameRateEnabled => false;
 
             /// <summary>
             /// Whether the AR session update should be synchronized with the Unity frame rate.
-            /// If <c>true</c>, <see cref="Update(XRSessionSubsystem)"/> should block until the next AR frame is available.
+            /// If <c>true</c>, <see cref="Update(XRSessionUpdateParams)"/> should block until the next AR frame is available.
             /// Must be implemented if
             /// <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/>
             /// is <c>True</c>.

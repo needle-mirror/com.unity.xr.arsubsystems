@@ -7,10 +7,10 @@ using UnityEngine.SubsystemsImplementation;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// The descriptor of the <see cref="XRDepthSubsystem"/> that shows which depth detectiomn features are available on that XRSubsystem.
+    /// The descriptor of the <see cref="XRDepthSubsystem"/> that shows which depth detection features are available on that XRSubsystem.
     /// </summary>
     /// <remarks>
-    /// You use the <c>Create</c> factory method along with <see cref="DepthSubsystemParams"/> struct to construct and
+    /// You use the <see cref="RegisterDescriptor"/> factory method along with <see cref="Cinfo"/> struct to construct and
     /// register one of these from each depth data provider.
     /// </remarks>
     /// <seealso cref="XRDepthSubsystem"/>
@@ -31,17 +31,17 @@ namespace UnityEngine.XR.ARSubsystems
             /// The subsystem does not support any capabilities.
             /// </summary>
             None = 0,
-            
+
             /// <summary>
             /// The subsystem supports feature points (point cloud).
             /// </summary>
             FeaturePoints = 1 << 0,
-            
+
             /// <summary>
             /// The subsystem supports a confidence value for each feature point.
             /// </summary>
             Confidence = 1 << 1,
-            
+
             /// <summary>
             /// The subsystem provides unique identifiers for each feature point.
             /// </summary>

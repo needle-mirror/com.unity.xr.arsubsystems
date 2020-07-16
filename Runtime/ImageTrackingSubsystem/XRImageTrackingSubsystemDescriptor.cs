@@ -57,8 +57,9 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             /// <remarks>
             /// If <c>true</c>,
-            /// <see cref="XRImageTrackingSubsystem.IProvider.maxNumberOfMovingImages"/>
-            /// must be implemented.
+            /// <see cref="XRImageTrackingSubsystem.Provider.currentMaxNumberOfMovingImages"/> and
+            /// <see cref="XRImageTrackingSubsystem.Provider.requestedMaxNumberOfMovingImages"/>
+            /// should be implemented.
             /// </remarks>
             public bool supportsMovingImages { get; set; }
 
@@ -73,9 +74,9 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             /// <remarks>
             /// If <c>true</c>,
-            /// <see cref="XRImageTrackingSubsystem.IProvider.CreateRuntimeLibrary(XRReferenceImageLibrary)"/>
+            /// <see cref="XRImageTrackingSubsystem.Provider.CreateRuntimeLibrary(XRReferenceImageLibrary)"/>
             /// must be implemented and
-            /// <see cref="XRImageTrackingSubsystem.IProvider.imageLibrary"/>
+            /// <see cref="XRImageTrackingSubsystem.Provider.imageLibrary"/>
             /// will never be called.
             /// </remarks>
             /// <seealso cref="MutableRuntimeReferenceImageLibrary"/>

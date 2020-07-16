@@ -14,7 +14,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <remarks>
     /// Image libraries are immutable at runtime. To create and manipulate
     /// an image library via Editor scripts, see the extension methods in
-    /// <see cref="XRReferenceImageLibraryExtensions"/>.
+    /// <see cref="UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions"/>.
     /// If you need to mutate the library at runtime, see <see cref="MutableRuntimeReferenceImageLibrary"/>.
     /// </remarks>
     [CreateAssetMenu(fileName="ReferenceImageLibrary", menuName="XR/Reference Image Library", order=1001)]

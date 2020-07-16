@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.5] - 2020-07-16
+### Fixes
+- Minor correction in a debug warning message related to shaders in the build pipeline.
+- Updated documentation.
+- Fixed xmldoc errors.
+
 ## [4.1.0-preview.3] - 2020-07-09
 ### Fixes
 - Minor documentation fixes.
@@ -34,7 +40,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [4.0.0-preview.3] - 2020-05-04
 ### New
-- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](../api/UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.html#UnityEngine_XR_ARSubsystems_XRRaycastSubsystem_TryAddRaycast).
+- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](../api/UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.html#UnityEngine_XR_ARSubsystems_XRRaycastSubsystem_TryAddRaycast_UnityEngine_Ray_System_Single_UnityEngine_XR_ARSubsystems_XRRaycast__).
 - Added a constructor to create a TrackableId from parsing a string.
 
 ## [4.0.0-preview.1] - 2020-02-26
