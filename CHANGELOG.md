@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.6] - 2020-07-27
+### New
+- Implemented `supportsColorCorrection` boolean in `XRCameraSubsystemDescriptor`. This value indicates whether or not color correction values for ambient color are available on the current device.
+
+### Fixes
+- Fixed script updater attribute which could result in an infinite loop during automatic script updates.
+
 ## [4.1.0-preview.5] - 2020-07-16
 ### Fixes
 - Minor correction in a debug warning message related to shaders in the build pipeline.

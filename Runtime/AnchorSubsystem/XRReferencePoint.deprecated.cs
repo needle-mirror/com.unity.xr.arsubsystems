@@ -8,7 +8,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// </summary>
     /// <seealso cref="XRReferencePointSubsystem"/>
     [StructLayout(LayoutKind.Sequential)]
-    [Obsolete("XRReferencePoint has been deprecated. Use XRReferencePoint instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRReferencePoint", true)]
+    [Obsolete("XRReferencePoint has been deprecated. Use XRAnchor instead (UnityUpgradable) -> UnityEngine.XR.ARSubsystems.XRAnchor", true)]
     public struct XRReferencePoint : ITrackable, IEquatable<XRReferencePoint>
     {
         /// <summary>

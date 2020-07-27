@@ -18,7 +18,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The identifier for the provider implementation of the subsystem.
         /// </value>
         public string id { get; set; }
-        
+
 #if UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
@@ -164,6 +164,7 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
                 && supportsAverageBrightness.Equals(other.supportsAverageBrightness)
                 && supportsAverageColorTemperature.Equals(other.supportsAverageColorTemperature)
+                && supportsColorCorrection.Equals(other.supportsColorCorrection)
                 && supportsDisplayMatrix.Equals(other.supportsDisplayMatrix)
                 && supportsProjectionMatrix.Equals(other.supportsProjectionMatrix)
                 && supportsTimestamp.Equals(other.supportsTimestamp)
@@ -223,6 +224,7 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
                 hashCode = (hashCode * 486187739) + supportsAverageBrightness.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageColorTemperature.GetHashCode();
+                hashCode = (hashCode * 486187739) + supportsColorCorrection.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsDisplayMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsProjectionMatrix.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsTimestamp.GetHashCode();
@@ -266,6 +268,7 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
             supportsAverageBrightness = cameraSubsystemParams.supportsAverageBrightness;
             supportsAverageColorTemperature = cameraSubsystemParams.supportsAverageColorTemperature;
+            supportsColorCorrection = cameraSubsystemParams.supportsColorCorrection;
             supportsDisplayMatrix = cameraSubsystemParams.supportsDisplayMatrix;
             supportsProjectionMatrix = cameraSubsystemParams.supportsProjectionMatrix;
             supportsTimestamp = cameraSubsystemParams.supportsTimestamp;
@@ -295,6 +298,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if current subsystem is allowed to provide average camera temperature. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageColorTemperature { get; private set; }
+
+        /// <summary>
+        /// Specifies if current subsystem is allowed to provide color correction.
+        /// </summary>
+        public bool supportsColorCorrection { get; private set; }
 
         /// <summary>
         /// Specifies if current subsystem is allowed to provide display matrix.
