@@ -13,6 +13,7 @@ This package provides interfaces for the following subsystems:
 - [Face Tracking](face-tracking.md)
 - [Environment Probes](environment-probe-subsystem.md)
 - [Object Tracking](object-tracking.md)
+- [Meshes](mesh-subsystem.md)
 
 ## Installing AR Subsystems
 
@@ -97,5 +98,6 @@ Each tracking subsystem requires you to implement a method called `GetChanges`. 
 
 This version of AR Foundation is compatible with the following versions of the Unity Editor:
 
-* 2019.2a8 (and later versions of 2019.2)
-* 2019.3
+* 2019.4
+* 2020.1
+* 2020.2

@@ -109,7 +109,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// A native pointer associated with this environment probe.
         /// The data pointed to by this pointer is implementation-defined. Its lifetime
         /// is also implementation-defined, but will be valid at least until the next
-        /// call to <see cref="XREnvironmentProbeSubsystem.GetChanges(Allocator)"/>.
+        /// call to <see cref="XREnvironmentProbeSubsystem.GetChanges(Unity.Collections.Allocator)"/>.
         /// </summary>
         public IntPtr nativePtr
         {

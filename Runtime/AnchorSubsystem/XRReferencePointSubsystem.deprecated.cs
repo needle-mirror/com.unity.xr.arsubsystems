@@ -141,14 +141,15 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
 
             /// <summary>
-            /// Invoked to get the changes to reference points (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
+            /// Invoked to get the changes to reference points (added, updated, and removed) since the last call to
+            /// <see cref="GetChanges(XRReferencePoint, Allocator)"/>.
             /// </summary>
             /// <param name="defaultReferencePoint">The default reference point. This should be used to initialize the returned
             /// <c>NativeArray</c>s for backwards compatibility.
-            /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, T, int, Allocator)"/>.
+            /// See <see cref="TrackableChanges{T}.TrackableChanges(void*, int, void*, int, void*, int, T, int, Unity.Collections.Allocator)"/>.
             /// </param>
             /// <param name="allocator">An allocator to use for the <c>NativeArray</c>s in <see cref="TrackableChanges{T}"/>.</param>
-            /// <returns>Changes since the last call to <see cref="GetChanges"/>.</returns>
+            /// <returns>Changes since the last call to <see cref="GetChanges(XRReferencePoint, Allocator)"/>.</returns>
             public abstract TrackableChanges<XRReferencePoint> GetChanges(XRReferencePoint defaultReferencePoint, Allocator allocator);
 
             /// <summary>
@@ -192,7 +193,7 @@ namespace UnityEngine.XR.ARSubsystems
 
 #if !UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Should return an instance of <see cref="IProvider"/>.
+        /// Should create an instance of <see cref="Provider"/>.
         /// </summary>
         /// <returns>The interface to the implementation-specific provider.</returns>
         protected abstract Provider CreateProvider();

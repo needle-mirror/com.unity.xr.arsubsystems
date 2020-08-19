@@ -111,8 +111,7 @@ namespace UnityEngine.XR.ARSubsystems
             m_Removed = new NativeArray<TrackableId>(removedCount, allocator);
             if (removedCount > 0)
             {
-                m_Removed.CopyFrom(NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<TrackableId>(
-                    removedPtr, removedCount, Allocator.None));
+                UnsafeUtility.MemCpy(m_Removed.GetUnsafePtr(), removedPtr, removedCount * sizeof(TrackableId));
             }
             isCreated = true;
         }

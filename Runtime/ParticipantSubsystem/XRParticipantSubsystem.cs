@@ -101,7 +101,8 @@ namespace UnityEngine.XR.ARSubsystems
 #endif
 
             /// <summary>
-            /// Get the changed (added, updated, and removed) participants since the last call to <see cref="GetChanges(Allocator)"/>.
+            /// Get the changed (added, updated, and removed) participants since the last call to
+            /// <see cref="GetChanges(XRParticipant,Allocator)"/>.
             /// </summary>
             /// <param name="defaultParticipant">
             /// The default participant. This should be used to initialize the returned <c>NativeArray</c>s for backwards compatibility.
@@ -110,7 +111,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <param name="allocator">An <c>Allocator</c> to use when allocating the returned <c>NativeArray</c>s.</param>
             /// <returns>
             /// <see cref="TrackableChanges{T}"/> describing the participants that have been added, updated, and removed
-            /// since the last call to <see cref="GetChanges(Allocator)"/>. The changes should be allocated using
+            /// since the last call to <see cref="GetChanges(XRParticipant,Allocator)"/>. The changes should be allocated using
             /// <paramref name="allocator"/>.
             /// </returns>
             public abstract TrackableChanges<XRParticipant> GetChanges(

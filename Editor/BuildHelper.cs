@@ -23,7 +23,7 @@ namespace UnityEditor.XR.ARSubsystems
         {
             if (string.IsNullOrEmpty(shaderName))
             {
-                Debug.LogWarning("Incompatible render pipeline in GraphicsSettings.renderPipelineAsset. Background "
+                Debug.LogWarning("Incompatible render pipeline in GraphicsSettings.currentRenderPipeline. Background "
                                  + "rendering may not operate properly.");
             }
             else
