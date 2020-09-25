@@ -1,3 +1,6 @@
+---
+uid: arsubsystems-session-subsystem
+---
 # XR session subsystem
 
 A "session" refers to an instance of AR. While the other AR subsystems provide specific pieces of functionality, like plane detection, the session controls the lifecycle of all AR-related subsystems. If you `Stop` (or fail to `Create`) an `XRSessionSubsystem`, the other AR subsystems might not work.

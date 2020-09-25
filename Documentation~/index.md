@@ -1,10 +1,14 @@
+---
+uid: arsubsystems-manual
+---
 # About AR Subsystems
 
-A [subsystem](https://docs.unity3d.com/ScriptReference/Subsystem.html) is a platform-agnostic interface for surfacing different types of functionality and data. The AR-related subsystems are defined in this package and use the namespace `UnityEngine.XR.ARSubsystems`. This package only provides the interface for various subsystems. Implementations for these subsystems (called "providers") can typically be found in another package or plug-in.
+A [subsystem](xref:UnityEngine.Subsystem) is a platform-agnostic interface for surfacing different types of functionality and data. The AR-related subsystems are defined in this package and use the namespace `UnityEngine.XR.ARSubsystems`. This package only provides the interface for various subsystems. Implementations for these subsystems (called "providers") can typically be found in another package or plug-in.
 
 This package provides interfaces for the following subsystems:
 
 - [Session](session-subsystem.md)
+- [Anchors](anchor-subsystem.md)
 - [Raycasting](raycasting-subsystem.md)
 - [Camera](camera-subsystem.md)
 - [Plane Detection](plane-subsystem.md)
@@ -13,6 +17,7 @@ This package provides interfaces for the following subsystems:
 - [Face Tracking](face-tracking.md)
 - [Environment Probes](environment-probe-subsystem.md)
 - [Object Tracking](object-tracking.md)
+- [Body Tracking](xref:UnityEngine.XR.ARSubsystems.XRHumanBodySubsystem)
 - [Occlusion](occlusion-subsystem.md)
 - [Meshes](mesh-subsystem.md)
 

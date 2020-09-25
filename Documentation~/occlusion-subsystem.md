@@ -1,6 +1,9 @@
+---
+uid: arsubsystems-occlusion-subsystem
+---
 # Occlusion subsystem
 
-Provider packages for platforms that expose per-frame images representing depth or stencil images may implement the XROcclsionSubsystem. Incorporating these depth images into the rendering process are often the best approach for achieving realistic-looking blending of augmented and real-world content by making sure that nearby physical objects occlude virtual content that is located behind them in the shared AR space.
+Provider packages for platforms that expose per-frame images representing depth or stencil images may implement the [XROcclsionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem). Incorporating these depth images into the rendering process are often the best approach for achieving realistic-looking blending of augmented and real-world content by making sure that nearby physical objects occlude virtual content that is located behind them in the shared AR space.
 
 The types of depth images supported are:
 - _Environment Depth_: distance from the device to any part of the environment in the camera field of view

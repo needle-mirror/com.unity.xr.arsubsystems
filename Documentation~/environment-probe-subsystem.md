@@ -1,3 +1,6 @@
+---
+uid: arsubsystems-environment-probe-subsystem
+---
 # XR environment probe subsystem
 
 The environment probe subsystem provides an interface for managing and interacting with XR environment probes.

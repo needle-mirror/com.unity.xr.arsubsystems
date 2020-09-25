@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
+using System.Linq;
 using UnityEditor;
 #endif
 
@@ -18,12 +19,13 @@ namespace UnityEngine.XR.ARSubsystems
     /// If you need to mutate the library at runtime, see <see cref="MutableRuntimeReferenceImageLibrary"/>.
     /// </remarks>
     [CreateAssetMenu(fileName="ReferenceImageLibrary", menuName="XR/Reference Image Library", order=1001)]
+    [HelpURL(HelpUrls.Manual + "image-tracking.html")]
     public class XRReferenceImageLibrary : ScriptableObject, IReferenceImageLibrary
     {
         /// <summary>
         /// The number of images in the library.
         /// </summary>
-        public int count { get { return m_Images.Count; } }
+        public int count => m_Images.Count;
 
         /// <summary>
         /// Gets an enumerator which can be used to iterate over the images in this library.
@@ -37,10 +39,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </code>
         /// </example>
         /// <returns>An <c>IEnumerator</c> which can be used to iterate over the images in the library.</returns>
-        public List<XRReferenceImage>.Enumerator GetEnumerator()
-        {
-            return m_Images.GetEnumerator();
-        }
+        public List<XRReferenceImage>.Enumerator GetEnumerator() => m_Images.GetEnumerator();
 
         /// <summary>
         /// Get an image by index.
@@ -76,15 +75,27 @@ namespace UnityEngine.XR.ARSubsystems
         /// A <c>Guid</c> associated with this reference library.
         /// The Guid is used to uniquely identify this library at runtime.
         /// </summary>
-        public Guid guid
-        {
-            get { return GuidUtil.Compose(m_GuidLow, m_GuidHigh); }
-        }
+        public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
 #if UNITY_EDITOR
         void Awake()
         {
-            if ((m_GuidLow == 0) && (m_GuidHigh == 0))
+            // We need to generate a new guid for new assets
+            var shouldGenerateNewGuid = (m_GuidLow == 0 && m_GuidHigh == 0);
+
+            // If this asset was duplicated from another, then we need to generate a unique guid, so
+            // check against all existing XRReferenceImageLibraries in the asset database.
+            if (!shouldGenerateNewGuid)
+            {
+                var currentGuid = guid;
+                shouldGenerateNewGuid = AssetDatabase
+                    .FindAssets($"t:{nameof(XRReferenceImageLibrary)}")
+                    .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
+                    .Select(assetPath => AssetDatabase.LoadAssetAtPath<XRReferenceImageLibrary>(assetPath))
+                    .Any(library => library != this && library.guid.Equals(currentGuid));
+            }
+
+            if (shouldGenerateNewGuid)
             {
                 var bytes = Guid.NewGuid().ToByteArray();
                 m_GuidLow = BitConverter.ToUInt64(bytes, 0);

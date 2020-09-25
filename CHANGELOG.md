@@ -4,17 +4,23 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.9] - 2020-09-25
+### Changes
+- Updating dependency on com.unity.subsystemregistration to 1.1.0.
+
+### Fixes
+- Fix documentation links.
+- Fix [XRReferenceImageLibraries](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case.
+
 ## [4.1.0-preview.7] - 2020-08-26
 ### Fixes
-- Fixed an issue which could throw an exception when subsystems were run in the Editor (e.g., for simulation or remoting). This could happen when a trackable (e.g., a plane or anchor) was removed. This did not affect Player builds (i.e., on device). This is an example of the exception and associated callstack:
-```
+- Fixed an issue which could throw an exception when subsystems were run in the Editor (e.g., for simulation or remoting). This could happen when a trackable (e.g., a plane or anchor) was removed. This did not affect Player builds (i.e., on device). This is an example of the exception and associated callstack: <pre>
 NullReferenceException: Object reference not set to an instance of an object
 Unity.Collections.LowLevel.Unsafe.AtomicSafetyHandle.CheckReadAndThrow (Unity.Collections.LowLevel.Unsafe.AtomicSafetyHandle handle)
 Unity.Collections.NativeArray`1[T].Copy (Unity.Collections.NativeArray`1[T] src, Unity.Collections.NativeArray`1[T] dst)
 Unity.Collections.NativeArray`1[T].CopyFrom (Unity.Collections.NativeArray`1[T] array)
 UnityEngine.XR.ARSubsystems.TrackableChanges`1[T]..ctor (System.Void* addedPtr, System.Int32 addedCount, System.Void* updatedPtr, System.Int32 updatedCount, System.Void* removedPtr, System.Int32 removedCount, UnityEngine.XR.ARSubsystems.XRReferencePoint defaultT, System.Int32 stride, Unity.Collections.Allocator allocator)
-...
-```
+...</pre>
 
 ## [4.1.0-preview.6] - 2020-07-27
 ### New
@@ -59,7 +65,7 @@ UnityEngine.XR.ARSubsystems.TrackableChanges`1[T]..ctor (System.Void* addedPtr, 
 
 ## [4.0.0-preview.3] - 2020-05-04
 ### New
-- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](../api/UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.html#UnityEngine_XR_ARSubsystems_XRRaycastSubsystem_TryAddRaycast_UnityEngine_Ray_System_Single_UnityEngine_XR_ARSubsystems_XRRaycast__).
+- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider.TryAddRaycast(UnityEngine.Ray,System.Single,UnityEngine.XR.ARSubsystems.XRRaycast@)).
 - Added a constructor to create a TrackableId from parsing a string.
 
 ## [4.0.0-preview.1] - 2020-02-26
@@ -134,7 +140,7 @@ contextual information such as `Floor`, `Wall`, `Ceiling`.
 ## [2.2.0-preview.4] - 2019-07-30
 ### New
 - Add support for eye tracking.
-- Added an [XRParticipantSubsystem](../manual/participant-subsystem.html) which can track users in a multi-user collaborative session.
+- Added an [XRParticipantSubsystem](xref:arsubsystems-participant-subsystem) which can track users in a multi-user collaborative session.
 - Add support for exposure duration
 - Add support for exposure offset
 - Add support for Lightweight Render Pipeline and Universal Render Pipeline.
