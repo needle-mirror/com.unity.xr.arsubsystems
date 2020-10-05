@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
+using System.Linq;
 using UnityEditor;
 #endif
 
@@ -18,6 +19,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// If you need to mutate the library at runtime, see <see cref="MutableRuntimeReferenceImageLibrary"/>.
     /// </remarks>
     [CreateAssetMenu(fileName="ReferenceImageLibrary", menuName="XR/Reference Image Library", order=1001)]
+    [HelpURL(HelpUrls.Manual + "image-tracking.html")]
     public class XRReferenceImageLibrary : ScriptableObject, IReferenceImageLibrary
     {
         /// <summary>
@@ -84,7 +86,22 @@ namespace UnityEngine.XR.ARSubsystems
 #if UNITY_EDITOR
         void Awake()
         {
-            if ((m_GuidLow == 0) && (m_GuidHigh == 0))
+            // We need to generate a new guid for new assets
+            var shouldGenerateNewGuid = (m_GuidLow == 0 && m_GuidHigh == 0);
+
+            // If this asset was duplicated from another, then we need to generate a unique guid, so
+            // check against all existing XRReferenceImageLibraries in the asset database.
+            if (!shouldGenerateNewGuid)
+            {
+                var currentGuid = guid;
+                shouldGenerateNewGuid = AssetDatabase
+                    .FindAssets($"t:{nameof(XRReferenceImageLibrary)}")
+                    .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
+                    .Select(assetPath => AssetDatabase.LoadAssetAtPath<XRReferenceImageLibrary>(assetPath))
+                    .Any(library => library != this && library.guid.Equals(currentGuid));
+            }
+
+            if (shouldGenerateNewGuid)
             {
                 var bytes = Guid.NewGuid().ToByteArray();
                 m_GuidLow = BitConverter.ToUInt64(bytes, 0);

@@ -1,3 +1,6 @@
+---
+uid: arsubsystems-image-tracking-subsystem
+---
 # XR image tracking subsystem
 
 The image tracking subsystem attempts to detect two-dimensional images in the environment that match images stored in a reference images library.

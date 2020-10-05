@@ -1,3 +1,6 @@
+---
+uid: arsubsystems-object-tracking-subsystem
+---
 # XR object tracking subsystem
 
 The object tracking subsystem attempts to detect three-dimensional objects in the environment that have previously been scanned and stored in a reference objects library.

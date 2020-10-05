@@ -17,6 +17,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// </remarks>
     /// <seealso cref="XRReferenceObject"/>
     /// <seealso cref="XRReferenceObjectLibrary"/>
+    [HelpURL(HelpUrls.Api + "UnityEngine.XR.ARSubsystems.XRReferenceObjectEntry.html")]
     public abstract class XRReferenceObjectEntry : ScriptableObject
     { }
 }

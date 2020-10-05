@@ -1,4 +1,7 @@
-# Mesh subsystem
+---
+uid: arsubsystems-mesh-subsystem
+---
+# XR mesh subsystem
 
 Provider packages for platforms that support 3D reconstruction of physical surroundings may implement the [XRMeshSubsystem](https://docs.unity3d.com/ScriptReference/XR.XRMeshSubsystem.html). The purpose of this subsystem is the efficient generation of meshes inside of Unity based on the geometry data provided by an XR device.
 
