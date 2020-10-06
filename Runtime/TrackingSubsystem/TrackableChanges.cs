@@ -40,7 +40,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="updatedCount">The number of updated trackables.</param>
         /// <param name="removedCount">The number of removed trackables.</param>
         /// <param name="allocator">
-        /// An allocator to use for each of 
+        /// An allocator to use for each of
         /// <see cref="added"/>, <see cref="updated"/>, and <see cref="removed"/> arrays.
         /// </param>
         public TrackableChanges(
@@ -88,8 +88,7 @@ namespace UnityEngine.XR.ARSubsystems
             m_Removed = new NativeArray<TrackableId>(removedCount, allocator);
             if (removedCount > 0)
             {
-                m_Removed.CopyFrom(NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<TrackableId>(
-                    removedPtr, removedCount, Allocator.None));
+                UnsafeUtility.MemCpy(m_Removed.GetUnsafePtr(), removedPtr, removedCount * sizeof(TrackableId));
             }
             isCreated = true;
         }
@@ -133,6 +132,8 @@ namespace UnityEngine.XR.ARSubsystems
                 m_Updated.Dispose();
                 m_Removed.Dispose();
             }
+
+            isCreated = false;
         }
 
         TrackableChanges(
