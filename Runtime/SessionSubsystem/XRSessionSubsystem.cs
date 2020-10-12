@@ -491,7 +491,10 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
 #if !UNITY_2020_2_OR_NEWER
-        Provider provider;
+        /// <summary>
+        /// The provider created by the implementation that contains the required session functionality.
+        /// </summary>
+        protected Provider provider { get; }
         XRSessionSubsystemDescriptor subsystemDescriptor => SubsystemDescriptor;
 #endif
     }

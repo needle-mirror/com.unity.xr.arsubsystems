@@ -25,7 +25,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The implementation specific provider of human body functionality.
         /// </value>
-        Provider provider;
+        protected Provider provider { get; }
 #endif
 
         /// <summary>

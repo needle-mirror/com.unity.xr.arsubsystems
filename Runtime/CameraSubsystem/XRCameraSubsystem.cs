@@ -28,7 +28,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The provider created by the implementation that contains the required camera functionality.
         /// </value>
-        Provider provider;
+        protected Provider provider { get; }
 #endif
 
         /// <summary>

@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-preview.10] - 2020-10-12
+### Changes
+- Each subsystem's "provider" is now accessible by derived classes via a protected property `provider`.
+
 ## [4.1.0-preview.9] - 2020-09-25
 ### Changes
 - Updating dependency on com.unity.subsystemregistration to 1.1.0.

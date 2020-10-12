@@ -189,7 +189,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>The interface to the implementation-specific provider.</returns>
         protected abstract Provider CreateProvider();
 
-        Provider provider;
+        /// <summary>
+        /// The provider created by the implementation that contains the required anchor functionality.
+        /// </summary>
+        protected Provider provider { get; }
 #endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR

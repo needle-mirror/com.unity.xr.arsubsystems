@@ -219,7 +219,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <returns>An instance of the <see cref="Provider"/> interface.</returns>
         protected abstract Provider CreateProvider();
-        Provider provider;
+
+        /// <summary>
+        /// The provider created by the implementation that contains the required image tracking functionality.
+        /// </summary>
+        protected Provider provider { get; }
 #endif
 
         RuntimeReferenceImageLibrary m_ImageLibrary;

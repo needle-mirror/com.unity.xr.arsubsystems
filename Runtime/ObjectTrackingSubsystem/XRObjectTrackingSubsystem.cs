@@ -206,7 +206,10 @@ namespace UnityEngine.XR.ARSubsystems
         XRReferenceObjectLibrary m_Library;
 
 #if !UNITY_2020_2_OR_NEWER
-        Provider provider;
+        /// <summary>
+        /// The provider created by the implementation that contains the required object tracking functionality.
+        /// </summary>
+        protected Provider provider { get; }
 #endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR

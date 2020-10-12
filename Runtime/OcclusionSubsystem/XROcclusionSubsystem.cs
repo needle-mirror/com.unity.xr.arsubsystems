@@ -26,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The implementation specific provider of occlusion functionality.
         /// </value>
-        Provider provider;
+        protected Provider provider { get; }
 #endif
 
         /// <summary>

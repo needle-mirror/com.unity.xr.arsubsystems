@@ -248,7 +248,10 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
 #if !UNITY_2020_2_OR_NEWER
-        Provider provider;
+        /// <summary>
+        /// The provider created by the implementation that contains the required plane tracking functionality.
+        /// </summary>
+        protected Provider provider { get; }
 #endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR

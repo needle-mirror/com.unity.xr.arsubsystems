@@ -327,7 +327,10 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
 #if !UNITY_2020_2_OR_NEWER
-        Provider provider;
+        /// <summary>
+        /// The provider created by the implementation that contains the required environment probe functionality.
+        /// </summary>
+        protected Provider provider { get; }
 #endif
     }
 }
