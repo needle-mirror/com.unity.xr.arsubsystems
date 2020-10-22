@@ -83,6 +83,12 @@ namespace UnityEngine.XR.ARSubsystems
             public bool supportsMutableLibrary { get; set; }
 
             /// <summary>
+            /// Whether the subsystem supports image validation (validating images before they are added to a
+            /// <see cref="MutableRuntimeReferenceImageLibrary"/>).
+            /// </summary>
+            public bool supportsImageValidation { get; set; }
+
+            /// <summary>
             /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
             /// </summary>
             /// <returns>A hash code generated from this object's fields.</returns>
@@ -100,6 +106,7 @@ namespace UnityEngine.XR.ARSubsystems
                     hashCode = hashCode * 486187739 + supportsMovingImages.GetHashCode();
                     hashCode = hashCode * 486187739 + requiresPhysicalImageDimensions.GetHashCode();
                     hashCode = hashCode * 486187739 + supportsMutableLibrary.GetHashCode();
+                    hashCode = hashCode * 486187739 + supportsImageValidation.GetHashCode();
                     return hashCode;
                 }
             }
@@ -117,11 +124,12 @@ namespace UnityEngine.XR.ARSubsystems
                     ReferenceEquals(providerType, other.providerType) &&
                     ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride) &&
 #else
-                    ReferenceEquals(subsystemImplementationType, subsystemImplementationType) &&
+                    ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType) &&
 #endif
                     supportsMovingImages == other.supportsMovingImages &&
                     requiresPhysicalImageDimensions == other.requiresPhysicalImageDimensions &&
-                    supportsMutableLibrary == other.supportsMutableLibrary;
+                    supportsMutableLibrary == other.supportsMutableLibrary &&
+                    supportsImageValidation == other.supportsImageValidation;
             }
 
             /// <summary>
@@ -152,13 +160,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Whether the subsystem supports tracking the poses of moving images in realtime.
         /// </summary>
-        public bool supportsMovingImages { get; private set; }
+        public bool supportsMovingImages { get; }
 
         /// <summary>
         /// Whether the subsystem requires physical image dimensions to be provided for all reference images.
         /// If <c>false</c>, specifying the physical dimensions is optional.
         /// </summary>
-        public bool requiresPhysicalImageDimensions { get; private set; }
+        public bool requiresPhysicalImageDimensions { get; }
 
         /// <summary>
         /// Whether the subsystem supports <see cref="MutableRuntimeReferenceImageLibrary"/>, a reference
@@ -167,7 +175,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <seealso cref="MutableRuntimeReferenceImageLibrary"/>
         /// <seealso cref="XRImageTrackingSubsystem.CreateRuntimeLibrary(XRReferenceImageLibrary)"/>
-        public bool supportsMutableLibrary { get; private set; }
+        public bool supportsMutableLibrary { get; }
+
+        /// <summary>
+        /// Whether the subsystem supports image validation (validating images before they are added to a
+        /// <see cref="MutableRuntimeReferenceImageLibrary"/>).
+        /// </summary>
+        public bool supportsImageValidation { get; }
 
         /// <summary>
         /// Registers a new descriptor with the <c>SubsystemManager</c>.
@@ -184,16 +198,17 @@ namespace UnityEngine.XR.ARSubsystems
 
         XRImageTrackingSubsystemDescriptor(Cinfo cinfo)
         {
-            this.id = cinfo.id;
+            id = cinfo.id;
 #if UNITY_2020_2_OR_NEWER
-            this.providerType = cinfo.providerType;
-            this.subsystemTypeOverride = cinfo.subsystemTypeOverride;
+            providerType = cinfo.providerType;
+            subsystemTypeOverride = cinfo.subsystemTypeOverride;
 #else
-            this.subsystemImplementationType = cinfo.subsystemImplementationType;
+            subsystemImplementationType = cinfo.subsystemImplementationType;
 #endif
-            this.supportsMovingImages = cinfo.supportsMovingImages;
-            this.requiresPhysicalImageDimensions = cinfo.requiresPhysicalImageDimensions;
-            this.supportsMutableLibrary = cinfo.supportsMutableLibrary;
+            supportsMovingImages = cinfo.supportsMovingImages;
+            requiresPhysicalImageDimensions = cinfo.requiresPhysicalImageDimensions;
+            supportsMutableLibrary = cinfo.supportsMutableLibrary;
+            supportsImageValidation = cinfo.supportsImageValidation;
         }
     }
 }

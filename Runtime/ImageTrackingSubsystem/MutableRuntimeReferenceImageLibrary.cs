@@ -7,29 +7,35 @@ namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// A reference image library that can be constructed and modified at runtime.
-    /// By contrast, an <see cref="XRReferenceImageLibrary"/> can only be constructed
-    /// at edit-time and is immutable at runtime.
     /// </summary>
     /// <remarks>
-    /// Subsystem providers must implement this class for their provider if
-    /// <see cref="XRImageTrackingSubsystemDescriptor.supportsMutableLibrary"/>
-    /// is <c>true</c> to provide the functionality to support runtime mutable libraries.
+    /// This differs from an <see cref="XRReferenceImageLibrary"/>, which can only be constructed at edit-time and is
+    /// immutable at runtime.
+    ///
+    /// **Note for implementors:**
+    /// <see cref="XRImageTrackingSubsystem"/> providers must implement this class for their provider if
+    /// <see cref="XRImageTrackingSubsystemDescriptor.supportsMutableLibrary"/> is `true` to provide the functionality
+    /// to support runtime mutable libraries.
+    ///
     /// This is not something consumers of the ARSubsystems package should implement.
     /// </remarks>
     /// <seealso cref="XRImageTrackingSubsystem.CreateRuntimeLibrary(XRReferenceImageLibrary)"/>
     public abstract class MutableRuntimeReferenceImageLibrary : RuntimeReferenceImageLibrary
     {
         /// <summary>
-        /// This method should schedule a [Unity Job](https://docs.unity3d.com/Manual/JobSystem.html)
-        /// which adds an image to this reference image library.
+        /// This method should schedule a [Unity Job](xref:JobSystem) which adds an image to this reference image
+        /// library.
         /// </summary>
-        /// <param name="imageBytes">The raw image bytes in <paramref name="format"/>. Assume the bytes will be valid until the job completes.</param>
+        /// <param name="imageBytes">The raw image bytes in <paramref name="format"/>. Assume the bytes will be valid
+        ///     until the job completes.</param>
         /// <param name="sizeInPixels">The width and height of the image, in pixels.</param>
-        /// <param name="format">The format of <paramref name="imageBytes"/>. The format has already been validated with <see cref="IsTextureFormatSupported(TextureFormat)"/>.</param>
-        /// <param name="referenceImage">The <see cref="XRReferenceImage"/> data associated with the image to add to the library.
-        /// This includes information like physical dimensions, associated <c>Texture2D</c> (optional), and string name.</param>
+        /// <param name="format">The format of <paramref name="imageBytes"/>. The format has already been validated with
+        ///     <see cref="IsTextureFormatSupported(TextureFormat)"/>.</param>
+        /// <param name="referenceImage">The <see cref="XRReferenceImage"/> data associated with the image to add to the
+        ///     library. This includes information like physical dimensions, associated
+        ///     [Texture2D](xref:UnityEngine.Texture2D) (optional), and string name.</param>
         /// <param name="inputDeps">Input dependencies for the add image job.</param>
-        /// <returns>A [JobHandle](https://docs.unity3d.com/ScriptReference/Unity.Jobs.JobHandle.html) which can be used
+        /// <returns>A [JobHandle](xref:Unity.Jobs.JobHandle) which can be used
         /// to chain together multiple tasks or to query for completion.</returns>
         /// <seealso cref="ScheduleAddImageJob(NativeSlice{byte}, Vector2Int, TextureFormat, XRReferenceImage, JobHandle)"/>
         protected abstract JobHandle ScheduleAddImageJobImpl(
@@ -40,14 +46,159 @@ namespace UnityEngine.XR.ARSubsystems
             JobHandle inputDeps);
 
         /// <summary>
+        /// Derived classes should call this to create an <see cref="AddReferenceImageJobState"/> to be returned by
+        /// its implementation of <see cref="ScheduleAddImageWithValidationJobImpl"/>.
+        /// </summary>
+        /// <param name="handle">A handle to the job state. This should be unique to this job state.</param>
+        /// <param name="jobHandle">The [JobHandle](xref:Unity.Jobs.JobHandle) associated with the add job state.</param>
+        /// <returns>Returns a new <see cref="AddReferenceImageJobState"/> containing information about the state of
+        ///     an add image job.</returns>
+        /// <exception cref="System.ArgumentException">Thrown if <see cref="supportsValidation"/> is true and
+        ///     <paramref name="handle"/> is `IntPtr.Zero`.</exception>
+        protected AddReferenceImageJobState CreateAddJobState(IntPtr handle, JobHandle jobHandle)
+        {
+            if (supportsValidation && handle == IntPtr.Zero)
+                throw new ArgumentException($"{nameof(handle)} must be non-zero if {nameof(supportsValidation)} is true.", nameof(handle));
+
+            return new AddReferenceImageJobState(handle, jobHandle, this);
+        }
+
+        /// <summary>
+        /// Get the status of an <see cref="AddReferenceImageJobState"/>.
+        /// </summary>
+        /// <remarks>
+        /// **Note to implementors:**
+        ///
+        /// If <see cref="supportsValidation"/> is `true`, then you _must_ also implement this method.
+        /// </remarks>
+        /// <param name="state">The state whose status should be retrieved.</param>
+        /// <returns>Returns the <see cref="AddReferenceImageJobStatus"/> of an existing
+        ///     <see cref="AddReferenceImageJobState"/>.</returns>
+        /// <exception cref="System.NotImplementedException">Thrown if the <paramref name="state"/> has a non-zero
+        ///     <see cref="System.IntPtr"/> (non-zero means the concrete class should have overriden this method).
+        /// </exception>
+        protected internal virtual AddReferenceImageJobStatus GetAddReferenceImageJobStatus(AddReferenceImageJobState state)
+        {
+            if (state.AsIntPtr() == IntPtr.Zero)
+            {
+                return state.jobHandle.IsCompleted
+                    ? AddReferenceImageJobStatus.Success
+                    : AddReferenceImageJobStatus.Pending;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// (Read Only) Whether this <see cref="MutableRuntimeReferenceImageLibrary"/> supports the validation of images
+        /// when added via <see cref="ScheduleAddImageWithValidationJob"/>.
+        /// </summary>
+        /// <remarks>
+        /// **Note to implementors:**
+        ///
+        /// If this is `true`, then your implementation must also override:
+        /// - <see cref="ScheduleAddImageWithValidationJobImpl"/>
+        /// - <see cref="GetAddReferenceImageJobStatus"/>
+        /// </remarks>
+        public virtual bool supportsValidation => false;
+
+        /// <summary>
+        /// This method should schedule a [Unity Job](xref:JobSystem) which adds an image to this reference image
+        /// library.
+        /// </summary>
+        /// <param name="imageBytes">The raw image bytes in <paramref name="format"/>. You may assume the bytes are
+        ///     valid until the job completes.</param>
+        /// <param name="sizeInPixels">The width and height of the image, in pixels.</param>
+        /// <param name="format">The format of <paramref name="imageBytes"/>. The format has already been validated with
+        ///     <see cref="IsTextureFormatSupported(TextureFormat)"/>.</param>
+        /// <param name="referenceImage">The <see cref="XRReferenceImage"/> data associated with the image to add to the
+        ///     library. This includes information like physical dimensions, associated
+        ///     [Texture2D](xref:UnityEngine.Texture2D) (optional), and string name.</param>
+        /// <param name="inputDeps">A [JobHandle](xref:Unity.Jobs.JobHandle) representing input dependencies for the add
+        ///     image job.</param>
+        /// <returns>Returns an <see cref="AddReferenceImageJobState"/> which contains the state of the asynchronous
+        ///     image addition.</returns>
+        /// <exception cref="System.NotImplementedException">Thrown by this base class implementation. If
+        ///     <see cref="supportsValidation"/> is `true`, then this method should be implemented by the derived class.
+        /// </exception>
+        protected virtual AddReferenceImageJobState ScheduleAddImageWithValidationJobImpl(
+            NativeSlice<byte> imageBytes,
+            Vector2Int sizeInPixels,
+            TextureFormat format,
+            XRReferenceImage referenceImage,
+            JobHandle inputDeps) => throw new NotImplementedException();
+
+        /// <summary>
+        /// Asynchronously adds an image to this library.
+        /// </summary>
+        /// <remarks>
+        /// Image addition can take some time (e.g., several frames) due to the processing that must occur to insert
+        /// the image into the library. This is done using the [Unity Job System](xref:JobSystem). The returned
+        /// <see cref="AddReferenceImageJobState"/> allows your to query for the status of the job, and, if completed,
+        /// whether it was successful. The job state includes the [JobHandle](xref:Unity.Jobs.JobHandle) which can be
+        /// used to chain together multiple tasks.
+        ///
+        /// This job, like all [Unity jobs](xref:JobSystem), can have dependencies (using the
+        /// <paramref name="inputDeps"/>). This can be useful, for example, if <paramref name="imageBytes"/> is the
+        /// output of another job. If you are adding multiple images to the library, it is not necessary to pass a
+        /// previous <see cref="ScheduleAddImageWithValidationJob"/>'s `JobHandle` as the input dependency to the next
+        /// <see cref="ScheduleAddImageWithValidationJob"/>.
+        ///
+        /// The <paramref name="imageBytes"/> must be valid until this job completes. The caller is responsible for
+        /// managing its memory. You can use the resulting `JobHandle` to schedule a job that deallocates the
+        /// <paramref name="imageBytes"/>.
+        /// </remarks>
+        /// <param name="imageBytes">The raw image bytes in <paramref name="format"/>.</param>
+        /// <param name="sizeInPixels">The width and height of the image, in pixels.</param>
+        /// <param name="format">The format of <paramref name="imageBytes"/>. Test for and enumerate supported formats
+        ///     with <see cref="supportedTextureFormatCount"/>, <see cref="GetSupportedTextureFormatAt(int)"/>, and
+        ///     <see cref="IsTextureFormatSupported(TextureFormat)"/>.</param>
+        /// <param name="referenceImage">The <see cref="XRReferenceImage"/> data associated with the image to add to the
+        ///     library. This includes information like physical dimensions, associated
+        ///     [Texture2D](xref:UnityEngine.Texture2D) (optional), and string name. The
+        ///     <see cref="XRReferenceImage.guid"/> must be set to zero (<see cref="System.Guid.Empty"/>). A new guid is
+        ///     automatically generated for the new image.</param>
+        /// <param name="inputDeps">(Optional) input dependencies for the add image job.</param>
+        /// <returns>Returns an <see cref="AddReferenceImageJobState"/> that can be used to query the status of the job.
+        ///     The <see cref="AddReferenceImageJobState"/> can be used to determine whether the image was successfully
+        ///     added. Invalid images will be not be added to the reference image library.</returns>
+        /// <exception cref="System.ArgumentException">Thrown if <paramref name="imageBytes"/> does not contain any
+        ///     bytes.</exception>
+        /// <exception cref="System.ArgumentException">Thrown if <paramref name="referenceImage"/>'s
+        ///     <see cref="XRReferenceImage.guid"/> is not <see cref="System.Guid.Empty"/>.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="referenceImage"/>'s
+        ///     <see cref="XRReferenceImage.name"/> is `null`.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="referenceImage"/>'s
+        ///     <see cref="XRReferenceImage.specifySize"/> is `true` but
+        ///     <paramref name="referenceImage"/>.<see cref="XRReferenceImage.size"/> contains values less than or equal
+        ///     to zero.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if the <paramref name="format"/> is not supported.
+        ///     You can query for support using <see cref="IsTextureFormatSupported"/>.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="sizeInPixels"/> contains
+        ///     values less than or equal to zero.</exception>
+        public AddReferenceImageJobState ScheduleAddImageWithValidationJob(
+            NativeSlice<byte> imageBytes,
+            Vector2Int sizeInPixels,
+            TextureFormat format,
+            XRReferenceImage referenceImage,
+            JobHandle inputDeps = default)
+        {
+            ValidateAndThrow(imageBytes, sizeInPixels, format, ref referenceImage);
+
+            return supportsValidation
+                ? ScheduleAddImageWithValidationJobImpl(imageBytes, sizeInPixels, format, referenceImage, inputDeps)
+                : CreateAddJobState(IntPtr.Zero, ScheduleAddImageJobImpl(imageBytes, sizeInPixels, format, referenceImage, inputDeps));
+        }
+
+        /// <summary>
         /// Asynchronously adds an image to this library.
         /// </summary>
         /// <remarks>
         /// <para>
         /// Image addition can take some time (several frames) due to extra processing that
         /// must occur to insert the image into the library. This is done using
-        /// the [Unity Job System](https://docs.unity3d.com/Manual/JobSystem.html). The returned
-        /// [JobHandle](https://docs.unity3d.com/ScriptReference/Unity.Jobs.JobHandle.html) can be used
+        /// the [Unity Job System](xref:JobSystem). The returned
+        /// [JobHandle](xref:Unity.Jobs.JobHandle) can be used
         /// to chain together multiple tasks or to query for completion, but may be safely discarded if you do not need it.
         /// </para><para>
         /// This job, like all Unity jobs, can have dependencies (using the <paramref name="inputDeps"/>). This can be useful,
@@ -67,20 +218,27 @@ namespace UnityEngine.XR.ARSubsystems
         /// The <see cref="XRReferenceImage.guid"/> must be set to zero (empty).
         /// A new guid is automatically generated for the new image.</param>
         /// <param name="inputDeps">(Optional) input dependencies for the add image job.</param>
-        /// <returns>A [JobHandle](https://docs.unity3d.com/ScriptReference/Unity.Jobs.JobHandle.html) which can be used
+        /// <returns>A [JobHandle](xref:Unity.Jobs.JobHandle) which can be used
         /// to chain together multiple tasks or to query for completion. May be safely discarded.</returns>
         /// <exception cref="System.ArgumentException">Thrown if <paramref name="imageBytes"/> does not contain any bytes.</exception>
         /// <exception cref="System.ArgumentException">Thrown if <paramref name="referenceImage"/><c>.guid</c> is not <c>Guid.Empty</c>.</exception>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="referenceImage"/><c>.name</c> is <c>null</c>.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="referenceImage"/><c>.specifySize</c> is <c>true</c> and <paramref name="referenceImage"/><c>.size.x</c> contains a value less than or equal to zero.</exception>
-        /// <exception cref="System.InvalidOperationException">Thrown if <paramref name="texture"/>'s format is not supported. You can query for support using <c>XRImageTrackingSubsystem.IsTextureFormatSupported</c>.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if the <paramref name="format"/> is not supported. You can query for support using <see cref="IsTextureFormatSupported"/>.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="sizeInPixels"/><c>.x</c> or <paramref name="sizeInPixels"/><c>.y</c> is less than or equal to zero.</exception>
+        [Obsolete("Use " + nameof(ScheduleAddImageWithValidationJob) + " instead. (2020-10-20)")]
         public JobHandle ScheduleAddImageJob(
             NativeSlice<byte> imageBytes,
             Vector2Int sizeInPixels,
             TextureFormat format,
             XRReferenceImage referenceImage,
-            JobHandle inputDeps = default(JobHandle))
+            JobHandle inputDeps = default)
+        {
+            ValidateAndThrow(imageBytes, sizeInPixels, format, ref referenceImage);
+            return ScheduleAddImageJobImpl(imageBytes, sizeInPixels, format, referenceImage, inputDeps);
+        }
+
+        void ValidateAndThrow(NativeSlice<byte> imageBytes, Vector2Int sizeInPixels, TextureFormat format, ref XRReferenceImage referenceImage)
         {
             unsafe
             {
@@ -108,8 +266,6 @@ namespace UnityEngine.XR.ARSubsystems
 
             if (sizeInPixels.y <= 0)
                 throw new ArgumentOutOfRangeException($"{nameof(sizeInPixels)}.{nameof(sizeInPixels.y)}", sizeInPixels.y, "Image height must be greater than zero.");
-
-            return ScheduleAddImageJobImpl(imageBytes, sizeInPixels, format, referenceImage, inputDeps);
         }
 
         /// <summary>
@@ -134,7 +290,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Derived methods should return the [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html) at the given <paramref name="index"/>.
+        /// Derived methods should return the [TextureFormat](xref:UnityEngine.TextureFormat) at the given <paramref name="index"/>.
         /// <paramref name="index"/> has already been validated to be within [0..<see cref="supportedTextureFormatCount"/>).
         /// </summary>
         /// <param name="index">The index of the format to retrieve.</param>
@@ -144,7 +300,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Determines whether the given <paramref name="format"/> is supported.
         /// </summary>
-        /// <param name="format">The [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html) to test.</param>
+        /// <param name="format">The [TextureFormat](xref:UnityEngine.TextureFormat) to test.</param>
         /// <returns><c>true</c> if <paramref name="format"/> is supported for image addition; otherwise <c>false</c>.</returns>
         public bool IsTextureFormatSupported(TextureFormat format)
         {
@@ -163,10 +319,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The <see cref="Enumerator"/> is a <c>struct</c>, so no garbage is generated.
         /// </summary>
         /// <returns>An enumerator that can be used in a <c>foreach</c> statement.</returns>
-        public Enumerator GetEnumerator()
-        {
-            return new Enumerator(this);
-        }
+        public Enumerator GetEnumerator() => new Enumerator(this);
 
         // Converts a System.Guid into two ulongs
         static unsafe SerializableGuid GenerateNewGuid()
