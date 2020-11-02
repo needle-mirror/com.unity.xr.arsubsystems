@@ -40,6 +40,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// Tracking lost reason is not supported.
         /// </summary>
         Unsupported,
+
+        /// <summary>
+        /// The camera is in use by another application. Tracking may resume once the app regains access to the camera.
+        /// </summary>
+        CameraUnavailable
     }
 }
 
