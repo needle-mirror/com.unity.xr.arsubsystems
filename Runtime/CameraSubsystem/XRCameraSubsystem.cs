@@ -515,7 +515,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <returns>Returns `true` if the image was acquired. Returns `false` otherwise.</returns>
         /// <exception cref="System.NotSupportedException">Thrown if the implementation does not support camera image.
         /// </exception>
-        [Obsolete("Use TryAcquireLatestCpuImage instead. (2020-05-19")]
+        [Obsolete("Use TryAcquireLatestCpuImage instead. (2020-05-19)")]
         public bool TryGetLatestImage(out XRCpuImage cpuImage) => TryAcquireLatestCpuImage(out cpuImage);
 
         /// <summary>
