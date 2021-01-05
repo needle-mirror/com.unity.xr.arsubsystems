@@ -4,13 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.10] - 2021-01-05
+
+### Changes
+
+- Removed the `CONTRIBUTIONS.md` file as this package does not accept contributions.
+
 ## [4.0.9] - 2020-10-05
 ### New
 - Added section for [XROcclusion Subsystem](xref:arsubsystems-occlusion-subsystem).
 
 ### Fixes
 - Fix documentation links.
-- Fix [XRReferenceImageLibraries](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case. 
+- Fix [XRReferenceImageLibraries](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case.
 
 ## [4.0.8] - 2020-08-19
 ### Fixes
