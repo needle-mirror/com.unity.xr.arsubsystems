@@ -59,7 +59,6 @@ namespace UnityEngine.XR.ARSubsystems
 
             /// <summary>
             /// 16-bit unsigned integer, describing the depth (distance to an object) in millimeters.
-            /// Only the low 13 bits are used.
             /// </summary>
             DepthUint16 = 5,
         }

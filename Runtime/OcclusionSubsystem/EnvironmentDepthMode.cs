@@ -16,6 +16,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The environment depth is enabled and will be generated at the fastest resolution.
         /// </summary>
+        /// <remarks>
+        /// On <see cref="Fastest"/> mode, there is no smoothing or other post processing applied to the texture.
+        /// </remarks>
         [Description("Fastest")]
         Fastest = 1,
 
