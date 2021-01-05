@@ -4,9 +4,15 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.10] - 2021-01-05
+
+### Changes
+
+- Removed the `CONTRIBUTIONS.md` file as this package does not accept contributions.
+
 ## [3.1.6] - 2020-10-06
 ### Fixes
-- Fix [XRReferenceImageLibraries](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case. 
+- Fix [XRReferenceImageLibraries](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case.
 
 ## [3.1.5] - 2020-09-08
 ### Fixes
