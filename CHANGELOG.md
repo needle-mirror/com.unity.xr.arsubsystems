@@ -1,10 +1,21 @@
 # Changelog
+
 All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.1.5] - 2021-01-25
+## [4.2.0-pre.2] - 2021-03-03
+
+### New
+
+- The runtime image data associated with an [XRReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) is now stored directly in the asset. This allows novel reference image libraries to be downloaded by an app that was not originally built with that library, e.g., as an [asset bundle](xref:AssetBundlesIntro).
+- A new [reference object](xref:UnityEngine.XR.ARSubsystems.XRReferenceObject) can be [added](xref:UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary.Add(UnityEngine.XR.ARSubsystems.XRReferenceObject)) to a [reference object library](xref:UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary) at runtime.
+
+### Changes
+
+- The [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) provides a means to query for the capabilities of an [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem). Previously, these capabilities were booleans, but some platforms may take a few frames to determine a capability. Those `bool` properties have been deprecated in favor of properties that return a [Supported](xref:UnityEngine.XR.ARSubsystems.Supported) state, which includes a `Supported.Unknown` state to indicate support for the feature or capability is not yet known.
+- Update documentation for [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) with notes describing the limitations of feature support detection.
 
 ## [4.1.3] - 2021-01-05
 

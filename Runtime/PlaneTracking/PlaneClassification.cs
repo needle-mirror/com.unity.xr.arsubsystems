@@ -1,18 +1,18 @@
 ﻿namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Represents the alignment of a plane, e.g., whether it is horizontal or vertical.
+    /// Represents the alignment of a plane (for example, whether it is horizontal or vertical).
     /// </summary>
     /// <seealso cref="BoundedPlane.classification"/>
     public enum PlaneClassification
     {
         /// <summary>
-        /// The plane does not match any available classification
+        /// The plane does not match any available classification.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// The plane is horizontal with an upward facing normal, e.g., a floor.
+        /// The plane is horizontal with an upward facing normal (for example, a floor).
         /// </summary>
         Wall,
 

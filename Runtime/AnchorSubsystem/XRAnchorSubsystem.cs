@@ -1,61 +1,31 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Base class for a anchor subsystem.
+    /// Base class for an anchor subsystem.
     /// </summary>
     /// <remarks>
     /// <para>An anchor is a pose in the physical environment that is tracked by an XR device.
     /// As the device refines its understanding of the environment, anchors will be
-    /// updated, allowing developers to keep virtual content connected to a real-world position and orientation.</para>
+    /// updated, allowing you to keep virtual content connected to a real-world position and orientation.</para>
     /// <para>This abstract class should be implemented by an XR provider and instantiated using the <c>SubsystemManager</c>
     /// to enumerate the available <see cref="XRAnchorSubsystemDescriptor"/>s.</para>
     /// </remarks>
-#if UNITY_2020_2_OR_NEWER
     public class XRAnchorSubsystem
         : TrackingSubsystem<XRAnchor, XRAnchorSubsystem, XRAnchorSubsystemDescriptor, XRAnchorSubsystem.Provider>
-#else
-    public abstract class XRAnchorSubsystem
-        : TrackingSubsystem<XRAnchor, XRAnchorSubsystemDescriptor>
-#endif
     {
         /// <summary>
         /// Constructor. Do not invoke directly; use the <c>SubsystemManager</c>
         /// to enumerate the available <see cref="XRAnchorSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRAnchorSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
-        }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Starts the subsystem.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Start();
+        public XRAnchorSubsystem() { }
 
         /// <summary>
-        /// Stops the subsystem.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Stop();
-
-        /// <summary>
-        /// Destroys the subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
-
-        /// <summary>
-        /// Get the changes (added, updated, and removed) anchors since the last call
+        /// Get the changes to anchors (added, updated, and removed) since the last call
         /// to <see cref="GetChanges(Allocator)"/>.
         /// </summary>
         /// <param name="allocator">An allocator to use for the <c>NativeArray</c>s in <see cref="TrackableChanges{T}"/>.</param>
@@ -109,28 +79,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// An abstract class to be implemented by providers of this subsystem.
         /// </summary>
-        public abstract class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRAnchorSubsystem>
-#endif
+        public abstract class Provider : SubsystemProvider<XRAnchorSubsystem>
         {
-#if !UNITY_2020_2_OR_NEWER
-            /// <summary>
-            /// Invoked when <c>Start</c> is called on the subsystem. This method is only called if the subsystem was not previously running.
-            /// </summary>
-            public virtual void Start() { }
-
-            /// <summary>
-            /// Invoked when <c>Stop</c> is called on the subsystem. This method is only called if the subsystem was previously running.
-            /// </summary>
-            public virtual void Stop() { }
-
-            /// <summary>
-            /// Called when <c>Destroy</c> is called on the subsystem.
-            /// </summary>
-            public virtual void Destroy() { }
-#endif
-
             /// <summary>
             /// Invoked to get the changes to anchors (added, updated, and removed) since the last call to
             /// <see cref="GetChanges(XRAnchor,Allocator)"/>.
@@ -144,7 +94,7 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract TrackableChanges<XRAnchor> GetChanges(XRAnchor defaultAnchor, Allocator allocator);
 
             /// <summary>
-            /// Should create a new anchor with the provide <paramref name="pose"/>.
+            /// Should create a new anchor with the provided <paramref name="pose"/>.
             /// </summary>
             /// <param name="pose">The pose, in session space, of the new anchor.</param>
             /// <param name="anchor">The new anchor. Must be valid only if this method returns <c>true</c>.</param>
@@ -158,7 +108,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Should create a new anchor "attached" to the trackable with id <paramref name="trackableToAffix"/>.
             /// The behavior of the anchor depends on the type of trackable to which this anchor is attached and
-            /// may be implementation-defined.
+            /// might be implementation-defined.
             /// </summary>
             /// <param name="trackableToAffix">The id of the trackable to which to attach.</param>
             /// <param name="pose">The pose, in session space, of the anchor to create.</param>
@@ -181,19 +131,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// does not exist, return <c>false</c>.</returns>
             public virtual bool TryRemoveAnchor(TrackableId anchorId) => false;
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Should return an instance of <see cref="Provider"/>.
-        /// </summary>
-        /// <returns>The interface to the implementation-specific provider.</returns>
-        protected abstract Provider CreateProvider();
-
-        /// <summary>
-        /// The provider created by the implementation that contains the required anchor functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRAnchor> m_ValidationUtility =

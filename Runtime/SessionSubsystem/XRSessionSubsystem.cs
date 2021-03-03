@@ -1,24 +1,16 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// This subsystem controls the lifecycle of an XR session. Some platforms,
     /// particularly those that have non-XR modes, need to be able to turn the
-    /// session on and off to enter and exit XR mode(s) of operation.
+    /// session on and off to enter and exit XR modes of operation.
     /// </summary>
-#if UNITY_2020_2_OR_NEWER
     public class XRSessionSubsystem
         : SubsystemWithProvider<XRSessionSubsystem, XRSessionSubsystemDescriptor, XRSessionSubsystem.Provider>
-#else
-    public abstract class XRSessionSubsystem
-        : XRSubsystem<XRSessionSubsystemDescriptor>
-#endif
     {
         /// <summary>
         /// Returns an implementation-defined pointer associated with the session.
@@ -38,7 +30,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// This platform-agnostic method is typically implemented by a platform-specific package.
         /// </remarks>
         /// <returns>A <see cref="Promise{SessionAvailability}"/> which can be used to determine when the
-        /// availability has been determined and retrieve the result.</returns>
+        /// availability has been determined and to retrieve the result.</returns>
         public Promise<SessionAvailability> GetAvailabilityAsync() => provider.GetAvailabilityAsync();
 
         /// <summary>
@@ -49,7 +41,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// This platform-agnostic method is typically implemented by a platform-specific package.
         /// </remarks>
         /// <returns>A <see cref="Promise{SessionInstallationStatus}"/> which can be used to determine when the
-        /// installation completes and retrieve the result.</returns>
+        /// installation completes and to retrieve the result.</returns>
         public Promise<SessionInstallationStatus> InstallAsync()
         {
             if (!subsystemDescriptor.supportsInstall)
@@ -63,36 +55,15 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         public XRSessionSubsystem()
         {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
             m_ConfigurationChooser = m_DefaultConfigurationChooser;
         }
 
-#if !UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Starts or resumes the session.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Resume();
-#endif
-
-        /// <summary>
-        /// Restarts a session. <see cref="OnStop"/> and <see cref="OnStart"/> pause and resume
-        /// a session, respectively. <c>Restart</c> resets the session state and clears
-        /// and any detected trackables.
+        /// Restarts a session. [Stop](xref:UnityEngine.Subsystem.Stop) and [Start](xref:UnityEngine.Subsystem.Start)
+        /// pause and resume a session, respectively. <c>Restart</c> resets the session state and clears and any
+        /// detected trackables.
         /// </summary>
         public void Reset() => provider.Reset();
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Pauses the session.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Pause();
-        /// <summary>
-        /// Destroys the session.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
 
         /// <summary>
         /// Determines the <see cref="Configuration"/> the session will use given the requested <paramref name="features"/>.
@@ -208,18 +179,18 @@ namespace UnityEngine.XR.ARSubsystems
         public Feature requestedFeatures => provider.requestedFeatures;
 
         /// <summary>
-        /// Get the list of supported configuration descriptors. The session may have multiple, discrete "modes" of operation.
-        /// A configuration represents the capabilities of a "mode" of operation, which may be a subset of the session's overal
-        /// capabilities. That is, the session may support many features, but not all at the same time. This is used by
+        /// Get the list of supported configuration descriptors. The session can have multiple, discrete modes of operation.
+        /// A configuration represents the capabilities of a mode of operation, which can be a subset of the session's overal
+        /// capabilities. That is, the session might support many features, but not all at the same time. This is used by
         /// <see cref="XRSessionSubsystem.DetermineConfiguration(Feature)"/> to determine the best configuration given a set
         /// of requested features.
         /// </summary>
         /// <param name="allocator">The [allocator](https://docs.unity3d.com/ScriptReference/Unity.Collections.Allocator.html)
         /// to use for the returned [NativeArray](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.html).</param>
         /// <returns>Allocates a new [NativeArray](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.html)
-        /// and populates it with descriptors describing the supported configuration(s). The caller
-        /// owns the memory and is responsible for [Dispose](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.Dispose.html)'ing
-        /// of the <c>NativeArray</c>.</returns>
+        /// and populates it with descriptors describing the supported configurations. The caller
+        /// owns the memory and is responsible for calling [Dispose](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.Dispose.html)
+        /// on the <c>NativeArray</c>.</returns>
         public NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator) => provider.GetConfigurationDescriptors(allocator);
 
         /// <summary>
@@ -308,25 +279,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="XRSessionSubsystemDescriptor.supportsMatchFrameRate"/> is <c>False</c>.</exception>
         public int frameRate => provider.frameRate;
 
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Implement this to provide this class with an interface to
-        /// platform specific implementations.
-        /// </summary>
-        /// <returns>An implementation specific provider.</returns>
-        protected abstract Provider CreateProvider();
-#endif
-
         /// <summary>
         /// The API this subsystem uses to interop with
         /// different provider implementations.
         /// </summary>
-        public class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRSessionSubsystem>
-#endif
+        public class Provider : SubsystemProvider<XRSessionSubsystem>
         {
-#if UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Invoked to start or resume a session. This is different from <see cref="OnApplicationResume"/>.
             /// </summary>
@@ -336,17 +294,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// Invoked to pause a running session. This is different from <see cref="OnApplicationPause"/>.
             /// </summary>
             public override void Stop() {}
-#else
-            /// <summary>
-            /// Invoked to start or resume a session. This is different from <see cref="OnApplicationResume"/>.
-            /// </summary>
-            public virtual void Resume() { }
-
-            /// <summary>
-            /// Invoked to pause a running session. This is different from <see cref="OnApplicationPause"/>.
-            /// </summary>
-            public virtual void Pause() { }
-#endif
 
             /// <summary>
             /// Perform any per-frame update logic here.
@@ -359,7 +306,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <paramref name="configuration.descriptor.identifier"/>, which should be one of the ones returned
             /// by <see cref="GetConfigurationDescriptors(Unity.Collections.Allocator)"/>.
             /// </summary>
-            /// <param name="updateParams">Parameters about the current state that may be needed to inform the session.</param>
+            /// <param name="updateParams">Parameters about the current state that might be needed to inform the session.</param>
             /// <param name="configuration">The configuration the session should use.</param>
             public virtual void Update(XRSessionUpdateParams updateParams, Configuration configuration) { }
 
@@ -369,7 +316,7 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual Feature requestedFeatures => Feature.None;
 
             /// <summary>
-            /// Get or set the requested tracking mode, e.g., the <see cref="Feature.AnyTrackingMode"/> bits.
+            /// Get or set the requested tracking mode (for example, the <see cref="Feature.AnyTrackingMode"/> bits).
             /// </summary>
             public virtual Feature requestedTrackingMode
             {
@@ -378,7 +325,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Get the current tracking mode, e.g., the <see cref="Feature.AnyTrackingMode"/> bits.
+            /// Get the current tracking mode (for example, the <see cref="Feature.AnyTrackingMode"/> bits).
             /// </summary>
             public virtual Feature currentTrackingMode => Feature.None;
 
@@ -388,18 +335,14 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             /// <param name="allocator">The <c>[Allocator](https://docs.unity3d.com/ScriptReference/Unity.Collections.Allocator.html)</c>
             /// to use to create the returned <c>NativeArray</c>.</param>
-            /// <returns>A newly allocated <c>NativeArray</c> of <see cref="ConfigurationDescriptor"/>s describing the capabilities
+            /// <returns>A newly allocated <c>NativeArray</c> of <see cref="ConfigurationDescriptor"/>s that describes the capabilities
             /// of all the supported configurations.</returns>
             public virtual NativeArray<ConfigurationDescriptor> GetConfigurationDescriptors(Allocator allocator) => default;
 
             /// <summary>
             /// Stop the session and destroy all associated resources.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Destroy() { }
-#else
-            public virtual void Destroy() { }
-#endif
 
             /// <summary>
             /// Reset the session. The behavior should be equivalent to destroying and recreating the session.
@@ -452,7 +395,7 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual NotTrackingReason notTrackingReason => NotTrackingReason.Unsupported;
 
             /// <summary>
-            /// Get a unique identifier for this session
+            /// Get a unique identifier for this session.
             /// </summary>
             public virtual Guid sessionId => Guid.Empty;
 
@@ -489,13 +432,5 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual int frameRate =>
                 throw new NotSupportedException("Querying the frame rate is not supported by this session subsystem.");
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required session functionality.
-        /// </summary>
-        protected Provider provider { get; }
-        XRSessionSubsystemDescriptor subsystemDescriptor => SubsystemDescriptor;
-#endif
     }
 }

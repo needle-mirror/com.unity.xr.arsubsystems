@@ -106,7 +106,7 @@ namespace UnityEngine.XR.ARSubsystems
     }
 
     /// <summary>
-    /// Parameters of the Unity <c>Camera</c> that may be necessary/useful to the provider.
+    /// Parameters of the Unity <c>Camera</c> that might be necessary or useful to the provider.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct XRCameraFrame : IEquatable<XRCameraFrame>
@@ -212,37 +212,37 @@ namespace UnityEngine.XR.ARSubsystems
         double m_ExposureDuration;
 
         /// <summary>
-        /// The camera exposure offset of the scene for lighting scaling
+        /// The camera exposure offset of the scene for lighting scaling.
         /// </summary>
         /// <value>
-        /// The camera exposure offset of the scene for lighting scaling
+        /// The camera exposure offset of the scene for lighting scaling.
         /// </value>
         public float exposureOffset => m_ExposureOffset;
         float m_ExposureOffset;
 
         /// <summary>
-        /// The estimated, intensity in lumens of the most influential, real-world light in the scene.
+        /// The estimated intensity in lumens of the most influential real-world light in the scene.
         /// </summary>
         /// <value>
-        /// The estimated, intensity in lumens of the most influential, real-world light in the scene.
+        /// The estimated intensity in lumens of the most influential real-world light in the scene.
         /// </value>
         public float mainLightIntensityLumens => m_MainLightIntensityLumens;
         float m_MainLightIntensityLumens;
 
         /// <summary>
-        /// The estimated, color of the most influential, real-world light in the scene.
+        /// The estimated color of the most influential real-world light in the scene.
         /// </summary>
         /// <value>
-        /// The estimated, color of the most influential, real-world light in the scene.
+        /// The estimated color of the most influential real-world light in the scene.
         /// </value>
         public Color mainLightColor => m_MainLightColor;
         Color m_MainLightColor;
 
         /// <summary>
-        /// The estimated direction of the most influential, real-world light in the scene.
+        /// The estimated direction of the most influential real-world light in the scene.
         /// </summary>
         /// <value>
-        /// The estimated direction of the most influential, real-world light in the scene.
+        /// The estimated direction of the most influential real-world light in the scene.
         /// </value>
         public Vector3 mainLightDirection => m_MainLightDirection;
         Vector3 m_MainLightDirection;
@@ -254,7 +254,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The ambient spherical harmonic coefficients that represent lighting in the real-world.
         /// </value>
         /// <remarks>
-        /// See <see href="https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html">here</see> for further details.
+        /// See <see href="https://docs.unity3d.com/ScriptReference/Rendering.SphericalHarmonicsL2.html">Rendering.SphericalHarmonicsL2</see> for further details.
         /// </remarks>
         public SphericalHarmonicsL2 ambientSphericalHarmonics => m_AmbientSphericalHarmonics;
         SphericalHarmonicsL2 m_AmbientSphericalHarmonics;
@@ -278,127 +278,127 @@ namespace UnityEngine.XR.ARSubsystems
         float m_NoiseIntensity;
 
         /// <summary>
-        /// Whether the frame has a timestamp.
+        /// <c>True</c> if the frame has a timestamp.
         /// </summary>
         /// <value>
-        /// Whether the frame has a timestamp.
+        /// <c>True</c> if the frame has a timestamp.
         /// </value>
         public bool hasTimestamp => (m_Properties & XRCameraFrameProperties.Timestamp) != 0;
 
         /// <summary>
-        /// Whether the frame has an average brightness.
+        /// <c>True</c> if the frame has an average brightness.
         /// </summary>
         /// <value>
-        /// Whether the frame has an average brightness.
+        /// <c>True</c> if the frame has an average brightness.
         /// </value>
         public bool hasAverageBrightness => (m_Properties & XRCameraFrameProperties.AverageBrightness) != 0;
 
         /// <summary>
-        /// Whether the frame has an average color temperature.
+        /// <c>True</c> if the frame has an average color temperature.
         /// </summary>
         /// <value>
-        /// Whether the frame has an average color temperature.
+        /// <c>True</c> if the frame has an average color temperature.
         /// </value>
         public bool hasAverageColorTemperature => (m_Properties & XRCameraFrameProperties.AverageColorTemperature) != 0;
 
         /// <summary>
-        /// Whether the frame has a color correction value.
+        /// <c>True</c> if the frame has a color correction value.
         /// </summary>
         /// <value>
-        /// Whether the frame has a color correction value.
+        /// <c>True</c> if the frame has a color correction value.
         /// </value>
         public bool hasColorCorrection => (m_Properties & XRCameraFrameProperties.ColorCorrection) != 0;
 
         /// <summary>
-        /// Whether the frame has a projection matrix.
+        /// <c>True</c> if the frame has a projection matrix.
         /// </summary>
         /// <value>
-        /// Whether the frame has a projection matrix.
+        /// <c>True</c> if the frame has a projection matrix.
         /// </value>
         public bool hasProjectionMatrix => (m_Properties & XRCameraFrameProperties.ProjectionMatrix) != 0;
 
         /// <summary>
-        /// Whether the frame has a display matrix.
+        /// <c>True</c> if the frame has a display matrix.
         /// </summary>
         /// <value>
-        /// Whether the frame has a display matrix.
+        /// <c>True</c> if the frame has a display matrix.
         /// </value>
         public bool hasDisplayMatrix => (m_Properties & XRCameraFrameProperties.DisplayMatrix) != 0;
 
         /// <summary>
-        /// Whether the frame has an average intensity in lumens.
+        /// <c>True</c> if the frame has an average intensity in lumens.
         /// </summary>
         /// <value>
-        /// Whether the frame has an average intensity in lumens.
+        /// <c>True</c> if the frame has an average intensity in lumens.
         /// </value>
         public bool hasAverageIntensityInLumens => (m_Properties & XRCameraFrameProperties.AverageIntensityInLumens) != 0;
 
         /// <summary>
-        /// Whether the frame has an exposure duration in seconds with sub-millisecond precision.
+        /// <c>True</c> if the frame has an exposure duration in seconds with sub-millisecond precision.
         /// </summary>
         /// <value>
-        /// Whether the frame has an exposure duration in seconds with sub-millisecond precision.
+        /// <c>True</c> if the frame has an exposure duration in seconds with sub-millisecond precision.
         /// </value>
         public bool hasExposureDuration => (m_Properties & XRCameraFrameProperties.ExposureDuration) != 0;
 
         /// <summary>
-        /// Whether the frame has an exposure offset for scaling lighting.
+        /// <c>True</c> if the frame has an exposure offset for scaling lighting.
         /// </summary>
         /// <value>
-        /// Whether the frame has an exposure offset for scaling lighting.
+        /// <c>True</c> if the frame has an exposure offset for scaling lighting.
         /// </value>
         public bool hasExposureOffset => (m_Properties & XRCameraFrameProperties.ExposureOffset) != 0;
 
         /// <summary>
-        /// Whether the frame has the estimated main light channel-wise intensity of the scene.
+        /// <c>True</c> if the frame has the estimated main light channel-wise intensity of the scene.
         /// </summary>
         /// <value>
-        /// Whether the frame has the estimated main light channel-wise intensity of the scene.
+        /// <c>True</c> if the frame has the estimated main light channel-wise intensity of the scene.
         /// </value>
         public bool hasMainLightIntensityLumens => (m_Properties & XRCameraFrameProperties.MainLightIntensityLumens) != 0;
 
         /// <summary>
-        /// Whether the frame has the estimated main light color of the scene.
+        /// <c>True</c> if the frame has the estimated main light color of the scene.
         /// </summary>
         /// <value>
-        /// Whether the frame has the estimated main light color of the scene.
+        /// <c>True</c> if the frame has the estimated main light color of the scene.
         /// </value>
         public bool hasMainLightColor => (m_Properties & XRCameraFrameProperties.MainLightColor) != 0;
 
         /// <summary>
-        /// Whether the frame has the estimated main light direction of the scene.
+        /// <c>True</c> if the frame has the estimated main light direction of the scene.
         /// </summary>
         /// <value>
-        /// Whether the frame has the estimated main light direction of the scene.
+        /// <c>True</c> if the frame has the estimated main light direction of the scene.
         /// </value>
         public bool hasMainLightDirection => (m_Properties & XRCameraFrameProperties.MainLightDirection) != 0;
 
         /// <summary>
-        /// Whether the frame has the ambient spherical harmonics coefficients of the scene.
+        /// <c>True</c> if the frame has the ambient spherical harmonics coefficients of the scene.
         /// </summary>
         /// <value>
-        /// Whether the frame has the ambient spherical harmonics coefficients of the scene.
+        /// <c>True</c> if the frame has the ambient spherical harmonics coefficients of the scene.
         /// </value>
         public bool hasAmbientSphericalHarmonics => (m_Properties & XRCameraFrameProperties.AmbientSphericalHarmonics) != 0;
 
         /// <summary>
-        /// Whether the frame has a camera grain texture.
+        /// <c>True</c> if the frame has a camera grain texture.
         /// </summary>
         /// <value>
-        /// Whether the frame has a camera grain texture.
+        /// <c>True</c> if the frame has a camera grain texture.
         /// </value>
         public bool hasCameraGrain => (m_Properties & XRCameraFrameProperties.CameraGrain) != 0;
 
         /// <summary>
-        /// Whether the frame has a camera grain noise.
+        /// <c>True</c> if the frame has a camera grain noise.
         /// </summary>
         /// <value>
-        /// Whether the frame has a camera grain noise.
+        /// <c>True</c> if the frame has a camera grain noise.
         /// </value>
         public bool hasNoiseIntensity => (m_Properties & XRCameraFrameProperties.NoiseIntensity) != 0;
 
         /// <summary>
-        /// Provides timestamp of the camera frame.
+        /// Provides a timestamp of the camera frame.
         /// </summary>
         /// <param name="timestampNs">The timestamp of the camera frame.</param>
         /// <returns>
@@ -411,7 +411,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Provides brightness for the whole image as an average of all pixels' brightness.
+        /// Provides the brightness for the whole image as an average of all pixels' brightness.
         /// </summary>
         /// <param name="averageBrightness">An estimated average brightness for the environment.</param>
         /// <returns>
@@ -424,7 +424,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Provides color temperature for the whole image as an average of all pixels' color temperature.
+        /// Provides the color temperature for the whole image as an average of all pixels' color temperature.
         /// </summary>
         /// <param name="averageColorTemperature">An estimated color temperature.</param>
         /// <returns>
@@ -437,7 +437,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Provides projection matrix for the camera frame.
+        /// Provides the projection matrix for the camera frame.
         /// </summary>
         /// <param name="projectionMatrix">The projection matrix used by the <c>XRCameraSubsystem</c>.</param>
         /// <returns>
@@ -450,7 +450,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Provides display matrix defining how texture is being rendered on the screen.
+        /// Provides the display matrix defining how texture is being rendered on the screen.
         /// </summary>
         /// <param name="displayMatrix">The display matrix for rendering.</param>
         /// <returns>
@@ -463,11 +463,11 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Provides intensity, in lumens, for the environment.
+        /// Provides the intensity, in lumens, for the environment.
         /// </summary>
         /// <param name="averageIntensityInLumens">An estimated average intensity, in lumens, for the environment.</param>
         /// <returns>
-        /// <c>true</c> if average intensity was provided. Otherwise, <c>false</c>.
+        /// <c>true</c> if the average intensity was provided. Otherwise, <c>false</c>.
         /// </returns>
         public bool TryGetAverageIntensityInLumens(out float averageIntensityInLumens)
         {

@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -17,37 +14,20 @@ namespace UnityEngine.XR.ARSubsystems
     /// implementation; see the documentation for the implementing subsystem for
     /// further instructions.
     /// </remarks>
-#if UNITY_2020_2_OR_NEWER
     public class XRObjectTrackingSubsystem
         : TrackingSubsystem<XRTrackedObject, XRObjectTrackingSubsystem, XRObjectTrackingSubsystemDescriptor, XRObjectTrackingSubsystem.Provider>
-#else
-    public abstract class XRObjectTrackingSubsystem
-        : TrackingSubsystem<XRTrackedObject, XRObjectTrackingSubsystemDescriptor>
-#endif
     {
-#if !UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Should create an instance of <see cref="Provider"/>,
-        /// which contains the implementation for a specific <see cref="XRObjectTrackingSubsystem"/>.
+        /// For AR implementors: implement this class to provide support for object tracking.
         /// </summary>
-        /// <returns>A new <see cref="Provider"/> containing a concrete implementation of this API.</returns>
-        protected abstract Provider CreateProvider();
-#endif
-
-        /// <summary>
-        /// The API concrete class must implement for an <see cref="XRObjectTrackingSubsystem"/>.
-        /// </summary>
-        public abstract class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRObjectTrackingSubsystem>
-#endif
+        public abstract class Provider : SubsystemProvider<XRObjectTrackingSubsystem>
         {
             /// <summary>
-            /// Get the changes (added, updated, and removed) to <see cref="XRTrackedObject"/>s
-            /// since the last call to this method. It is typically invoked once per frame.
+            /// Get the changes to <see cref="XRTrackedObject"/>s (added, updated, and removed) 
+            /// since the last call to this method. This is typically invoked once per frame.
             /// </summary>
             /// <param name="template">A 'template' <see cref="XRTrackedObject"/>. <see cref="XRTrackedObject"/>
-            /// may have fields added to it in the future; this template allows you to fill
+            /// might have fields added to it in the future; this template allows you to fill
             /// the arrays of added, updated, and removed with default values before copying in
             /// data from your own memory buffer.</param>
             /// <param name="allocator">The allocator to use for the added, updated, and removed arrays.</param>
@@ -56,7 +36,7 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract TrackableChanges<XRTrackedObject> GetChanges(XRTrackedObject template, Allocator allocator);
 
             /// <summary>
-            /// The library containing the reference objects for which to scan.
+            /// The library that contains the reference objects for which to scan.
             /// If this is not <c>null</c>, the provider should begin scanning for the
             /// objects in the library. If <c>null</c>, the provider should stop
             /// scanning for objects.
@@ -65,39 +45,25 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 set {}
             }
-
-#if !UNITY_2020_2_OR_NEWER
-            /// <summary>
-            /// Invoked just before this subsystem is destroyed.
-            /// </summary>
-            public virtual void Destroy() {}
-#endif
         }
 
         /// <summary>
         /// Constructs an object tracking subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRObjectTrackingSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRObjectTrackingSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
-        }
+        public XRObjectTrackingSubsystem() { }
 
         /// <summary>
         /// Starts scanning for the reference objects in <see cref="library"/>.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="library"/> is <c>null</c>.</exception>
-        protected override sealed void OnStart()
+        protected sealed override void OnStart()
         {
             if (m_Library == null)
                 throw new InvalidOperationException("Cannot start object tracking without an object library.");
 
             provider.library = m_Library;
 
-#if UNITY_2020_2_OR_NEWER
             base.OnStart();
-#endif
         }
 
         /// <summary>
@@ -124,13 +90,6 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Destroys the subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
-
         /// <summary>
         /// Stops scanning for objects.
         /// </summary>
@@ -138,19 +97,17 @@ namespace UnityEngine.XR.ARSubsystems
         {
             provider.library = null;
 
-#if UNITY_2020_2_OR_NEWER
             base.OnStop();
-#endif
         }
 
         /// <summary>
-        /// Get changes (added, updated, and removed) to <see cref="XRTrackedObject"/>s since
+        /// Get changes to <see cref="XRTrackedObject"/>s (added, updated, and removed) since
         /// the last call to this method. The caller owns the memory allocated with <paramref name="allocator"/>.
         /// </summary>
         /// <param name="allocator">The allocator to use for the returned arrays of changes.</param>
         /// <returns>A new <see cref="TrackableChanges{T}"/> allocated with <paramref name="allocator"/>.
         /// The caller owns the memory and is responsible for calling <c>Dispose</c> on it.</returns>
-        public override sealed TrackableChanges<XRTrackedObject> GetChanges(Allocator allocator)
+        public sealed override TrackableChanges<XRTrackedObject> GetChanges(Allocator allocator)
         {
             var changes = provider.GetChanges(XRTrackedObject.defaultValue, allocator);
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -160,35 +117,27 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Registers a novel implementation of the <see cref="XRObjectTrackingSubsystem"/>.
+        /// Registers an implementation of the <see cref="XRObjectTrackingSubsystem"/>.
         /// </summary>
         /// <typeparam name="T">The concrete type of the subsystem being registered.</typeparam>
         /// <param name="id">A unique string identifying the subsystem implementation.</param>
         /// <param name="capabilities">Describes the capabilities of the implementation.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="id"/> is <c>null</c>.</exception>
         public static void Register<T>(string id, XRObjectTrackingSubsystemDescriptor.Capabilities capabilities)
-#if UNITY_2020_2_OR_NEWER
             where T : XRObjectTrackingSubsystem.Provider
-#else
-            where T : XRObjectTrackingSubsystem
-#endif
         {
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
 
-#if UNITY_2020_2_OR_NEWER
             SubsystemDescriptorStore.RegisterDescriptor(new XRObjectTrackingSubsystemDescriptor(id, typeof(T), null, capabilities));
-#else
-            SubsystemRegistration.CreateDescriptor(new XRObjectTrackingSubsystemDescriptor(id, typeof(T), null, capabilities));
-#endif
         }
 
-#if UNITY_2020_2_OR_NEWER
         /// <summary>
-        /// Registers a novel implementation of the <see cref="XRObjectTrackingSubsystem"/>.
+        /// Registers a new implementation of the <see cref="XRObjectTrackingSubsystem"/>.
         /// Allows overriding a derived type of <c>XRObjectTrackingSubsystem</c>.
         /// </summary>
-        /// <typeparam name="T">The concrete type of the subsystem being registered.</typeparam>
+        /// <typeparam name="TProvider">The concrete type of the provider being registered.</typeparam>
+        /// <typeparam name="TSubsystemOverride">The concrete type of the subsystem being registered.</typeparam>
         /// <param name="id">A unique string identifying the subsystem implementation.</param>
         /// <param name="capabilities">Describes the capabilities of the implementation.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="id"/> is <c>null</c>.</exception>
@@ -201,16 +150,8 @@ namespace UnityEngine.XR.ARSubsystems
 
             SubsystemDescriptorStore.RegisterDescriptor(new XRObjectTrackingSubsystemDescriptor(id, typeof(TProvider), typeof(TSubsystemOverride), capabilities));
         }
-#endif
 
         XRReferenceObjectLibrary m_Library;
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required object tracking functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRTrackedObject> m_ValidationUtility =

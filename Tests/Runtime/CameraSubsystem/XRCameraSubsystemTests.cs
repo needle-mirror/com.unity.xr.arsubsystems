@@ -11,10 +11,6 @@ namespace UnityEngine.XR.ARSubsystems.Tests
             public override void Stop() { }
             public override void Destroy() { }
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        protected override Provider CreateProvider() => new ProviderImpl();
-#endif
     }
 
     [TestFixture]
@@ -26,12 +22,8 @@ namespace UnityEngine.XR.ARSubsystems.Tests
             XRCameraSubsystem.Register(new XRCameraSubsystemCinfo
             {
                 id = "Test-Camera",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(XRCameraSubsystemImpl.ProviderImpl),
                 subsystemTypeOverride = typeof(XRCameraSubsystemImpl)
-#else
-                implementationType = typeof(XRCameraSubsystemImpl)
-#endif
             });
         }
 

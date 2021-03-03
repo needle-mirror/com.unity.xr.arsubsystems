@@ -11,7 +11,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Positions for each point in the point cloud. This array is parallel
         /// to <see cref="confidenceValues"/> and <see cref="identifiers"/>.
-        /// Use <c>positions.IsCreated</c> to check for existence.
+        /// Use <c>positions.IsCreated</c> to check if these exist.
         /// </summary>
         public NativeArray<Vector3> positions
         {
@@ -23,7 +23,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Confidence values for each point in the point cloud. This array is parallel
         /// to <see cref="positions"/> and <see cref="identifiers"/>.
-        /// Use <c>confidenceValues.IsCreated</c> to check for existence.
+        /// Use <c>confidenceValues.IsCreated</c> to check if these exist.
         /// </summary>
         public NativeArray<float> confidenceValues
         {
@@ -35,7 +35,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Identifiers for each point in the point cloud. This array is parallel
         /// to <see cref="positions"/> and <see cref="confidenceValues"/>.
-        /// Use <c>identifiers.IsCreated</c> to check for existence.
+        /// Use <c>identifiers.IsCreated</c> to check if these exist.
         /// </summary>
         /// <remarks>
         /// Identifiers are unique to a particular session, which means you can use
@@ -50,7 +50,7 @@ namespace UnityEngine.XR.ARSubsystems
         NativeArray<ulong> m_Identifiers;
 
         /// <summary>
-        /// Disposes of the <c>NativeArray</c>s, checking for existence first.
+        /// Checks for the existence of the <c>NativeArray</c>s and disposes them.
         /// </summary>
         public void Dispose()
         {

@@ -15,4 +15,4 @@ Some platforms support the concept of planes merging. If a plane is merged into 
 
 ## Boundary
 
-A `BoundedPlane` is finite (unlike a [Plane](xref:UnityEngine.Plane), which is infinite). In addition to a position and orientation, which would define an infinite plane, bounded planes have a size (width and height) and can also have boundary points. Boundary points are two dimensional vertices defined clockwise in plane-space (a space relative to the plane's [Pose](xref:UnityEngine.Pose)). The boundary points should define a convex shape.
+A `BoundedPlane` is finite (unlike a [Plane](xref:UnityEngine.Plane), which is infinite). In addition to a position and orientation, which would define an infinite plane, bounded planes have a size (width and height) and can also have boundary points. Boundary points are two-dimensional vertices defined clockwise in plane space (a space relative to the plane's [Pose](xref:UnityEngine.Pose)). The boundary points should define a convex shape.

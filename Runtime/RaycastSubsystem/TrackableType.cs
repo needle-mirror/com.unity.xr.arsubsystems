@@ -3,8 +3,8 @@ using System;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Flags representing trackable types in XR.
-    /// A "trackable" is feature in the physical environment that a device is able to track, such as a surface.
+    /// Flags that represent trackable types in XR.
+    /// A trackable is feature in the physical environment that a device is able to track, such as a surface.
     /// Often used in conjunction with <see cref="XRRaycastHit"/>.
     /// </summary>
     [Flags]
@@ -16,7 +16,7 @@ namespace UnityEngine.XR.ARSubsystems
         None = 0,
 
         /// <summary>
-        /// Refers to 2D convex shape associated with a plane's boundary points.
+        /// Refers to the 2D convex shape associated with a plane's boundary points.
         /// </summary>
         /// <remarks>
         /// When used as the <c>trackableTypeMask</c> in a
@@ -54,7 +54,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// When used as the <c>trackableTypeMask</c> in a
         /// <see cref="XRRaycastSubsystem.Raycast(Ray, TrackableType, Unity.Collections.Allocator)"/>,
         /// the ray is considered to have hit if the ray intersects with an estimated plane. An estimated
-        /// plane is implementation defined, but may not have an exact boundary. It is a guess that suggests
+        /// plane is implementation-defined, but might not have an exact boundary. It is a guess that suggests
         /// the ray is near a surface.
         /// </remarks>
         PlaneEstimated = 1 << 3,
@@ -74,7 +74,7 @@ namespace UnityEngine.XR.ARSubsystems
             PlaneEstimated,
 
         /// <summary>
-        /// Refers to a feature point (i.e., point in a point cloud).
+        /// Refers to a feature point (that is, a point in a point cloud).
         /// </summary>
         /// <remarks>
         /// When used as the <c>trackableTypeMask</c> in a

@@ -1,8 +1,5 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -16,11 +13,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <see cref="XRObjectTrackingSubsystem.Register{T}(string, XRObjectTrackingSubsystemDescriptor.Capabilities)"/>.
     /// </remarks>
     public class XRObjectTrackingSubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
         SubsystemDescriptorWithProvider<XRObjectTrackingSubsystem, XRObjectTrackingSubsystem.Provider>
-#else
-        SubsystemDescriptor<XRObjectTrackingSubsystem>
-#endif
     {
         /// <summary>
         /// Describes the capabilities of an <see cref="XRObjectTrackingSubsystem"/> implementation.
@@ -36,7 +29,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Tests for equality.
             /// </summary>
             /// <param name="other">The other <see cref="Capabilities"/> to compare against.</param>
-            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Capabilities"/>, otherwise false.</returns>
+            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Capabilities"/>, otherwise `false`.</returns>
             public bool Equals(Capabilities other) => true;
 
             /// <summary>
@@ -73,12 +66,8 @@ namespace UnityEngine.XR.ARSubsystems
         internal XRObjectTrackingSubsystemDescriptor(string id, Type providerType, Type subsystemTypeOverride, Capabilities capabilities)
         {
             this.id = id;
-#if UNITY_2020_2_OR_NEWER
             this.providerType = providerType;
             this.subsystemTypeOverride = subsystemTypeOverride;
-#else
-            this.subsystemImplementationType = providerType;
-#endif
             this.capabilities = capabilities;
         }
     }

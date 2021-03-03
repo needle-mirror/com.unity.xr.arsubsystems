@@ -87,7 +87,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// Disposes of the all four native arrays:
-        /// <see cref="vertices"/>, <see cref="normals"/>, <see cref="uvs"/>, and <see cref="indices"/>
+        /// <see cref="vertices"/>, <see cref="normals"/>, <see cref="uvs"/>, and <see cref="indices"/>.
         /// Checking for creation before calling Dispose.
         /// </summary>
         public void Dispose()

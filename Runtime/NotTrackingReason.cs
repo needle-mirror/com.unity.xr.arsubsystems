@@ -22,17 +22,17 @@ namespace UnityEngine.XR.ARSubsystems
         Relocalizing,
 
         /// <summary>
-        /// Tracking is lost due to poor lighting conditions.
+        /// Tracking was lost due to poor lighting conditions.
         /// </summary>
         InsufficientLight,
 
         /// <summary>
-        /// Tracking is lost due to insufficient visual features.
+        /// Tracking was lost due to insufficient visual features.
         /// </summary>
         InsufficientFeatures,
 
         /// <summary>
-        /// Tracking is lost due to excessive motion.
+        /// Tracking was lost due to excessive motion.
         /// </summary>
         ExcessiveMotion,
 
@@ -42,7 +42,7 @@ namespace UnityEngine.XR.ARSubsystems
         Unsupported,
 
         /// <summary>
-        /// The camera is in use by another application. Tracking may resume once the app regains access to the camera.
+        /// The camera is in use by another application. Tracking can resume once the app regains access to the camera.
         /// </summary>
         CameraUnavailable
     }

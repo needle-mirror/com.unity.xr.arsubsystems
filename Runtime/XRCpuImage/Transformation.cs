@@ -5,7 +5,7 @@ namespace UnityEngine.XR.ARSubsystems
     public partial struct XRCpuImage
     {
         /// <summary>
-        /// Describes transformations that may be applied to a camera image.
+        /// Describes transformations that can be applied to a camera image.
         /// </summary>
         [Flags]
         public enum Transformation

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// The session relative data associated with a plane.
+    /// The session-relative data associated with a plane.
     /// </summary>
     /// <seealso cref="XRPlaneSubsystem"/>
     [StructLayout(LayoutKind.Sequential)]
@@ -22,7 +22,7 @@ namespace UnityEngine.XR.ARSubsystems
                 PlaneClassification.None);
 
         /// <summary>
-        /// Gets a default-initialized <see cref="BoundedPlane"/>. This may be
+        /// Gets a default-initialized <see cref="BoundedPlane"/>. This can be
         /// different from the zero-initialized version, e.g., the <see cref="pose"/>
         /// is <c>Pose.identity</c> instead of zero-initialized.
         /// </summary>
@@ -36,7 +36,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="trackableId">The <see cref="TrackableId"/> associated with the plane.</param>
         /// <param name="subsumedBy">The plane which subsumed this one. Use <see cref="TrackableId.invalidId"/> if it has not been subsumed.</param>
         /// <param name="pose">The <c>Pose</c> associated with the plane.</param>
-        /// <param name="center">The center, in plane-space (relative to <paramref name="pose"/>) of the plane.</param>
+        /// <param name="center">The center of the plane, in plane space (relative to <paramref name="pose"/>).</param>
         /// <param name="size">The dimensions associated with the plane.</param>
         /// <param name="alignment">The <see cref="PlaneAlignment"/> associated with the plane.</param>
         /// <param name="trackingState">The <see cref="TrackingState"/> associated with the plane.</param>
@@ -137,7 +137,7 @@ namespace UnityEngine.XR.ARSubsystems
         public Plane plane => new Plane(normal, center);
 
         /// <summary>
-        /// Get the four corners of the plane in session space in clockwise order.
+        /// Get the four corners of the plane in session space, in clockwise order.
         /// </summary>
         /// <param name="p0">The first vertex.</param>
         /// <param name="p1">The second vertex.</param>
@@ -159,9 +159,9 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Generates a new string describing the plane's properties suitable for debugging purposes.
+        /// Generates a new string that describes the plane's properties, suitable for debugging purposes.
         /// </summary>
-        /// <returns>A string describing the plane's properties.</returns>
+        /// <returns>A string that describes the plane's properties.</returns>
         public override string ToString()
         {
             return string.Format(

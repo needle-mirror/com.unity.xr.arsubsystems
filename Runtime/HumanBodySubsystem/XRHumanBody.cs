@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Container for the data representing a trackable human body.
+    /// Container for the data that represents a trackable human body.
     /// </summary>
     [StructLayout (LayoutKind.Sequential)]
     public struct XRHumanBody : IEquatable<XRHumanBody>, ITrackable
@@ -62,10 +62,10 @@ namespace UnityEngine.XR.ARSubsystems
         TrackingState m_TrackingState;
 
         /// <summary>
-        /// The native pointer to implementation-specific human body.
+        /// The native pointer to the implementation-specific human body.
         /// </summary>
         /// <value>
-        /// The native pointer to implementation-specific human body.
+        /// The native pointer to the implementation-specific human body.
         /// </value>
         public IntPtr nativePtr
         {

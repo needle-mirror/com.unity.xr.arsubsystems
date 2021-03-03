@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// A set of flags representing features available in AR.
+    /// A set of flags that represent features available in AR.
     /// </summary>
     [Flags]
     public enum Feature : ulong
@@ -30,12 +30,12 @@ namespace UnityEngine.XR.ARSubsystems
         AnyCamera = WorldFacingCamera | UserFacingCamera,
 
         /// <summary>
-        /// Rotation only tracking, i.e., 3 degrees of freedom without positional tracking.
+        /// Rotation-only tracking (that is, 3 degrees of freedom without positional tracking).
         /// </summary>
         RotationOnly = 1 << 2,
 
         /// <summary>
-        /// Both position and rotation tracking, i.e., 6 degrees of freedom.
+        /// Both position and rotation tracking (that is, 6 degrees of freedom).
         /// </summary>
         PositionAndRotation = 1 << 3,
 
@@ -80,7 +80,7 @@ namespace UnityEngine.XR.ARSubsystems
         Body3D = 1 << 10,
 
         /// <summary>
-        /// Estimate scale when performing 3D human body tracking, see <see cref="Body3D"/>.
+        /// Estimate scale when performing 3D human body tracking. See <see cref="Body3D"/>.
         /// </summary>
         Body3DScaleEstimation = 1 << 11,
 
@@ -140,22 +140,22 @@ namespace UnityEngine.XR.ARSubsystems
         Raycast = 1 << 21,
 
         /// <summary>
-        /// A feature describing real-time meshing capability.
+        /// A feature that describes real-time meshing capability.
         /// </summary>
         Meshing = 1 << 22,
 
         /// <summary>
-        /// A feature describing classification for <see cref="Meshing"/>.
+        /// A feature that describes classification for <see cref="Meshing"/>.
         /// </summary>
         MeshClassification = 1 << 23,
 
         /// <summary>
-        /// A feature describing the ability to surface point clouds.
+        /// A feature that describes the ability to surface point clouds.
         /// </summary>
         PointCloud = 1 << 24,
 
         /// <summary>
-        /// A feature allowing environment depth iomages to be captured.
+        /// A feature that allows environment depth images to be captured.
         /// </summary>
         EnvironmentDepth = 1 << 25,
     }
@@ -193,43 +193,43 @@ namespace UnityEngine.XR.ARSubsystems
         public static bool None(this Feature self, Feature features) => (self & features) == Feature.None;
 
         /// <summary>
-        /// Computes the union of <paramref name="self"/> and <paramref name="features"/>,
-        /// i.e., the set of features in <paramref name="self"/> or <paramref name="features"/> or both.
+        /// Computes the union of <paramref name="self"/> and <paramref name="features"/> (that is,
+        /// the set of features in <paramref name="self"/> or <paramref name="features"/> or both).
         /// </summary>
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
         /// <param name="features">Features to union with <paramref name="self"/></param>
-        /// <returns>The union of <paramref name="self"/> and <paramref name="features"/>,
-        /// i.e., the set of features in <paramref name="self"/> or <paramref name="features"/> or both.</returns>
+        /// <returns>The union of <paramref name="self"/> and <paramref name="features"/>
+        /// (that is, the set of features in <paramref name="self"/> or <paramref name="features"/> or both).</returns>
         public static Feature Union(this Feature self, Feature features) => self | features;
 
         /// <summary>
-        /// Computes the intersection of <paramref name="self"/> and <paramref name="features"/>,
-        /// i.e., the set of features present in both <paramref name="self"/> and <paramref name="features"/>.
+        /// Computes the intersection of <paramref name="self"/> and <paramref name="features"/>
+        /// (that is, the set of features present in both <paramref name="self"/> and <paramref name="features"/>).
         /// </summary>
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
         /// <param name="features">Features to intersect with <paramref name="self"/></param>
-        /// <returns>The intersection of <paramref name="self"/> and <paramref name="features"/>,
-        /// i.e., the set of features common to both <paramref name="self"/> and <paramref name="features"/>.</returns>
+        /// <returns>The intersection of <paramref name="self"/> and <paramref name="features"/>
+        /// (that is, the set of features common to both <paramref name="self"/> and <paramref name="features"/>).</returns>
         public static Feature Intersection(this Feature self, Feature features) => self & features;
 
         /// <summary>
-        /// Computes the set difference, i.e., removes all flags in <paramref name="features"/> from <paramref name="self"/>.
+        /// Computes the set difference (that is, removes all flags in <paramref name="features"/> from <paramref name="self"/>).
         /// </summary>
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
         /// <param name="features">Features to remove from <paramref name="self"/></param>
-        /// <returns>The set difference of <paramref name="self"/> and <paramref name="features"/>,
-        /// i.e., all members of <paramref name="self"/> which do not belong to <paramref name="features"/>.</returns>
+        /// <returns>The set difference of <paramref name="self"/> and <paramref name="features"/>
+        /// (that is, all members of <paramref name="self"/> which do not belong to <paramref name="features"/>).</returns>
         public static Feature SetDifference(this Feature self, Feature features) => self & ~features;
 
         /// <summary>
-        /// Computes the symmetric difference, i.e.,
-        /// the set of all features that belong to exactly one of <paramref name="self"/> and <paramref name="features"/>
-        /// (present in one but not both).
+        /// Computes the symmetric difference (that is,
+        /// the set of all features that belong to exactly one of <paramref name="self"/> and <paramref name="features"/>,
+        /// present in one but not both).
         /// </summary>
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
         /// <param name="features">Features with which to compute the symmetric difference against <paramref name="self"/></param>
-        /// <returns>The symmetric difference of <paramref name="self"/> and <paramref name="features"/>,
-        /// i.e., the features that belong to <paramref name="self"/> or <paramref name="features"/>, but not both.</returns>
+        /// <returns>The symmetric difference of <paramref name="self"/> and <paramref name="features"/>
+        /// (that is, the features that belong to <paramref name="self"/> or <paramref name="features"/>, but not both).</returns>
         public static Feature SymmetricDifference(this Feature self, Feature features) => self ^ features;
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Filters just the light estimation related <see cref="Feature"/> flags.
         /// </summary>
         /// <param name="self">The <see cref="Feature"/> being extended.</param>
-        /// <returns>The light estimation related <see cref="Feature"/> flags from <paramref name="self"/>.</returns>
+        /// <returns>The light estimation-related <see cref="Feature"/> flags from <paramref name="self"/>.</returns>
         public static Feature LightEstimation(this Feature self) => self.Intersection(Feature.AnyLightEstimation);
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Generates a single string representing the list of enabled features separated by <paramref name="separator"/> or a comma if not specified.
+        /// Generates a single string representing the list of enabled features separated by <paramref name="separator"/>, or a comma if not specified.
         /// </summary>
         /// <remarks>
         /// This method makes several heap allocations, generating garbage. It is intended for debugging purposes and

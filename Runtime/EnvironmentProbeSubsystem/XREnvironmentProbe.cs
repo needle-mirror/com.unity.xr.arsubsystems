@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Encapsulates all of the data provided for an individual environment probe in an AR session.
+    /// Contains all of the data provided for an individual environment probe in an AR session.
     /// </summary>
     [StructLayout (LayoutKind.Sequential)]
     public struct XREnvironmentProbe : IEquatable<XREnvironmentProbe>, ITrackable
@@ -60,14 +60,14 @@ namespace UnityEngine.XR.ARSubsystems
         Pose m_Pose;
 
         /// <summary>
-        /// Specifies the volume size around the environment probe's position for use when projecting the environment
-        /// texture for parallax correction.
+        /// Specifies the volume size around the environment probe's position. This is used for
+        /// for parallax correction when projecting the environment texture.
         /// </summary>
         /// <value>
         /// The bounding volume size of the environment probe.
         /// </value>
         /// <remarks>
-        /// Note that <c>size</c> may validly be infinite.
+        /// Note that <c>size</c> can be infinite. This is valid.
         /// </remarks>
         public Vector3 size
         {
@@ -83,8 +83,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// The texture descriptor of the environment probe.
         /// </value>
         /// <remarks>
-        /// The <c>environmentTextureData</c> value may be invalid indicating that the device has yet to capture an
-        /// environment texture for this probe. Newly created environment probes have no environment texture. The
+        /// The <c>environmentTextureData</c> value can be invalid, which indicates that the device has not captured an
+        /// environment texture for this probe yet. Newly created environment probes have no environment texture. The
         /// <see cref="XRTextureDescriptor.valid" /> property should be used to determine whether the texture data
         /// is valid.
         /// </remarks>

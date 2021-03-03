@@ -26,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The index for the parent joint in the skeleton hierachy.
         /// </value>
         /// <remarks>
-        /// A parent index that is negative represents that the joint has no parent in the hierachy.
+        /// A negative parent index means that the joint has no parent in the hierachy.
         /// </remarks>
         public int parentIndex => m_ParentIndex;
         int m_ParentIndex;
@@ -121,7 +121,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// Generates a string representation of this <see cref="XRHumanBodyPose2DJoint"/>. Floating point
-        /// values using the ["F5"](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
+        /// values use the ["F5"](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
         /// format specifier.
         /// </summary>
         /// <returns>A string representation of this <see cref="XRHumanBodyPose2DJoint"/>.</returns>

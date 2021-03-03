@@ -1,8 +1,5 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -10,16 +7,11 @@ namespace UnityEngine.XR.ARSubsystems
     /// The descriptor of the <see cref="XRDepthSubsystem"/> that shows which depth detection features are available on that XRSubsystem.
     /// </summary>
     /// <remarks>
-    /// You use the <see cref="RegisterDescriptor"/> factory method along with <see cref="Cinfo"/> struct to construct and
+    /// Use the <see cref="RegisterDescriptor"/> factory method along with <see cref="Cinfo"/> struct to construct and
     /// register one of these from each depth data provider.
     /// </remarks>
     /// <seealso cref="XRDepthSubsystem"/>
-    public class XRDepthSubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
-        SubsystemDescriptorWithProvider<XRDepthSubsystem, XRDepthSubsystem.Provider>
-#else
-        SubsystemDescriptor<XRDepthSubsystem>
-#endif
+    public class XRDepthSubsystemDescriptor : SubsystemDescriptorWithProvider<XRDepthSubsystem, XRDepthSubsystem.Provider>
     {
         /// <summary>
         /// Describes the capabilities of an <see cref="XRDepthSubsystem"/>.
@@ -52,8 +44,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// This struct is an initializer for the creation of a <see cref="XRDepthSubsystemDescriptor"/>.
         /// </summary>
         /// <remarks>
-        /// Depth data provider should create during <c>InitializeOnLoad</c> a descriptor using
-        /// the params here to specify which of the XRDepthSubsystem features it supports.
+        /// Depth data provider should create  a descriptor during <c>InitializeOnLoad</c> using
+        /// the parameters here to specify which of the XRDepthSubsystem features it supports.
         /// </remarks>
         public struct Cinfo : IEquatable<Cinfo>
         {
@@ -62,7 +54,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id;
 
-#if UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Specifies the provider implementation type to use for instantiation.
             /// </summary>
@@ -78,18 +69,15 @@ namespace UnityEngine.XR.ARSubsystems
             /// The type of the subsystem to use for instantiation. If null, <c>XRDepthSubsystem</c> will be instantiated.
             /// </value>
             public Type subsystemTypeOverride { get; set; }
-#endif
 
             /// <summary>
             /// The concrete <c>Type</c> which will be instantiated if <c>Create</c> is called on this subsystem descriptor.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             [Obsolete("XRDepthSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
-#endif
             public Type implementationType;
 
             /// <summary>
-            /// Whether the subsystem supports feature points
+            /// <c>True</c> if the subsystem supports feature points, <c>false</c> otherwise.
             /// </summary>
             public bool supportsFeaturePoints
             {
@@ -108,7 +96,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Whether the subsystem supports per feature point confidence values.
+            /// <c>True</c> if the subsystem supports per feature point confidence values, <c>false</c> otherwise.
             /// </summary>
             public bool supportsConfidence
             {
@@ -127,7 +115,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Whether the subsystem supports per-feature point identifiers.
+            /// <c>True</c> if the subsystem supports per-feature point identifiers, <c>false</c> otherwise.
             /// </summary>
             public bool supportsUniqueIds
             {
@@ -160,12 +148,8 @@ namespace UnityEngine.XR.ARSubsystems
                 return
                     capabilities == other.capabilities &&
                     id == other.id &&
-#if UNITY_2020_2_OR_NEWER
                     providerType == other.providerType &&
                     subsystemTypeOverride == other.subsystemTypeOverride;
-#else
-                    implementationType == other.implementationType;
-#endif
             }
 
             /// <summary>
@@ -185,12 +169,8 @@ namespace UnityEngine.XR.ARSubsystems
                 unchecked
                 {
                     int hashCode = HashCode.ReferenceHash(id);
-#if UNITY_2020_2_OR_NEWER
                     hashCode = 486187739 * hashCode + HashCode.ReferenceHash(providerType);
                     hashCode = 486187739 * hashCode + HashCode.ReferenceHash(subsystemTypeOverride);
-#else
-                    hashCode = 486187739 * hashCode + HashCode.ReferenceHash(implementationType);
-#endif
                     hashCode = 486187739 * hashCode + ((int)capabilities).GetHashCode();
                     return hashCode;
                 }
@@ -216,29 +196,25 @@ namespace UnityEngine.XR.ARSubsystems
         XRDepthSubsystemDescriptor(Cinfo descriptorParams)
         {
             id = descriptorParams.id;
-#if UNITY_2020_2_OR_NEWER
             providerType = descriptorParams.providerType;
             subsystemTypeOverride = descriptorParams.subsystemTypeOverride;
-#else
-            subsystemImplementationType = descriptorParams.implementationType;
-#endif
             supportsFeaturePoints = descriptorParams.supportsFeaturePoints;
             supportsUniqueIds = descriptorParams.supportsUniqueIds;
             supportsConfidence = descriptorParams.supportsConfidence;
         }
 
         /// <summary>
-        /// Whether the implementation supports feature points.
+        /// <c>True</c> if the implementation supports feature points, <c>false</c> otherwise.
         /// </summary>
         public bool supportsFeaturePoints { get; private set; }
 
         /// <summary>
-        /// Whether the implementation supports per feature point identifiers.
+        /// <c>True</c> if the implementation supports per feature point identifiers, <c>false</c> otherwise.
         /// </summary>
         public bool supportsUniqueIds { get; private set; }
 
         /// <summary>
-        /// Whether the implementation supports per feature point confidence values.
+        /// <c>True</c> if the implementation supports per feature point confidence values, <c>false</c> otherwise.
         /// </summary>
         public bool supportsConfidence { get; private set; }
 
@@ -249,11 +225,7 @@ namespace UnityEngine.XR.ARSubsystems
         public static void RegisterDescriptor(Cinfo descriptorParams)
         {
             var descriptor = new XRDepthSubsystemDescriptor(descriptorParams);
-#if UNITY_2020_2_OR_NEWER
             SubsystemDescriptorStore.RegisterDescriptor(descriptor);
-#else
-            SubsystemRegistration.CreateDescriptor(descriptor);
-#endif
         }
     }
 }

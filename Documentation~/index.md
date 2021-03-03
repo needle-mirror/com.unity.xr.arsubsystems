@@ -3,7 +3,7 @@ uid: arsubsystems-manual
 ---
 # About AR Subsystems
 
-A [subsystem](xref:UnityEngine.Subsystem) is a platform-agnostic interface for surfacing different types of functionality and data. The AR-related subsystems are defined in this package and use the namespace `UnityEngine.XR.ARSubsystems`. This package only provides the interface for various subsystems. Implementations for these subsystems (called "providers") can typically be found in another package or plug-in.
+A [subsystem](xref:UnityEngine.Subsystem) is a platform-agnostic interface for surfacing different types of functionality and data. The AR-related subsystems are defined in this package and use the namespace `UnityEngine.XR.ARSubsystems`. This package only provides the interface for various subsystems. Implementations for these subsystems (called "providers") are typically provided as separate packages or plug-ins. These are called "provider implementations".
 
 This package provides interfaces for the following subsystems:
 
@@ -23,11 +23,12 @@ This package provides interfaces for the following subsystems:
 
 ## Installing AR Subsystems
 
-ARSubsystems a dependency of platform-specific packages which make use of one or more of the subsystems defined within it. To use AR Subsystems, you must also install at least one of these platform-specific AR packages:
+AR Subsystems is a dependency of platform-specific packages which use one or more of the subsystems defined within it. To use AR Subsystems, you must also install at least one of these platform-specific AR packages:
 
-- ARCore XR Plugin
-- ARKit XR Plugin
-- Windows XR Plugin
+- ARCore XR Plug-in
+- ARKit XR Plug-in
+- Magic Leap XR Plug-in
+- Windows XR Plug-in
 
 ## Using AR Subsystems
 
@@ -89,7 +90,7 @@ Refer to the subsystem-specific documentation list above for more details about 
 
 If you are implementing one of the AR Subsystems in this package (for example, you are a hardware manufacturer for a new AR device), you need to implement a concrete instance of the relevant abstract base class this package provides. Those types are typically named `XR<feature>Subsystem`.
 
-Each subsystem has a nested class called `IProvider`. This is the primary interface you'll need to implement for each subsystem you plan to support.
+Each subsystem has a nested class called `IProvider`. This is the primary interface you must implement for each subsystem you plan to support.
 
 ### Tracking subsystems
 
@@ -104,7 +105,4 @@ Each tracking subsystem requires you to implement a method called `GetChanges`. 
 
 This version of AR Foundation is compatible with the following versions of the Unity Editor:
 
-* 2019.4
-* 2020.1
-* 2020.2
-* 2021.1
+* 2021.2

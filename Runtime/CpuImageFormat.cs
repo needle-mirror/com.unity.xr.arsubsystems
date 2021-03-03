@@ -31,7 +31,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// iOS. See
             /// <a href="https://developer.apple.com/documentation/corevideo/1563591-pixel_format_identifiers/kcvpixelformattype_420ypcbcr8biplanarfullrange">
             /// kCVPixelFormatType_420YpCbCr8BiPlanarFullRange</a>.</para>
-            /// <para>This format consists of two image planes. The first is the Y (luminocity) plane, with 8 bits per
+            /// <para>This format consists of two image planes. The first is the Y (luminosity) plane, with 8 bits per
             /// pixel. The second plane is the UV (chromaticity) plane. The U and V chromaticity values are interleaved
             /// (u0, v0, u1, v1, etc.). Each 2x2 block of pixels share the same chromaticity values, so a given (x, y)
             /// pixel's chromaticity value is given by

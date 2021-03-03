@@ -17,7 +17,7 @@ The image tracking subsystem attempts to detect two-dimensional images in the en
 
 You create reference image libraries in the Unity Editor. From Unity's main menu, go to **Assets &gt; Create &gt; XR &gt; Reference Image Library**.
 
-This creates a new reference image library Asset in your Project. To add images, select this Asset, then click **Add Image** and complete the fields that appear:
+This creates a new reference image library Asset in your project. To add images, select this Asset, then click **Add Image** and complete the fields that appear:
 
 ![Editing a reference image library](images/create-reference-image-library.gif "Editing a reference image library")
 
@@ -40,6 +40,12 @@ XRImageTrackingSubsystem subsystem = ...
 subsystem.imageLibrary = myLibrary;
 subsystem.Start();
 ```
-**Note:** You must set `imageLibrary` to a non-null reference before starting the subsystem.
+
+> [!NOTE]
+> You must set `imageLibrary` to a non-null reference before starting the subsystem.
 
 Query for changes to tracked images with `XRImageTrackingSubsystem.GetChanges`. This returns all changes to tracked images (added, updated, and removed) since the last call to this method.
+
+## Using reference image libraries with asset bundles
+
+Prior to AR Subsystems 4.2, reference image libraries had to be built into the Player; that is, the `XRReferenceImageLibrary` served only as a means to look up data that was expected to be packaged in the app. This meant that you could not, for example, download a new reference image library to an already released app. As of AR Subsystems 4.2, platform-specifc data can be attached to the `XRReferenceImageLibrary` asset when building a Player or [asset bundle](xref:AssetBundlesIntro). This means that you can include an `XRReferenceImageLibrary` in an asset bundle and use it in an app that was not built with that reference image library present.

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Describes session relative data for an anchor.
+    /// Describes session-relative data for an anchor.
     /// </summary>
     /// <seealso cref="XRAnchorSubsystem"/>
     [StructLayout(LayoutKind.Sequential)]
@@ -12,8 +12,8 @@ namespace UnityEngine.XR.ARSubsystems
     {
         /// <summary>
         /// Gets a default-initialized <see cref="XRAnchor"/>. This may be
-        /// different from the zero-initialized version, e.g., the <see cref="pose"/>
-        /// is <c>Pose.identity</c> instead of zero-initialized.
+        /// different from the zero-initialized version (for example, the <see cref="pose"/>
+        /// is <c>Pose.identity</c> instead of zero-initialized).
         /// </summary>
         public static XRAnchor defaultValue => s_Default;
 
@@ -25,7 +25,7 @@ namespace UnityEngine.XR.ARSubsystems
         };
 
         /// <summary>
-        /// Constructs the session relative data for an anchor.
+        /// Constructs the session-relative data for an anchor.
         /// This is typically provided by an implementation of the <see cref="XRAnchorSubsystem"/>
         /// and not invoked directly.
         /// </summary>
@@ -48,7 +48,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Constructs the session relative data for anchor.
+        /// Constructs the session-relative data for anchor.
         /// This is typically provided by an implementation of the <see cref="XRAnchorSubsystem"/>
         /// and not invoked directly.
         /// </summary>

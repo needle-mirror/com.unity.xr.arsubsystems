@@ -64,7 +64,7 @@ namespace UnityEditor.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Finds a shader with the given name, or fail the build, if no shader is found.
+        /// Finds a shader with the given name. If no shader with that name is found, the build fails.
         /// </summary>
         /// <param name="shaderName">The name of a shader to find.</param>
         /// <returns>

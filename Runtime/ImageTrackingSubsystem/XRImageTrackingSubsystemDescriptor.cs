@@ -1,20 +1,12 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Describes the capabilities of an <see cref="XRImageTrackingSubsystem"/>.
     /// </summary>
-    public class XRImageTrackingSubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
-        SubsystemDescriptorWithProvider<XRImageTrackingSubsystem, XRImageTrackingSubsystem.Provider>
-#else
-        SubsystemDescriptor<XRImageTrackingSubsystem>
-#endif
+    public class XRImageTrackingSubsystemDescriptor : SubsystemDescriptorWithProvider<XRImageTrackingSubsystem, XRImageTrackingSubsystem.Provider>
     {
         /// <summary>
         /// Construction information for the <see cref="XRImageTrackingSubsystemDescriptor"/>.
@@ -26,7 +18,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id { get; set; }
 
-#if UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Specifies the provider implementation type to use for instantiation.
             /// </summary>
@@ -42,14 +33,11 @@ namespace UnityEngine.XR.ARSubsystems
             /// The type of the subsystem to use for instantiation. If null, <c>XRImageTrackingSubsystem</c> will be instantiated.
             /// </value>
             public Type subsystemTypeOverride { get; set; }
-#endif
 
             /// <summary>
             /// The <c>System.Type</c> of the provider implementation, used to instantiate the class.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             [Obsolete("XRImageTrackingSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
-#endif
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
@@ -70,7 +58,7 @@ namespace UnityEngine.XR.ARSubsystems
             public bool requiresPhysicalImageDimensions { get; set; }
 
             /// <summary>
-            /// Whether the subsystem supports image libraries that may be mutated at runtime.
+            /// Whether the subsystem supports image libraries that can be mutated at runtime.
             /// </summary>
             /// <remarks>
             /// If <c>true</c>,
@@ -97,12 +85,8 @@ namespace UnityEngine.XR.ARSubsystems
                 unchecked
                 {
                     int hashCode = HashCode.ReferenceHash(id);
-#if UNITY_2020_2_OR_NEWER
                     hashCode = hashCode * 486187739 + HashCode.ReferenceHash(providerType);
                     hashCode = hashCode * 486187739 + HashCode.ReferenceHash(subsystemTypeOverride);
-#else
-                    hashCode = hashCode * 486187739 + HashCode.ReferenceHash(subsystemImplementationType);
-#endif
                     hashCode = hashCode * 486187739 + supportsMovingImages.GetHashCode();
                     hashCode = hashCode * 486187739 + requiresPhysicalImageDimensions.GetHashCode();
                     hashCode = hashCode * 486187739 + supportsMutableLibrary.GetHashCode();
@@ -120,12 +104,8 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 return
                     ReferenceEquals(id, other.id) &&
-#if UNITY_2020_2_OR_NEWER
                     ReferenceEquals(providerType, other.providerType) &&
                     ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride) &&
-#else
-                    ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType) &&
-#endif
                     supportsMovingImages == other.supportsMovingImages &&
                     requiresPhysicalImageDimensions == other.requiresPhysicalImageDimensions &&
                     supportsMutableLibrary == other.supportsMutableLibrary &&
@@ -158,12 +138,12 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Whether the subsystem supports tracking the poses of moving images in realtime.
+        /// <c>True</c> if the subsystem supports tracking the poses of moving images in real time.
         /// </summary>
         public bool supportsMovingImages { get; }
 
         /// <summary>
-        /// Whether the subsystem requires physical image dimensions to be provided for all reference images.
+        /// <c>True</c> if the subsystem requires physical image dimensions to be provided for all reference images.
         /// If <c>false</c>, specifying the physical dimensions is optional.
         /// </summary>
         public bool requiresPhysicalImageDimensions { get; }
@@ -189,22 +169,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="cinfo">The construction information for the new descriptor.</param>
         public static void Create(Cinfo cinfo)
         {
-#if UNITY_2020_2_OR_NEWER
             SubsystemDescriptorStore.RegisterDescriptor(new XRImageTrackingSubsystemDescriptor(cinfo));
-#else
-            SubsystemRegistration.CreateDescriptor(new XRImageTrackingSubsystemDescriptor(cinfo));
-#endif
         }
 
         XRImageTrackingSubsystemDescriptor(Cinfo cinfo)
         {
             id = cinfo.id;
-#if UNITY_2020_2_OR_NEWER
             providerType = cinfo.providerType;
             subsystemTypeOverride = cinfo.subsystemTypeOverride;
-#else
-            subsystemImplementationType = cinfo.subsystemImplementationType;
-#endif
             supportsMovingImages = cinfo.supportsMovingImages;
             requiresPhysicalImageDimensions = cinfo.requiresPhysicalImageDimensions;
             supportsMutableLibrary = cinfo.supportsMutableLibrary;

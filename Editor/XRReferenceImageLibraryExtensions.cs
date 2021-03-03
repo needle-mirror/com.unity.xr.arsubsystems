@@ -15,6 +15,43 @@ namespace UnityEditor.XR.ARSubsystems
     public static class XRReferenceImageLibraryExtensions
     {
         /// <summary>
+        /// Associate binary data with a string key.
+        /// </summary>
+        /// <remarks>
+        /// Providers use this to associate provider-specific data with the library. During Player Build (in an
+        /// [IPreprocessBuildWithReport.OnPreprocessBuild](xref:UnityEditor.Build.IPreprocessBuildWithReport.OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport))
+        /// callback), the data store is first cleared. Each enabled provider then has an opportunity to add one or more
+        /// entries for itself.
+        ///
+        /// Providers can use this to store a serialized version of the image library specific to that provider.
+        /// Retrieve data with <see cref="UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary.dataStore"/>.
+        /// </remarks>
+        /// <param name="library">The <see cref="UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary"/> being extended.</param>
+        /// <param name="key">The key which can be used to later retrieve <paramref name="data"/>.</param>
+        /// <param name="data">The data to associate with <paramref name="key"/>.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="key"/> is `null`.</exception>
+        public static void SetDataForKey(this XRReferenceImageLibrary library, string key, byte[] data)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            library.InternalSetDataForKey(key, data);
+        }
+
+        /// <summary>
+        /// Clears the binary data store.
+        /// </summary>
+        /// <remarks>
+        /// Provider-specific binary data can be associated with each
+        /// <see cref="UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary"/> (see <see cref="SetDataForKey"/>). This is
+        /// used to store arbitrarily large blocks of binary data required at runtime -- usually some form of processed
+        /// image data. This data is regenerated during Player Build, and may be safely discarded otherwise. Use this
+        /// method to clear the data store to avoid large files in your project.
+        /// </remarks>
+        /// <param name="library">The <see cref="UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary"/> being extended.</param>
+        public static void ClearDataStore(this XRReferenceImageLibrary library) => library.InternalClearDataStore();
+
+        /// <summary>
         /// Creates an empty <c>XRReferenceImage</c> and adds it to the library. The new
         /// reference image is inserted at the end of the list of reference images.
         /// </summary>
@@ -23,7 +60,7 @@ namespace UnityEditor.XR.ARSubsystems
         public static void Add(this XRReferenceImageLibrary library)
         {
             if (library == null)
-                throw new ArgumentNullException("library");
+                throw new ArgumentNullException(nameof(library));
 
             library.m_Images.Add(new XRReferenceImage
             {
@@ -135,13 +172,13 @@ namespace UnityEditor.XR.ARSubsystems
         static void ValidateAndThrow(XRReferenceImageLibrary library, int index)
         {
             if (library == null)
-                throw new ArgumentNullException("library");
+                throw new ArgumentNullException(nameof(library));
 
             if (library.count == 0)
                 throw new IndexOutOfRangeException("The reference image library is empty; cannot index into it.");
 
             if (index < 0 || index >= library.count)
-                throw new IndexOutOfRangeException(string.Format("{0} is out of range. 'index' must be between 0 and {1}", index, library.count - 1));
+                throw new IndexOutOfRangeException($"{index} is out of range. 'index' must be between 0 and {library.count - 1}");
         }
     }
 }

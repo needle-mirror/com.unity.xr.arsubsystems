@@ -1,8 +1,5 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -10,11 +7,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// Descriptor for the <see cref="XRRaycastSubsystem"/>. Describes capabilities of a specific raycast provider.
     /// </summary>
     public sealed class XRRaycastSubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
         SubsystemDescriptorWithProvider<XRRaycastSubsystem, XRRaycastSubsystem.Provider>
-#else
-        SubsystemDescriptor<XRRaycastSubsystem>
-#endif
     {
         /// <summary>
         /// Used to register a descriptor. See <see cref="RegisterDescriptor(Cinfo)"/>.
@@ -26,7 +19,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public string id { get; set; }
 
-#if UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Specifies the provider implementation type to use for instantiation.
             /// </summary>
@@ -42,14 +34,11 @@ namespace UnityEngine.XR.ARSubsystems
             /// The type of the subsystem to use for instantiation. If null, <c>XRAnchorSubsystem</c> will be instantiated.
             /// </value>
             public Type subsystemTypeOverride { get; set; }
-#endif
 
             /// <summary>
             /// The <c>Type</c> of the subsystem.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             [Obsolete("XRRaycastSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
-#endif
             public Type subsystemImplementationType { get; set; }
 
             /// <summary>
@@ -68,7 +57,7 @@ namespace UnityEngine.XR.ARSubsystems
             public TrackableType supportedTrackableTypes { get; set; }
 
             /// <summary>
-            /// Whether "tracked" raycasts are supported. A tracked raycast is repeated
+            /// Whether tracked raycasts are supported. A tracked raycast is repeated
             /// over time and the results are updated automatically.
             /// </summary>
             public bool supportsTrackedRaycasts { get; set; }
@@ -79,12 +68,8 @@ namespace UnityEngine.XR.ARSubsystems
             /// <returns>A hash code generated from this object's fields.</returns>
             public override int GetHashCode() => HashCode.Combine(
                 HashCode.ReferenceHash(id),
-#if UNITY_2020_2_OR_NEWER
                 HashCode.ReferenceHash(providerType),
                 HashCode.ReferenceHash(subsystemTypeOverride),
-#else
-                HashCode.ReferenceHash(subsystemImplementationType),
-#endif
                 supportsViewportBasedRaycast.GetHashCode(),
                 supportsWorldBasedRaycast.GetHashCode(),
                 ((int)supportedTrackableTypes).GetHashCode(),
@@ -117,12 +102,8 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 return
                     String.Equals(id, other.id) &&
-#if UNITY_2020_2_OR_NEWER
                     ReferenceEquals(providerType, other.providerType) &&
                     ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride) &&
-#else
-                    ReferenceEquals(subsystemImplementationType, other.subsystemImplementationType) &&
-#endif
                     supportsViewportBasedRaycast == other.supportsViewportBasedRaycast &&
                     supportsWorldBasedRaycast == other.supportsWorldBasedRaycast &&
                     supportedTrackableTypes == other.supportedTrackableTypes;
@@ -172,22 +153,14 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="cinfo"></param>
         public static void RegisterDescriptor(Cinfo cinfo)
         {
-#if UNITY_2020_2_OR_NEWER
             SubsystemDescriptorStore.RegisterDescriptor(new XRRaycastSubsystemDescriptor(cinfo));
-#else
-            SubsystemRegistration.CreateDescriptor(new XRRaycastSubsystemDescriptor(cinfo));
-#endif
         }
 
         XRRaycastSubsystemDescriptor(Cinfo cinfo)
         {
             id = cinfo.id;
-#if UNITY_2020_2_OR_NEWER
             providerType = cinfo.providerType;
             subsystemTypeOverride = cinfo.subsystemTypeOverride;
-#else
-            subsystemImplementationType = cinfo.subsystemImplementationType;
-#endif
             supportsViewportBasedRaycast = cinfo.supportsViewportBasedRaycast;
             supportsWorldBasedRaycast = cinfo.supportsWorldBasedRaycast;
             supportedTrackableTypes = cinfo.supportedTrackableTypes;

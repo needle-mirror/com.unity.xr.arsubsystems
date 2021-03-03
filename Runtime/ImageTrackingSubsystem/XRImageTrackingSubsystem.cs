@@ -1,36 +1,23 @@
 using System;
 using Unity.Collections;
 using UnityEngine.Assertions;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// A subsystem for detecting and tracking a preconfigured set of images in the environment.
     /// </summary>
-#if UNITY_2020_2_OR_NEWER
     public class XRImageTrackingSubsystem
         : TrackingSubsystem<XRTrackedImage, XRImageTrackingSubsystem, XRImageTrackingSubsystemDescriptor, XRImageTrackingSubsystem.Provider>
-#else
-    public abstract class XRImageTrackingSubsystem
-        : TrackingSubsystem<XRTrackedImage, XRImageTrackingSubsystemDescriptor>
-#endif
     {
         /// <summary>
-        /// Constructs a subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRImageTrackingSubsystemDescriptor"/> instead.
+        /// Constructs a subsystem. Do not invoke directly; call <c>Create</c> on the <see cref="XRImageTrackingSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRImageTrackingSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
-        }
+        public XRImageTrackingSubsystem() { }
 
         /// <summary>
-        /// Starts the subsystem, that is, start detecting images in the scene. <see cref="imageLibrary"/> must not be null.
+        /// Starts the subsystem, that is, starts detecting images in the scene. <see cref="imageLibrary"/> must not be null.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Thrown if <see cref="imageLibrary"/> is null.</exception>
         protected override void OnStart()
@@ -40,9 +27,7 @@ namespace UnityEngine.XR.ARSubsystems
 
             provider.imageLibrary = m_ImageLibrary;
 
-#if UNITY_2020_2_OR_NEWER
             base.OnStart();
-#endif
         }
 
         /// <summary>
@@ -50,26 +35,17 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         protected sealed override void OnStop()
         {
-#if UNITY_2020_2_OR_NEWER
             base.OnStop();
-#endif
             provider.imageLibrary = null;
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Destroys the subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
 
         /// <summary>
         /// Get or set the reference image library. This is the set of images to look for in the environment.
         /// </summary>
         /// <remarks>
-        /// A <see cref="RuntimeReferenceImageLibrary"/> is created at runtime and may be modifiable
-        /// (see <see cref="MutableRuntimeReferenceImageLibrary"/>). A <see cref="RuntimeReferenceImageLibrary"/>
-        /// may be created from an <see cref="XRReferenceImageLibrary"/> using
+        /// A <see cref="RuntimeReferenceImageLibrary"/> is created at runtime and can be modifiable
+        /// (see <see cref="MutableRuntimeReferenceImageLibrary"/>). You can create a <see cref="RuntimeReferenceImageLibrary"/>
+        /// from an <see cref="XRReferenceImageLibrary"/> using
         /// <see cref="CreateRuntimeLibrary(XRReferenceImageLibrary"/>.
         /// </remarks>
         /// <exception cref="System.ArgumentNullException">Thrown if the subsystem has been started, and you attempt to set the image library to null.</exception>
@@ -96,7 +72,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Creates a <see cref="RuntimeReferenceImageLibrary"/> from an existing <see cref="XRReferenceImageLibrary"/>
+        /// Creates a <see cref="RuntimeReferenceImageLibrary"/> from an existing <see cref="XRReferenceImageLibrary"/>,
         /// or an empty library if <paramref name="serializedLibrary"/> is <c>null</c>.
         /// Use this to construct the runtime representation of an <see cref="XRReferenceImageLibrary"/>.
         /// </summary>
@@ -117,10 +93,10 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Retrieve the changes in the state of tracked images (added, updated, removed) since the last call to <c>GetChanges</c>.
+        /// Retrieve the changes in the state of tracked images (added, updated, and removed) since the last call to <c>GetChanges</c>.
         /// </summary>
         /// <param name="allocator">The allocator to use for the returned set of changes.</param>
-        /// <returns>The set of tracked image changes (added, updated, removed) since the last call to this method.</returns>
+        /// <returns>The set of tracked image changes (added, updated, and removed) since the last call to this method.</returns>
         public override TrackableChanges<XRTrackedImage> GetChanges(Allocator allocator)
         {
             var changes = provider.GetChanges(XRTrackedImage.defaultValue, allocator);
@@ -145,33 +121,23 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// The current maximum number of moving images to track.
-        /// This may be different from <see cref="requestedMaxNumberOfMovingImages"/>.
+        /// This can be different from <see cref="requestedMaxNumberOfMovingImages"/>.
         /// </summary>
         public int currentMaxNumberOfMovingImages => provider.currentMaxNumberOfMovingImages;
 
         /// <summary>
         /// Methods to implement by the implementing provider.
         /// </summary>
-        public abstract class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRImageTrackingSubsystem>
-#endif
+        public abstract class Provider : SubsystemProvider<XRImageTrackingSubsystem>
         {
-#if !UNITY_2020_2_OR_NEWER
             /// <summary>
-            /// Called when the subsystem is destroyed.
-            /// </summary>
-            public virtual void Destroy() {}
-#endif
-
-            /// <summary>
-            /// Get the changes (added, updated, removed) to the tracked images since the last call to this method.
+            /// Get the changes to the tracked images (added, updated, and removed) since the last call to this method.
             /// </summary>
             /// <param name="defaultTrackedImage">An <see cref="XRTrackedImage"/> populated with default values.
             /// The implementation should first fill arrays of added, updated, and removed with copies of this
             /// before copying in its own values. This guards against additional fields added to the <see cref="XRTrackedImage"/> in the future.</param>
             /// <param name="allocator">The allocator to use for the returned data.</param>
-            /// <returns>The set of changes (added, updated, removed) tracked images since the last call to this method.</returns>
+            /// <returns>The set of changes to tracked images (added, updated, and removed) since the last call to this method.</returns>
             public abstract TrackableChanges<XRTrackedImage> GetChanges(XRTrackedImage defaultTrackedImage, Allocator allocator);
 
             /// <summary>
@@ -191,11 +157,11 @@ namespace UnityEngine.XR.ARSubsystems
             public abstract RuntimeReferenceImageLibrary CreateRuntimeLibrary(XRReferenceImageLibrary serializedLibrary);
 
             /// <summary>
-            /// The requested maximum number of moving images to track in realtime.
+            /// The requested maximum number of moving images to track in real time.
             /// </summary>
             /// <remarks>
             /// Must be implemented if <see cref="XRImageTrackingSubsystemDescriptor.supportsMovingImages"/> is <c>true</c>;
-            /// otherwise, this property will never be set and need not be implemented.
+            /// otherwise, this property will never be set and doesn't need to be implemented.
             /// </remarks>
             /// <exception cref="System.NotSupportedException">Thrown if not overridden by the derived class.</exception>
             public virtual int requestedMaxNumberOfMovingImages
@@ -212,19 +178,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// </remarks>
             public virtual int currentMaxNumberOfMovingImages => 0;
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Create an implementation of the <see cref="Provider"/> class. This will only be called once.
-        /// </summary>
-        /// <returns>An instance of the <see cref="Provider"/> interface.</returns>
-        protected abstract Provider CreateProvider();
-
-        /// <summary>
-        /// The provider created by the implementation that contains the required image tracking functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
 
         RuntimeReferenceImageLibrary m_ImageLibrary;
 

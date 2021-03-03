@@ -1,10 +1,10 @@
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// An enum used to determine that current status of the software install.
+    /// An enum used to determine the current status of the software install.
     /// </summary>
     /// <remarks>
-    /// Some devices may support AR but require a software update. Some platforms allow
+    /// Some devices might support AR but require a software update. Some platforms allow
     /// prompting a user to install the required software. This enum is used to indicate
     /// the result of an installation request.
     /// </remarks>

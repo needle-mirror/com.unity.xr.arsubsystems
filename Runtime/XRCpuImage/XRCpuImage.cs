@@ -79,7 +79,7 @@ namespace UnityEngine.XR.ARSubsystems
             Format m_Format;
 
             /// <summary>
-            /// Constructs the camera image cinfo.
+            /// Constructs the camera image `Cinfo`.
             /// </summary>
             /// <param name="nativeHandle">The handle representing the camera image on the native level.</param>
             /// <param name="dimensions">The dimensions of the camera image.</param>
@@ -99,7 +99,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Tests for equality.
             /// </summary>
             /// <param name="other">The other <see cref="Cinfo"/> to compare against.</param>
-            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Cinfo"/>, otherwise false.</returns>
+            /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="Cinfo"/>, otherwise `false`.</returns>
             public bool Equals(Cinfo other)
             {
                 return (nativeHandle.Equals(other.nativeHandle) && dimensions.Equals(other.dimensions)
@@ -174,7 +174,7 @@ namespace UnityEngine.XR.ARSubsystems
         public int height => dimensions.y;
 
         /// <summary>
-        /// The number of image planes. A "plane" in this context refers to a channel in the raw video format,
+        /// The number of image planes. A plane in this context refers to a channel in the raw video format,
         /// not a physical surface.
         /// </summary>
         /// <value>
@@ -199,7 +199,7 @@ namespace UnityEngine.XR.ARSubsystems
         public double timestamp { get; private set; }
 
         /// <summary>
-        /// Whether this <c>XRCpuImage</c> represents a valid image (i.e., not Disposed).
+        /// Whether this <c>XRCpuImage</c> represents a valid image (that is, it has not been Disposed).
         /// </summary>
         /// <value>
         /// <c>true</c> if this <c>XRCpuImage</c> represents a valid image. Otherwise, <c>false</c>.
@@ -226,17 +226,17 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Determines whether the given [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html)
+        /// Determines whether the given [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html)
         /// is supported for conversion.
         /// </summary>
-        /// <param name="format">A [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html) to
-        ///     test.</param>
+        /// <param name="format">A [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html) to
+        /// test.</param>
         /// <returns>Returns `true` if <paramref name="format"/> is supported by the various conversion
-        ///     methods.</returns>
+        /// methods.</returns>
         public bool FormatSupported(TextureFormat format) => m_Api?.FormatSupported(this, format) == true;
 
         /// <summary>
-        /// Get an image "plane". A "plane" in this context refers to a channel in the raw video format, not a physical
+        /// Get an image plane. A plane in this context refers to a channel in the raw video format, not a physical
         /// surface.
         /// </summary>
         /// <param name="planeIndex">The index of the plane to get.</param>
@@ -366,10 +366,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="conversionParams">The parameters for the image conversion.</param>
         /// <param name="destinationBuffer">The destination buffer for the converted data. The buffer must be
-        ///     large enough to hold the converted data, that is, at least as large as the value returned by
-        ///     <see cref="GetConvertedDataSize(ConversionParams)"/>.</param>
+        /// large enough to hold the converted data, that is, at least as large as the value returned by
+        /// <see cref="GetConvertedDataSize(ConversionParams)"/>.</param>
         /// <exception cref="System.ArgumentException">Thrown if the <paramref name="destinationBuffer"/>
-        ///     has insufficient space for the converted data.</exception>
+        /// has insufficient space for the converted data.</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the conversion failed.</exception>
         /// <seealso cref="FormatSupported"/>
         public unsafe void Convert(ConversionParams conversionParams, NativeSlice<byte> destinationBuffer)
@@ -475,7 +475,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="conversionParams">The conversion parameters to validate.</param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the input image rect exceeds the actual
         /// image dimensions or if the output dimensions exceed the input dimensions.</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the texture format is not suppported</exception>
+        /// <exception cref="System.ArgumentException">Thrown if the texture format is not suppported.</exception>
         /// <seealso cref="FormatSupported"/>
         void ValidateConversionParamsAndThrow(ConversionParams conversionParams)
         {

@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Contains information regarding the camera configuration.
+    /// Contains information about camera configuration.
     /// </summary>
     /// <remarks>
     /// Different devices support different camera configurations. This includes
-    /// the resolution of the image and may include framerate on some platforms.
+    /// image resolution and might include framerate on some platforms.
     ///
     /// The camera image configuration affects the resolution of the image
     /// returned by <see cref="XRCameraSubsystem.TryAcquireLatestCpuImage"/>.
@@ -23,18 +23,18 @@ namespace UnityEngine.XR.ARSubsystems
         IntPtr m_NativeConfigurationHandle;
 
         /// <summary>
-        /// The width of the camera resolution
+        /// The width of the camera resolution.
         /// </summary>
         /// <value>
-        /// The width, in pixels, of the camera resolution
+        /// The width, in pixels, of the camera resolution.
         /// </value>
         public int width => m_Resolution.x;
 
         /// <summary>
-        /// The height of the camera resolution
+        /// The height of the camera resolution.
         /// </summary>
         /// <value>
-        /// The height, in pixels, of the camera resolution
+        /// The height, in pixels, of the camera resolution.
         /// </value>
         public int height => m_Resolution.y;
 
@@ -53,7 +53,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The framerate, if this camera configuration specifies one. Otherwise, <c>null</c>.
         /// </value>
         /// <remarks>
-        /// On some platforms, different resolutions may affect the available framerate.
+        /// On some platforms, different resolutions might affect the available framerate.
         /// </remarks>
         public int? framerate => (m_Framerate > 0) ? new int?(m_Framerate) : new int?();
 
@@ -66,7 +66,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a camera configuration with a framerate.
         /// </summary>
-        /// <param name="handle">The platform specific native handle that can be used to get the native configuration.</param>
+        /// <param name="handle">The platform-specific native handle that you can use to get the native configuration.</param>
         /// <param name="resolution">The resolution of the camera image.</param>
         /// <param name="framerate">The camera framerate. Throws <c>ArgumentOutOfRangeException</c>
         /// if <paramref name="framerate"/> is less than or equal to zero.</param>
@@ -84,7 +84,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Constructs a camera configuration without a framerate.
         /// </summary>
-        /// <param name="handle">The platform specific native handle that can be used to get the native configuration.</param>
+        /// <param name="handle">The platform-specific native handle that can be used to get the native configuration.</param>
         /// <param name="resolution">The resolution of the camera image.</param>
         public XRCameraConfiguration(IntPtr handle, Vector2Int resolution)
         {

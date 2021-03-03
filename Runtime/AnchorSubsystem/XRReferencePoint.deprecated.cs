@@ -12,9 +12,9 @@ namespace UnityEngine.XR.ARSubsystems
     public struct XRReferencePoint : ITrackable, IEquatable<XRReferencePoint>
     {
         /// <summary>
-        /// Gets a default-initialized <see cref="XRReferencePoint"/>. This may be
-        /// different from the zero-initialized version, e.g., the <see cref="pose"/>
-        /// is <c>Pose.identity</c> instead of zero-initialized.
+        /// Gets a default-initialized <see cref="XRReferencePoint"/>. This can be
+        /// different from the zero-initialized version (for example, the <see cref="pose"/>
+        /// is <c>Pose.identity</c> instead of zero-initialized).
         /// </summary>
         public static XRReferencePoint defaultValue => s_Default;
 
@@ -26,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         };
 
         /// <summary>
-        /// Constructs the session relative data for reference point.
+        /// Constructs the session-relative data for a reference point.
         /// This is typically provided by an implementation of the <see cref="XRReferencePointSubsystem"/>
         /// and not invoked directly.
         /// </summary>
@@ -49,7 +49,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Constructs the session relative data for reference point.
+        /// Constructs the session-relative data for a reference point.
         /// This is typically provided by an implementation of the <see cref="XRReferencePointSubsystem"/>
         /// and not invoked directly.
         /// </summary>

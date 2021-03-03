@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// A struct describing face data that is stored in the <see cref="XRFaceSubsystem"/>
+    /// A struct that describes face data stored in the <see cref="XRFaceSubsystem"/>.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct XRFace : ITrackable, IEquatable<XRFace>
@@ -35,7 +35,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The unique <see cref="TrackableId"/> of the face as a trackable within the <see cref="XRFaceSubsystem"/>.
         /// </summary>
         /// <remarks>
-        /// With this, you are able to extract more data about this particular face from the <see cref="XRFaceSubsystem"/>.
+        /// With this, you can extract more data about this particular face from the <see cref="XRFaceSubsystem"/>.
         /// </remarks>
         public TrackableId trackableId => m_TrackableId;
 
@@ -68,7 +68,7 @@ namespace UnityEngine.XR.ARSubsystems
         public Pose rightEyePose => m_RightEyePose;
 
         /// <summary>
-        /// The position of which the eyes are fixated in relation to the face.
+        /// The position where the eyes are fixated in relation to the face.
         /// </summary>
         public Vector3 fixationPoint => m_FixationPoint;
 

@@ -2,13 +2,13 @@ namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// A Promise is used for operations that retrieve data asynchronously. Use this object
-    /// to determine the status of the operation (i.e., whether it has completed), and
+    /// to determine the status of the operation (that is, whether it has completed), and
     /// the resulting data.
     /// </summary>
     /// <remarks>
     /// Since <see cref="Promise{T}"/> derives from <c>CustomYieldInstruction</c>,
     /// you can <c>yield return</c> on a Promise in a coroutine. If you prefer not
-    /// to use the Promise as a coroutine, you may manually check <see cref="Promise{T}.keepWaiting"/>
+    /// to use the Promise as a coroutine, you can manually check <see cref="Promise{T}.keepWaiting"/>
     /// to determine if the operation has completed. Once the operation is complete, you can get the
     /// resulting value from <see cref="Promise{T}.result"/>.
     /// </remarks>
@@ -45,7 +45,7 @@ namespace UnityEngine.XR.ARSubsystems
         public T result { get; private set; }
 
         /// <summary>
-        /// Creates a resolved promise, i.e., one that is already complete.
+        /// Creates a resolved promise (that is, a promise that is already complete).
         /// </summary>
         /// <param name="result">The result of the operation.</param>
         /// <returns>A completed <see cref="Promise{T}"/>.</returns>

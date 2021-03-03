@@ -14,4 +14,4 @@ The camera subsystem manages a hardware camera on the AR device. It provides the
 - Light estimation information (color and brightness of the environment).
 - Camera focus mode (autofocus or fixed)
 
-For API details, see the [Script API Reference](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystem).
+For API details, see the [XRCameraSubsystem](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystem).

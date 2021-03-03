@@ -15,7 +15,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// is <paramref name="sourceElementSize"/> bytes.
         /// </summary>
         /// <remarks>
-        /// This is useful for native interops with structs that may change over time. This allows
+        /// This is useful for native inter-operations with structs that might change over time. This allows
         /// new fields to be added to the C# struct without breaking data obtained from data calls.
         /// </remarks>
         /// <typeparam name="T">The type of struct to copy.</typeparam>
@@ -69,7 +69,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Creates a new array allocated with <paramref name="allocator"/> initialized with <paramref name="length"/>
+        /// Creates a new array allocated with <paramref name="allocator"/> and initialized with <paramref name="length"/>
         /// copies of <paramref name="value"/>.
         /// </summary>
         /// <typeparam name="T">The type of the <c>NativeArray</c> to create. Must be a <c>struct</c>.</typeparam>

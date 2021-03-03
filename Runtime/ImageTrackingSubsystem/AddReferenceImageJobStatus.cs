@@ -10,7 +10,7 @@ namespace UnityEngine.XR.ARSubsystems
     public enum AddReferenceImageJobStatus
     {
         /// <summary>
-        /// No status, e.g., because the <see cref="AddReferenceImageJobState"/> was default-constructed.
+        /// No status (for example, because the <see cref="AddReferenceImageJobState"/> was default-constructed).
         /// </summary>
         None,
 
@@ -46,7 +46,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="status">The <see cref="AddReferenceImageJobStatus"/> being extended.</param>
         /// <returns>Returns `true` if <paramref name="status"/> is <see cref="AddReferenceImageJobStatus.Pending"/>.
-        ///     Returns `false` otherwise.</returns>
+        /// Returns `false` otherwise.</returns>
         public static bool IsPending(this AddReferenceImageJobStatus status) =>
             status == AddReferenceImageJobStatus.Pending;
 
@@ -55,7 +55,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="status">The <see cref="AddReferenceImageJobStatus"/> being extended.</param>
         /// <returns>Returns `true` if <paramref name="status"/> is greater than
-        ///     <see cref="AddReferenceImageJobStatus.Pending"/>. Returns `false` otherwise.</returns>
+        /// <see cref="AddReferenceImageJobStatus.Pending"/>. Returns `false` otherwise.</returns>
         public static bool IsComplete(this AddReferenceImageJobStatus status) =>
             status > AddReferenceImageJobStatus.Pending;
 
@@ -64,7 +64,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="status">The <see cref="AddReferenceImageJobStatus"/> being extended.</param>
         /// <returns>Returns `true` if <paramref name="status"/> is greater than or equal to
-        ///     <see cref="AddReferenceImageJobStatus.ErrorInvalidImage"/>. Returns `false` otherwise.</returns>
+        /// <see cref="AddReferenceImageJobStatus.ErrorInvalidImage"/>. Returns `false` otherwise.</returns>
         public static bool IsError(this AddReferenceImageJobStatus status) =>
             status >= AddReferenceImageJobStatus.ErrorInvalidImage;
 
@@ -73,7 +73,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="status">The <see cref="AddReferenceImageJobStatus"/> being extended.</param>
         /// <returns>Returns `true` if <paramref name="status"/> is <see cref="AddReferenceImageJobStatus.Success"/>.
-        ///     Returns `false` otherwise.</returns>
+        /// Returns `false` otherwise.</returns>
         public static bool IsSuccess(this AddReferenceImageJobStatus status) =>
             status == AddReferenceImageJobStatus.Success;
     }

@@ -20,12 +20,26 @@ namespace UnityEngine.XR.ARSubsystems
     /// </remarks>
     [CreateAssetMenu(fileName="ReferenceImageLibrary", menuName="XR/Reference Image Library", order=1001)]
     [HelpURL(HelpUrls.Manual + "image-tracking.html")]
-    public class XRReferenceImageLibrary : ScriptableObject, IReferenceImageLibrary
+    public class XRReferenceImageLibrary : ScriptableObject, IReferenceImageLibrary, ISerializationCallbackReceiver
     {
         /// <summary>
         /// The number of images in the library.
         /// </summary>
         public int count => m_Images.Count;
+
+        /// <summary>
+        /// (Read Only) Binary data associated with a string key.
+        /// </summary>
+        /// <remarks>
+        /// This is used by providers to associate provider-specific data with the library. During Player Build (in an
+        /// [IPreprocessBuildWithReport.OnPreprocessBuild](xref:UnityEditor.Build.IPreprocessBuildWithReport.OnPreprocessBuild(UnityEditor.Build.Reporting.BuildReport))
+        /// callback), the data store is first cleared. Each enabled provider then has an opportunity to add one or more
+        /// entries for itself.
+        ///
+        /// Providers can use this to store a serialized version of the image library specific to that provider.
+        /// Set data with <see cref="UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetDataForKey"/>.
+        /// </remarks>
+        public IReadOnlyDictionary<string, byte[]> dataStore => m_DataStore.dictionary;
 
         /// <summary>
         /// Gets an enumerator which can be used to iterate over the images in this library.
@@ -72,12 +86,27 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// A <c>Guid</c> associated with this reference library.
-        /// The Guid is used to uniquely identify this library at runtime.
+        /// A <c>GUID</c> associated with this reference library.
+        /// The GUID is used to uniquely identify this library at runtime.
         /// </summary>
         public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
+        /// <summary>
+        /// Invoked before serialization.
+        /// </summary>
+        void ISerializationCallbackReceiver.OnBeforeSerialize() => m_DataStore.Serialize();
+
+        /// <summary>
+        /// Invoked after serialization.
+        /// </summary>
+        void ISerializationCallbackReceiver.OnAfterDeserialize() => m_DataStore.Deserialize();
+
 #if UNITY_EDITOR
+        internal static IEnumerable<XRReferenceImageLibrary> All() => AssetDatabase
+            .FindAssets($"t:{nameof(XRReferenceImageLibrary)}")
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Select(AssetDatabase.LoadAssetAtPath<XRReferenceImageLibrary>);
+
         void Awake()
         {
             // We need to generate a new guid for new assets
@@ -88,11 +117,7 @@ namespace UnityEngine.XR.ARSubsystems
             if (!shouldGenerateNewGuid)
             {
                 var currentGuid = guid;
-                shouldGenerateNewGuid = AssetDatabase
-                    .FindAssets($"t:{nameof(XRReferenceImageLibrary)}")
-                    .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
-                    .Select(assetPath => AssetDatabase.LoadAssetAtPath<XRReferenceImageLibrary>(assetPath))
-                    .Any(library => library != this && library.guid.Equals(currentGuid));
+                shouldGenerateNewGuid = All().Any(library => library != this && library.guid.Equals(currentGuid));
             }
 
             if (shouldGenerateNewGuid)
@@ -100,6 +125,31 @@ namespace UnityEngine.XR.ARSubsystems
                 var bytes = Guid.NewGuid().ToByteArray();
                 m_GuidLow = BitConverter.ToUInt64(bytes, 0);
                 m_GuidHigh = BitConverter.ToUInt64(bytes, 8);
+                EditorUtility.SetDirty(this);
+            }
+        }
+
+        internal void InternalClearDataStore()
+        {
+            m_DataStore.dictionary.Clear();
+            EditorUtility.SetDirty(this);
+        }
+
+        internal void InternalSetDataForKey(string key, byte[] data)
+        {
+            bool isDirty;
+            if (data == null)
+            {
+                isDirty = m_DataStore.dictionary.Remove(key);
+            }
+            else
+            {
+                m_DataStore.dictionary[key] = data;
+                isDirty = true;
+            }
+
+            if (isDirty)
+            {
                 EditorUtility.SetDirty(this);
             }
         }
@@ -112,6 +162,9 @@ namespace UnityEngine.XR.ARSubsystems
         [SerializeField]
         ulong m_GuidHigh;
 #pragma warning restore CS0649
+
+        [SerializeField]
+        SerializableDictionary<string, byte[]> m_DataStore = new SerializableDictionary<string, byte[]>();
 
         [SerializeField]
         internal List<XRReferenceImage> m_Images = new List<XRReferenceImage>();

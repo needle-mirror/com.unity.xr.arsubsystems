@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -15,32 +12,12 @@ namespace UnityEngine.XR.ARSubsystems
     /// The <c>XRCameraSubsystem</c> links a Unity <c>Camera</c> to a device camera for video overlay (pass-thru
     /// rendering). It also allows developers to query for environmental light estimation, when available.
     /// </remarks>
-#if UNITY_2020_2_OR_NEWER
     public class XRCameraSubsystem : SubsystemWithProvider<XRCameraSubsystem, XRCameraSubsystemDescriptor, XRCameraSubsystem.Provider>
-#else
-    public abstract class XRCameraSubsystem : XRSubsystem<XRCameraSubsystemDescriptor>
-#endif
     {
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required camera functionality.
-        /// </summary>
-        /// <value>
-        /// The provider created by the implementation that contains the required camera functionality.
-        /// </value>
-        protected Provider provider { get; }
-#endif
-
         /// <summary>
         /// Construct the <c>XRCameraSubsystem</c>.
         /// </summary>
-        public XRCameraSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-            Debug.Assert(provider != null, "camera functionality provider cannot be null");
-#endif
-        }
+        public XRCameraSubsystem() { }
 
         /// <summary>
         /// Gets the camera currently in use.
@@ -49,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         public Feature currentCamera => provider.currentCamera.Cameras();
 
         /// <summary>
-        /// Get or set the requested camera, i.e., the <see cref="Feature.AnyCamera"/> bits.
+        /// Get or set the requested camera (that is, the <see cref="Feature.AnyCamera"/> bits).
         /// </summary>
         public Feature requestedCamera
         {
@@ -60,10 +37,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Interface for providing camera functionality for the implementation.
         /// </summary>
-        public class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRCameraSubsystem>
-#endif
+        public class Provider : SubsystemProvider<XRCameraSubsystem>
         {
             /// <summary>
             /// An instance of the <see cref="XRCpuImage.Api"/> used to operate on <see cref="XRCpuImage"/> objects.
@@ -88,8 +62,8 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual bool permissionGranted => false;
 
             /// <summary>
-            /// Whether or not culling should be inverted during rendering. Some front-facing
-            /// camera modes may require this.
+            /// <c>True</c> if culling should be inverted during rendering. Some front-facing
+            /// camera modes might require this.
             /// </summary>
             public virtual bool invertCulling => false;
 
@@ -109,34 +83,22 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Method to be implemented by provider to start the camera for the subsystem.
+            /// Method to be implemented by the provider to start the camera for the subsystem.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Start() { }
-#else
-            public virtual void Start() { }
-#endif
 
             /// <summary>
-            /// Method to be implemented by provider to stop the camera for the subsystem.
+            /// Method to be implemented by the provider to stop the camera for the subsystem.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Stop() { }
-#else
-            public virtual void Stop() { }
-#endif
 
             /// <summary>
-            /// Method to be implemented by provider to destroy the camera for the subsystem.
+            /// Method to be implemented by the provider to destroy the camera for the subsystem.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Destroy() { }
-#else
-            public virtual void Destroy() { }
-#endif
 
             /// <summary>
-            /// Method to be implemented by provider to get the camera frame for the subsystem.
+            /// Method to be implemented by the provider to get the camera frame for the subsystem.
             /// </summary>
             /// <param name="cameraParams">The current Unity <c>Camera</c> parameters.</param>
             /// <param name="cameraFrame">The current camera frame returned by the method.</param>
@@ -209,10 +171,10 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Property to be implemented by the provider to query/set the current camera configuration.
+            /// Property to be implemented by the provider to query or set the current camera configuration.
             /// </summary>
             /// <value>
-            /// The current camera configuration if it exists. Otherise, <c>null</c>.
+            /// The current camera configuration, if it exists. Otherise, <c>null</c>.
             /// </value>
             /// <exception cref="System.NotSupportedException">Thrown when setting the current configuration if the
             /// implementation does not support camera configurations.</exception>
@@ -344,23 +306,6 @@ namespace UnityEngine.XR.ARSubsystems
             set => provider.requestedLightEstimation = value.LightEstimation();
         }
 
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Start the camera subsystem.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Start();
-
-        /// <summary>
-        /// Stop the camera subsystem.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Stop();
-
-        /// <summary>
-        /// Destroy the camera subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
-
         /// <summary>
         /// Gets the <see cref="XRTextureDescriptor"/>s associated with the
         /// current frame. The caller owns the returned <c>NativeArray</c>
@@ -391,7 +336,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// thread and should only be called by the code responsible for executing background rendering on
         /// mobile AR platforms.
         /// </summary>
-        /// <param name="id">Platform specific identifier.</param>
+        /// <param name="id">Platform-specific identifier.</param>
         public void OnBeforeBackgroundRender(int id)
         {
             provider.OnBeforeBackgroundRender(id);
@@ -425,7 +370,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The current camera configuration.
         /// </summary>
         /// <value>
-        /// The current camera configuration if it exists. Otherise, <c>null</c>.
+        /// The current camera configuration, if it exists. Otherise, <c>null</c>.
         /// </value>
         /// <exception cref="System.NotSupportedException">Thrown when setting the current configuration if the
         /// implementation does not support camera configurations.</exception>
@@ -450,20 +395,10 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Whether to invert the culling mode during rendering. Some front-facing
-        /// camera modes may require this.
+        /// Set this to <c>true</c> to invert the culling mode during rendering. Some front-facing
+        /// camera modes might require this.
         /// </summary>
         public bool invertCulling => provider.invertCulling;
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Method for the implementation to create the camera functionality provider.
-        /// </summary>
-        /// <returns>
-        /// The camera functionality provider.
-        /// </returns>
-        protected abstract Provider CreateProvider();
-#endif
 
         /// <summary>
         /// Get the latest frame from the provider.
@@ -568,12 +503,8 @@ namespace UnityEngine.XR.ARSubsystems
         public static bool Register(XRCameraSubsystemCinfo cameraSubsystemParams)
         {
             XRCameraSubsystemDescriptor cameraSubsystemDescriptor = XRCameraSubsystemDescriptor.Create(cameraSubsystemParams);
-#if UNITY_2020_2_OR_NEWER
             SubsystemDescriptorStore.RegisterDescriptor(cameraSubsystemDescriptor);
             return true;
-#else
-            return SubsystemRegistration.CreateDescriptor(cameraSubsystemDescriptor);
-#endif
         }
     }
 }

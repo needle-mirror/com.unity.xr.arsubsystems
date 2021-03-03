@@ -12,8 +12,8 @@ namespace UnityEngine.XR.ARSubsystems
     {
         /// <summary>
         /// Gets a default-initialized <see cref="XRPointCloud"/>. This may be
-        /// different from the zero-initialized version, e.g., the <see cref="pose"/>
-        /// is <c>Pose.identity</c> instead of zero-initialized.
+        /// different from the zero-initialized version (for example, the <see cref="pose"/>
+        /// is <c>Pose.identity</c> instead of zero-initialized).
         /// </summary>
         public static XRPointCloud defaultValue => s_Default;
 

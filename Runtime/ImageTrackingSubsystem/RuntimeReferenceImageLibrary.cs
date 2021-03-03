@@ -32,10 +32,10 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// Derived methods should return the <see cref="XRReferenceImage"/> at the given <paramref name="index"/>.
-        /// The <paramref name="index"/> has already been validated to be within the range [0..<see cref="count"/>).
+        /// The <paramref name="index"/> has already been validated to be within the range [0..<see cref="count"/>].
         /// </summary>
         /// <param name="index">The index of the reference image to get.</param>
-        /// <returns>A <see cref="XRReferenceImage"/> representing the reference image at index <paramref name="index"/>.</returns>
+        /// <returns>A <see cref="XRReferenceImage"/> that represents the reference image at index <paramref name="index"/>.</returns>
         protected abstract XRReferenceImage GetReferenceImageAt(int index);
     }
 }

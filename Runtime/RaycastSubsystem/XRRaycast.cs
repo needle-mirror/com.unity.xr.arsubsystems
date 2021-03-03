@@ -14,7 +14,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// A default-initialized raycast.
-        /// This may be different from a zero-initialized raycast.
+        /// This can be different from a zero-initialized raycast.
         /// </summary>
         public static XRRaycast defaultValue => s_Default;
 
@@ -34,7 +34,7 @@ namespace UnityEngine.XR.ARSubsystems
         public TrackingState trackingState => m_TrackingState;
 
         /// <summary>
-        /// The pointer associated with this raycast. The data this pointer points to is implementation defined.
+        /// The pointer associated with this raycast. The data this pointer points to is implementation-defined.
         /// Refer to the platform-specific AR package for details.
         /// </summary>
         public IntPtr nativePtr => m_NativePtr;

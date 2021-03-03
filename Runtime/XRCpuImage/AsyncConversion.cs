@@ -37,7 +37,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <summary>
             /// Start the image conversion using this class to interact with the asynchronous conversion and results.
             /// </summary>
-            /// <param name="api">The cpu image api performing the image conversion.</param>
+            /// <param name="api">The CPU image API performing the image conversion.</param>
             /// <param name="nativeHandle">The native handle for the camera image.</param>
             /// <param name="conversionParams">The parameters for image conversion.</param>
             internal AsyncConversion(XRCpuImage.Api api, int nativeHandle, ConversionParams conversionParams)
@@ -52,13 +52,13 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Get the raw image data. The returned <c>NativeArray</c> is a direct "view" into the native memory. The
+            /// Get the raw image data. The returned <c>NativeArray</c> is a direct view into the native memory. The
             /// memory is only valid until this <see cref="AsyncConversion"/> is disposed.
             /// </summary>
             /// <typeparam name="T">The type of data to return. No conversion is performed based on the type; this is
-            /// merely for access convenience.</typeparam>
+            /// only for access convenience.</typeparam>
             /// <returns>
-            /// A new <c>NativeArray</c> representing the raw image data. This method may fail; use
+            /// A new <c>NativeArray</c> representing the raw image data. This method might fail; use
             /// <c>NativeArray.IsCreated</c> to determine the validity of the data.
             /// </returns>
             /// <exception cref="System.InvalidOperationException">Thrown if the asynchronous conversion

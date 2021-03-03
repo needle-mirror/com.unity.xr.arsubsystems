@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -11,25 +8,15 @@ namespace UnityEngine.XR.ARSubsystems
     /// Defines an interface for interacting with environment probe functionality for creating realistic lighting and
     /// environment texturing in AR scenes.
     /// </summary>
-#if UNITY_2020_2_OR_NEWER
     public class XREnvironmentProbeSubsystem
         : TrackingSubsystem<XREnvironmentProbe, XREnvironmentProbeSubsystem, XREnvironmentProbeSubsystemDescriptor, XREnvironmentProbeSubsystem.Provider>
-#else
-    public abstract class XREnvironmentProbeSubsystem
-        : TrackingSubsystem<XREnvironmentProbe, XREnvironmentProbeSubsystemDescriptor>
-#endif
     {
         /// <summary>
         /// Constructs an <see cref="XREnvironmentProbeSubsystem"/>.
         /// Do not create this directly.
         /// Call <c>Create</c> on an <see cref="XREnvironmentProbeSubsystemDescriptor"/> obtained from the <c>SubsystemManager</c>.
         /// </summary>
-        public XREnvironmentProbeSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
-        }
+        public XREnvironmentProbeSubsystem() { }
 
         /// <summary>
         /// Specifies whether the AR session should automatically place environment probes in the scene.
@@ -39,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         /// <remarks>
         /// If both manual and automatic placement of environment probes are supported, manually placed environment
-        /// probes may be specified via <see cref="TryAddEnvironmentProbe"/> regardless of whether automatic placement is
+        /// probes can be specified via <see cref="TryAddEnvironmentProbe"/> regardless of whether automatic placement is
         /// enabled or not.
         /// </remarks>
         /// <exception cref="System.NotSupportedException">Thrown when setting this value to <c>true</c> for
@@ -56,12 +43,8 @@ namespace UnityEngine.XR.ARSubsystems
             }
         }
 
-#if !UNITY_2020_2_OR_NEWER
-        XREnvironmentProbeSubsystemDescriptor subsystemDescriptor => SubsystemDescriptor;
-#endif
-
         /// <summary>
-        /// Specifies whether the AR session will automatically place environment probes in the scene.
+        /// <c>True</c> if the AR session will automatically place environment probes in the scene, <c>false</c> otherwise.
         /// </summary>
         /// <seealso cref="automaticPlacementRequested"/>
         public bool automaticPlacementEnabled => provider.automaticPlacementEnabled;
@@ -79,36 +62,20 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Queries whether HDR environment textures are enabled.
+        /// <c>True</c> if HDR environment textures are enabled.
         /// </summary>
         public bool environmentTextureHDREnabled => provider.environmentTextureHDREnabled;
 
         /// <summary>
-        ///
+        /// Get the changes (added, updated, and removed) environment probes since the last call to <see cref="GetChanges(Allocator)"/>.
         /// </summary>
-        /// <param name="allocator"></param>
-        /// <returns></returns>
+        /// <param name="allocator">The [Allocator](xref:Unity.Collections.Allocator) to use when allocating the returned [NativeArrays](xref:Unity.Collections.NativeArray`1).</param>
+        /// <returns>
+        /// <see cref="TrackableChanges{T}"/> describing the planes that have been added, updated, and removed
+        /// since the last call to <see cref="GetChanges(Allocator)"/>. The caller owns the memory allocated with [Allocator](xref:Unity.Collections.Allocator) and is responsible for disposing it.
+        /// </returns>
         public override TrackableChanges<XREnvironmentProbe> GetChanges(Allocator allocator)
             => provider.GetChanges(XREnvironmentProbe.defaultValue, allocator);
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Starts the subsystem. If <see cref="automaticPlacementEnabled"/> is `true`, environment probes will be
-        /// created automatically.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Start();
-
-        /// <summary>
-        /// Stops the subsystem. This does not remove existing environment probes, but it stops automatically placing them, and manually placed probes will not be updated
-        /// until <see cref="OnStart"/> is called again.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Stop();
-
-        /// <summary>
-        /// Destroys the subsystem and any internal state.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
 
         /// <summary>
         /// Tries to create an environment probe.
@@ -144,7 +111,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>false</c>.
         /// </returns>
         /// <remarks>
-        /// <c>RemoveEnvironmentProbe</c> may be used to remove both manually-placed and automatically-placed
+        /// <c>RemoveEnvironmentProbe</c> can be used to remove both manually placed and automatically placed
         /// environment probes if the implementation supports such removals, as indicated by the descriptor properties
         /// <see cref="XREnvironmentProbeSubsystemDescriptor.supportsRemovalOfManual"/> and
         /// <see cref="XREnvironmentProbeSubsystemDescriptor.supportsRemovalOfAutomatic"/>.
@@ -163,41 +130,11 @@ namespace UnityEngine.XR.ARSubsystems
             return provider.RemoveEnvironmentProbe(trackableId);
         }
 
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Must create an implementation of <see cref="Provider"/>, the provider-specific implementation of this subsystem.
-        /// </summary>
-        /// <returns>An instance of a derived <see cref="Provider"/>.</returns>
-        protected abstract Provider CreateProvider();
-#endif
-
         /// <summary>
         /// The class for providers to implement to support the <see cref="XREnvironmentProbeSubsystem"/>.
         /// </summary>
-        public abstract class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XREnvironmentProbeSubsystem>
-#endif
+        public abstract class Provider : SubsystemProvider<XREnvironmentProbeSubsystem>
         {
-#if !UNITY_2020_2_OR_NEWER
-            /// <summary>
-            /// Starts the subsystem. Will only be invoked if
-            /// <see cref="XRSubsystem{TSubsystemDescriptor}.running"/> is <c>false</c>.
-            /// </summary>
-            public virtual void Start() {}
-
-            /// <summary>
-            /// Stops the subsystem. Will only be invoked if
-            /// <see cref="XRSubsystem{TSubsystemDescriptor}.running"/> is <c>true</c>.
-            /// </summary>
-            public virtual void Stop() {}
-
-            /// <summary>
-            /// Invoked when the <see cref="XREnvironmentProbeSubsystem"/> is about to be destroyed.
-            /// </summary>
-            public virtual void Destroy() {}
-#endif
-
             /// <summary>
             /// Overridden by the provider implementation to set the automatic placement request state for the environment probe subsystem.
             /// </summary>
@@ -209,7 +146,7 @@ namespace UnityEngine.XR.ARSubsystems
                 {
                     if (value)
                     {
-                        throw new NotSupportedException("automatic placement of environment probes is not supported by this implementation");
+                        throw new NotSupportedException("Automatic placement of environment probes is not supported by this implementation");
                     }
                 }
             }
@@ -254,7 +191,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <exception cref="System.NotSupportedException">Thrown in the default implementation of this method.</exception>
             public virtual bool TryAddEnvironmentProbe(Pose pose, Vector3 scale, Vector3 size, out XREnvironmentProbe environmentProbe)
             {
-                throw new NotSupportedException("manual placement of environment probes is not supported by this implementation");
+                throw new NotSupportedException("Manual placement of environment probes is not supported by this implementation");
             }
 
             /// <summary>
@@ -267,19 +204,19 @@ namespace UnityEngine.XR.ARSubsystems
             /// Otherwise, <c>false</c>.
             /// </returns>
             /// <remarks>
-            /// This method may be used to remove both manually-placed and automatically-placed environment probes if the
-            /// implementation supports such removals. Providers should implement this method remove environment probes of
+            /// You can use this method to remove both manually placed and automatically placed environment probes if the
+            /// implementation supports such removals. Providers should implement this method to remove environment probes of
             /// the allowed types and to throw a <c>System.NotSupportedException</c> for removals of environment probes of
             /// disallowed types.
             /// </remarks>
             /// <exception cref="System.NotSupportedException">Thrown in the default implementation.</exception>
             public virtual bool RemoveEnvironmentProbe(TrackableId trackableId)
             {
-                throw new NotSupportedException("removal of environment probes is not supported by this implementation");
+                throw new NotSupportedException("Removal of environment probes is not supported by this implementation");
             }
 
             /// <summary>
-            /// Get changes (added, updated, and removed) in environment probes since the last call to this method.
+            /// Get changes to environment probes (added, updated, and removed) since the last call to this method.
             /// </summary>
             /// <param name="defaultEnvironmentProbe">A default value for environment probes. Implementations should first fill their output
             /// arrays with copies of this value, then copy in their own. See the <see cref="NativeCopyUtility"/>.
@@ -299,18 +236,18 @@ namespace UnityEngine.XR.ARSubsystems
         /// <c>true</c> if the subsystem implementation is registered. Otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentException">Thrown when the values specified in the
-        /// <paramref name="environmentProbeSubsystemCinfo"/> parameter are invalid. Typically, this will occur
+        /// <paramref name="environmentProbeSubsystemCinfo"/> parameter are invalid. Typically, this happens:
         /// <list type="bullet">
         /// <item>
-        /// <description>if <see cref="XREnvironmentProbeSubsystemCinfo.id"/> is <c>null</c> or empty</description>
+        /// <description>If <see cref="XREnvironmentProbeSubsystemCinfo.id"/> is <c>null</c> or empty.</description>
         /// </item>
         /// <item>
-        /// <description>if <see cref="XREnvironmentProbeSubsystemCinfo.implementationType"/> is <c>null</c>
+        /// <description>If <see cref="XREnvironmentProbeSubsystemCinfo.implementationType"/> is <c>null.</c>
         /// </description>
         /// </item>
         /// <item>
-        /// <description>if <see cref="XREnvironmentProbeSubsystemCinfo.implementationType"/> does not derive from the
-        /// <c>XREnvironmentProbeSubsystem</c> class
+        /// <description>If <see cref="XREnvironmentProbeSubsystemCinfo.implementationType"/> does not derive from the
+        /// <c>XREnvironmentProbeSubsystem</c> class.
         /// </description>
         /// </item>
         /// </list>
@@ -318,19 +255,8 @@ namespace UnityEngine.XR.ARSubsystems
         public static bool Register(XREnvironmentProbeSubsystemCinfo environmentProbeSubsystemCinfo)
         {
             XREnvironmentProbeSubsystemDescriptor environmentProbeSubsystemDescriptor = XREnvironmentProbeSubsystemDescriptor.Create(environmentProbeSubsystemCinfo);
-#if UNITY_2020_2_OR_NEWER
             SubsystemDescriptorStore.RegisterDescriptor(environmentProbeSubsystemDescriptor);
             return true;
-#else
-            return SubsystemRegistration.CreateDescriptor(environmentProbeSubsystemDescriptor);
-#endif
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required environment probe functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
     }
 }

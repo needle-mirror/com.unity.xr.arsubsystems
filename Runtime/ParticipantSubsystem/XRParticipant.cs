@@ -7,7 +7,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// The session-relative data associated with a participant.
     /// </summary>
     /// <remarks>
-    /// A "participant" is another device in a multi-user collaborative session.
+    /// A participant is another device in a multi-user collaborative session.
     /// </remarks>
     /// <seealso cref="XRParticipantSubsystem"/>
     [StructLayout(LayoutKind.Sequential)]
@@ -54,7 +54,7 @@ namespace UnityEngine.XR.ARSubsystems
         public TrackableId trackableId => m_TrackableId;
 
         /// <summary>
-        /// The <c>Pose</c>, in session-space, associated with this participant.
+        /// The <c>Pose</c>, in session space, associated with this participant.
         /// </summary>
         public Pose pose => m_Pose;
 

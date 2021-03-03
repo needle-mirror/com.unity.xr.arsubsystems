@@ -8,7 +8,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <typeparam name="TSubsystemDescriptor">The
     /// [Subsystem Descriptor](https://docs.unity3d.com/ScriptReference/SubsystemDescriptor.html)
     /// for the
-    /// [Subsystem](https://docs.unity3d.com/ScriptReference/Subsystem.html)
+    /// [Subsystem](https://docs.unity3d.com/ScriptReference/Subsystem.html).
     /// </typeparam>
     public abstract class XRSubsystem<TSubsystemDescriptor> : Subsystem<TSubsystemDescriptor>
         where TSubsystemDescriptor : ISubsystemDescriptor
@@ -38,23 +38,12 @@ namespace UnityEngine.XR.ARSubsystems
 
         bool m_Running;
 
-#if !UNITY_2020_1_OR_NEWER
-        bool m_Destroyed;
-#endif
-
         /// <summary>
         /// Destroys the [subsystem](https://docs.unity3d.com/ScriptReference/Subsystem.html).
         /// If the subsystem is <see cref="running"/>, <see cref="Stop"/> is also called.
         /// </summary>
         protected sealed override void OnDestroy()
         {
-#if !UNITY_2020_1_OR_NEWER
-            // 2020.1 has this logic built into Unity core, but before
-            // that we need to track the destroyed state ourselves.
-            if (m_Destroyed)
-                return;
-            m_Destroyed = true;
-#endif
             Stop();
             OnDestroyed();
         }

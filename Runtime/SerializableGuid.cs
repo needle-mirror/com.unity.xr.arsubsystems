@@ -24,7 +24,7 @@ namespace UnityEngine.XR.ARSubsystems
         static readonly SerializableGuid k_Empty = new SerializableGuid(0, 0);
 
         /// <summary>
-        /// Used to represent <c>System.Guid.Empty</c>, e.g., a GUID whose value is all zeros.
+        /// Used to represent <c>System.Guid.Empty</c> (that is, a GUID whose values are all zeros).
         /// </summary>
         public static SerializableGuid empty => k_Empty;
 

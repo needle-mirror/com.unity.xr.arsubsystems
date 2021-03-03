@@ -13,10 +13,6 @@ namespace UnityEngine.XR.ARSubsystems.Tests
                 throw new System.NotImplementedException();
             }
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        protected override Provider CreateProvider() => new MockProvider();
-#endif
     }
 
     [TestFixture]
@@ -28,12 +24,8 @@ namespace UnityEngine.XR.ARSubsystems.Tests
             XRRaycastSubsystemDescriptor.RegisterDescriptor(new XRRaycastSubsystemDescriptor.Cinfo
             {
                 id = "Test-Raycast",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(XRRaycastSubsystemImpl.MockProvider),
                 subsystemTypeOverride = typeof(XRRaycastSubsystemImpl)
-#else
-                subsystemImplementationType = typeof(XRRaycastSubsystemImpl)
-#endif
             });
         }
 

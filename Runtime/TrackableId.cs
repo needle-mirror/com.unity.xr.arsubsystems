@@ -5,14 +5,14 @@ using System.Text.RegularExpressions;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// A session-unique identifier for trackables in the real-world environment, e.g., planes and feature points.
+    /// A session-unique identifier for trackables in the real-world environment, such as planes and feature points.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Ids are generally unique to a particular session, but multiple sessions may produce
+    /// Ids are generally unique to a particular session, but multiple sessions might produce
     /// identical ids for different trackables.
     /// </para><para>
-    /// A trackable id is a 128 bit number, stored as two ulongs. This makes it large enough to hold a <c>Guid</c>.
+    /// A trackable id is a 128 bit number, stored as two <c>ulong</c>s. This makes it large enough to hold a <c>Guid</c>.
     /// </para>
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
@@ -111,7 +111,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Tests for equality.
         /// </summary>
         /// <param name="other">The other <see cref="TrackableId"/> to compare against.</param>
-        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="TrackableId"/>, otherwise false.</returns>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="TrackableId"/>, otherwise `false`.</returns>
         public bool Equals(TrackableId other) => (m_SubId1 == other.m_SubId1) && (m_SubId2 == other.m_SubId2);
 
         /// <summary>

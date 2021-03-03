@@ -27,6 +27,6 @@ Environment probes can be placed in two different ways:
 
 - Automatic placement
 
-  Providing implementations can implement their own algorithms to choose how and where to place environment probes for the best-quality environment information. Automatic probe placement usually relies on key feature points detected in the real-world environment. The providing implementation is in full control of these automatic placement choices.
+  Provider implementations can implement their own algorithms to choose how and where to place environment probes for the best-quality environment information. Automatic probe placement usually relies on key feature points detected in the real-world environment. The provider implementation is in full control of these automatic placement choices.
 
-Automatically placed environment probes offer a good overall set of environment information for real-world features. However, manually placing environment probes close to key virtual scene objects allow for a better environmental rendering quality of those objects.
+Automatically placed environment probes offer a good overall set of environment information for real-world features. However, manually placing environment probes close to key virtual scene objects allows for a better environmental rendering quality of those objects.

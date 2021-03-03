@@ -6,12 +6,12 @@ namespace UnityEngine.XR.ARSubsystems
     public partial struct XRCpuImage
     {
         /// <summary>
-        /// Information about the camera image planes. An image "plane" refers to an image channel used in video encoding.
+        /// Information about the camera image planes. An image plane refers to an image channel used in video encoding.
         /// </summary>
         public struct Plane : IEquatable<Plane>
         {
             /// <summary>
-            /// Container for the metadata describing access to the raw camera image plane data.
+            /// Container for the metadata that describes access to the raw camera image plane data.
             /// </summary>
             public struct Cinfo : IEquatable<Cinfo>
             {
@@ -140,7 +140,7 @@ namespace UnityEngine.XR.ARSubsystems
             public int pixelStride { get; internal set; }
 
             /// <summary>
-            /// A "view" into the platform-specific plane data. It is an error to access <c>data</c> after the owning
+            /// A view into the platform-specific plane data. It is an error to access <c>data</c> after the owning
             /// <see cref="XRCpuImage"/> has been disposed.
             /// </summary>
             /// <value>

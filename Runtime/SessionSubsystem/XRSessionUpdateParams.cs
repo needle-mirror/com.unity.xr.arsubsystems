@@ -8,7 +8,7 @@ namespace UnityEngine.XR.ARSubsystems
     public struct XRSessionUpdateParams : IEquatable<XRSessionUpdateParams>
     {
         /// <summary>
-        /// The current screen orientation
+        /// The current screen orientation.
         /// </summary>
         public ScreenOrientation screenOrientation { get; set; }
 
@@ -18,7 +18,7 @@ namespace UnityEngine.XR.ARSubsystems
         public Vector2Int screenDimensions { get; set; }
 
         /// <summary>
-        /// Generates a hash code suitable for use in a Dictionary or HashSet.
+        /// Generates a hash code suitable for use in a `Dictionary` or `HashSet`.
         /// </summary>
         /// <returns>A hash code of this <see cref="XRSessionUpdateParams"/>.</returns>
         public override int GetHashCode() => HashCode.Combine(((int)screenOrientation).GetHashCode(), screenDimensions.GetHashCode());

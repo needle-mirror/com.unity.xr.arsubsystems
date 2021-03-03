@@ -9,8 +9,8 @@ namespace UnityEngine.XR.ARSubsystems
     /// A reference image is an image to look for in the physical environment.
     /// The <see cref="XRReferenceImage"/> does not directly reference a <c>Texture2D</c>
     /// or other image data; it only stores the GUID of the <c>Texture2D</c> as it
-    /// appears in the <c>AssetDatabase</c>. At build time, platform specific build steps
-    /// may use the guids to look up the source textures and generate an appropriate
+    /// appears in the <c>AssetDatabase</c>. At build time, platform-specific build steps
+    /// can use the GUIDs to look up the source textures and generate an appropriate
     /// image database. At runtime, detected images can be matched up with the source
     /// <see cref="XRReferenceImage"/>.
     /// </remarks>
@@ -30,13 +30,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// </param>
         /// <param name="size">
         /// Optional. The size of the image, in meters. This can improve image detection,
-        /// and may be required by some platforms.
+        /// and might be required by some platforms.
         /// </param>
         /// <param name="name">A name associated with this reference image.</param>
         /// <param name="texture">
         /// The source texture which this reference image represents.
-        /// This may be `null` to avoid including the texture in
-        /// the Player build if that is not desired. See `XRReferenceImageLibraryExtensions.SetTexture`
+        /// This can be `null` to avoid including the texture in
+        /// the Player build if you don't want that. See `XRReferenceImageLibraryExtensions.SetTexture`
         /// for more details.
         /// </param>
         public XRReferenceImage(
@@ -59,7 +59,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// The [Guid](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netframework-4.8)
-        /// of the source texture as it appeared in the
+        /// of the source texture as it appears in the
         /// [AssetDatabase](https://docs.unity3d.com/ScriptReference/AssetDatabase.html)
         /// in the Editor.
         /// </summary>
@@ -72,7 +72,7 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// The size of the image, in meters. This can improve image detection,
-        /// and may be required by some platforms.
+        /// and might be required by some platforms.
         /// </summary>
         public Vector2 size => m_Size;
 
@@ -94,7 +94,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The source texture which this reference image represents.
         /// This may be <c>null</c> to avoid including the texture in
-        /// the Player build if that is not desired. See
+        /// the Player build if you don't want that. See
         /// <c>UnityEditor.XR.ARSubsystems.XRReferenceImageLibraryExtensions.SetTexture</c>
         /// for more details.
         /// </summary>

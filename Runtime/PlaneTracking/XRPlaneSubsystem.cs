@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -11,46 +8,19 @@ namespace UnityEngine.XR.ARSubsystems
     /// Base class for plane subsystems.
     /// </summary>
     /// <remarks>
-    /// This subsystem surfaces information regarding plane (i.e., flat surface) detection in the physical environment.
+    /// This subsystem surfaces information regarding the detection of planes (that is, flat surfaces) in the physical environment.
     /// Implementations are typically found in other provider or platform-specific packages.
     /// </remarks>
-#if UNITY_2020_2_OR_NEWER
     public class XRPlaneSubsystem
         : TrackingSubsystem<BoundedPlane, XRPlaneSubsystem, XRPlaneSubsystemDescriptor, XRPlaneSubsystem.Provider>
-#else
-    public abstract class XRPlaneSubsystem
-        : TrackingSubsystem<BoundedPlane, XRPlaneSubsystemDescriptor>
-#endif
     {
         /// <summary>
-        /// Constructs a plane subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRPlaneSubsystemDescriptor"/> instead.
+        /// Constructs a plane subsystem. Do not invoke directly; call <c>Create</c> on the <see cref="XRPlaneSubsystemDescriptor"/> instead.
         /// </summary>
-        public XRPlaneSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
-        }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Start the plane subsystem, i.e., start tracking planes.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Start();
+        public XRPlaneSubsystem() { }
 
         /// <summary>
-        /// Destroy the plane subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-
-        /// <summary>
-        /// Stop the subsystem, i.e., stop tracking planes.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Stop();
-#endif
-
-        /// <summary>
-        /// Get or set the requested <see cref="PlaneDetectionMode"/>, e.g.,
+        /// Get or set the requested <see cref="PlaneDetectionMode"/>, for example,
         /// to enable different modes of detection.
         /// </summary>
         /// <exception cref="System.NotSupportedException">Thrown if <see cref="requestedPlaneDetectionMode"/> is set to
@@ -67,11 +37,11 @@ namespace UnityEngine.XR.ARSubsystems
         public PlaneDetectionMode currentPlaneDetectionMode => provider.currentPlaneDetectionMode;
 
         /// <summary>
-        /// Get the changes (added, updated, and removed) planes since the last call to <see cref="GetChanges(Allocator)"/>.
+        /// Get the changes to planes (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
         /// </summary>
         /// <param name="allocator">An <c>Allocator</c> to use when allocating the returned <c>NativeArray</c>s.</param>
         /// <returns>
-        /// <see cref="TrackableChanges{T}"/> describing the planes that have been added, updated, and removed
+        /// <see cref="TrackableChanges{T}"/> that describes the planes that have been added, updated, and removed
         /// since the last call to <see cref="GetChanges(Allocator)"/>. The caller owns the memory allocated with <c>Allocator</c>.
         /// </returns>
         public override TrackableChanges<BoundedPlane> GetChanges(Allocator allocator)
@@ -89,7 +59,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="trackableId">The <see cref="TrackableId"/> associated with the plane of which to retrieve the boundary.</param>
         /// <param name="allocator">An <c>Allocator</c> to use if <paramref name="boundary"/> needs to be created. <c>Allocator.Temp</c> is not supported; use <c>Allocator.TempJob</c> if you need temporary memory.</param>
         /// <param name="boundary">The boundary will be stored here. If <c>boundary</c> is the same length as the new boundary,
-        /// it is simply overwritten with the new data. Otherwise, it is disposed and recreated with the correct length.</param>
+        /// it is overwritten with the new data. Otherwise, it is disposed and recreated with the correct length.</param>
         public void GetBoundary(
             TrackableId trackableId,
             Allocator allocator,
@@ -103,14 +73,6 @@ namespace UnityEngine.XR.ARSubsystems
 
             provider.GetBoundary(trackableId, allocator, ref boundary);
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Concrete classes must implement this to provide the provider-specific implementation.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract Provider CreateProvider();
-#endif
 
         /// <summary>
         /// Creates or resizes the <paramref name="array"/> if necessary. If <paramref name="array"/>
@@ -144,12 +106,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The API that derived classes must implement.
         /// </summary>
-        public abstract class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRPlaneSubsystem>
-#endif
+        public abstract class Provider : SubsystemProvider<XRPlaneSubsystem>
         {
-#if UNITY_2020_2_OR_NEWER
             /// <summary>
             /// Creates or resizes the <paramref name="array"/> if necessary. If <paramref name="array"/>
             /// has been allocated and its length is equal to <paramref name="length"/>, then this method
@@ -178,22 +136,6 @@ namespace UnityEngine.XR.ARSubsystems
                     array = new NativeArray<T>(length, allocator);
                 }
             }
-#else
-            /// <summary>
-            /// Start the plane subsystem, i.e., start tracking planes.
-            /// </summary>
-            public virtual void Start() { }
-
-            /// <summary>
-            /// Stop the subsystem, i.e., stop tracking planes.
-            /// </summary>
-            public virtual void Stop() { }
-
-            /// <summary>
-            /// Destroy the plane subsystem. <see cref="Stop"/> is always called first.
-            /// </summary>
-            public virtual void Destroy() { }
-#endif
 
             /// <summary>
             /// Retrieves the boundary points of the plane with <paramref name="trackableId"/>.
@@ -211,7 +153,7 @@ namespace UnityEngine.XR.ARSubsystems
             }
 
             /// <summary>
-            /// Get the changes (added, updated, and removed) planes since the last call to
+            /// Get the changes to planes (added, updated, and removed) since the last call to
             /// <see cref="GetChanges(BoundedPlane,Allocator)"/>.
             /// </summary>
             /// <param name="defaultPlane">
@@ -246,13 +188,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// </summary>
             public virtual PlaneDetectionMode currentPlaneDetectionMode => PlaneDetectionMode.None;
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required plane tracking functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<BoundedPlane> m_ValidationUtility =

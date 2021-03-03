@@ -9,10 +9,6 @@ namespace UnityEngine.XR.ARSubsystems.Tests
         {
             public ProviderImpl() { }
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        protected override Provider CreateProvider() => new ProviderImpl();
-#endif
     }
 
     [TestFixture]
@@ -24,12 +20,8 @@ namespace UnityEngine.XR.ARSubsystems.Tests
             XRSessionSubsystemDescriptor.RegisterDescriptor(new XRSessionSubsystemDescriptor.Cinfo
             {
                 id = "Test-Session",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(XRSessionSubsystemImpl.ProviderImpl),
                 subsystemTypeOverride = typeof(XRSessionSubsystemImpl)
-#else
-                subsystemImplementationType = typeof(XRSessionSubsystemImpl)
-#endif
             });
         }
 

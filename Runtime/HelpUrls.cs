@@ -5,7 +5,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// </summary>
     static class HelpUrls
     {
-        const string Version = "4.1";
+        const string Version = "4.2";
 
         const string BaseUrl = "https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@" + Version;
 

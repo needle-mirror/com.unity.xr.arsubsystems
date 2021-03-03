@@ -43,10 +43,10 @@ namespace UnityEngine.XR.ARSubsystems
         Vector2 m_PrincipalPoint;
 
         /// <summary>
-        /// The dimensions of the image in pixels.
+        /// The width and height of the image in pixels.
         /// </summary>
         /// <value>
-        /// The dimensions of the image in pixels.
+        /// The width and height of the image in pixels.
         /// </value>
         public Vector2Int resolution => m_Resolution;
         Vector2Int m_Resolution;

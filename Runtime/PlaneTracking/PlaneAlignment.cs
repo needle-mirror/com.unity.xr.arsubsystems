@@ -1,33 +1,33 @@
 ﻿namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Represents the alignment of a plane, e.g., whether it is horizontal or vertical.
+    /// Represents the alignment of a plane (for example, whether it is horizontal or vertical).
     /// </summary>
     /// <seealso cref="BoundedPlane.alignment"/>
     public enum PlaneAlignment
     {
         /// <summary>
-        /// No alignment
+        /// No alignment.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// The plane is horizontal with an upward facing normal, e.g., a floor.
+        /// The plane is horizontal with an upward facing normal (for example, a floor).
         /// </summary>
         HorizontalUp = 100,
 
         /// <summary>
-        /// The plane is horizontal with a downward facing normal, e.g., a ceiling.
+        /// The plane is horizontal with a downward facing normal (for example, a ceiling).
         /// </summary>
         HorizontalDown = 101,
 
         /// <summary>
-        /// The plane is vertical, e.g., a wall.
+        /// The plane is vertical (for example, a wall).
         /// </summary>
         Vertical = 200,
 
         /// <summary>
-        /// The plane is not axis aligned.
+        /// The plane is not aligned with any axis.
         /// </summary>
         NotAxisAligned = 300
     }

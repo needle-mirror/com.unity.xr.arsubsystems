@@ -6,19 +6,13 @@ namespace UnityEngine.XR.ARSubsystems.Tests
 {
     public class XRAnchorSubsystemImpl : XRAnchorSubsystem
     {
-#if !UNITY_2020_2_OR_NEWER
-        protected override Provider CreateProvider() => new TestProvider();
-#endif
-
         public class TestProvider : Provider
         {
             public TestProvider() { }
 
-#if UNITY_2020_2_OR_NEWER
             public override void Start() { }
             public override void Stop() { }
             public override void Destroy() { }
-#endif
 
             public override TrackableChanges<XRAnchor> GetChanges(XRAnchor defaultAnchor, Allocator allocator) => default;
         }
@@ -33,12 +27,8 @@ namespace UnityEngine.XR.ARSubsystems.Tests
             XRAnchorSubsystemDescriptor.Create(new XRAnchorSubsystemDescriptor.Cinfo
             {
                 id = "Test-Anchor",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(XRAnchorSubsystemImpl.TestProvider),
                 subsystemTypeOverride = typeof(XRAnchorSubsystemImpl)
-#else
-                subsystemImplementationType = typeof(XRAnchorSubsystemImpl)
-#endif
             });
         }
 

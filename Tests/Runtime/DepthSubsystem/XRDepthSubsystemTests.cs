@@ -6,10 +6,6 @@ namespace UnityEngine.XR.ARSubsystems.Tests
 {
     public class XRDepthSubsystemImpl : XRDepthSubsystem
     {
-#if !UNITY_2020_2_OR_NEWER
-        protected override Provider CreateProvider() => new TestProvider();
-#endif
-
         public class TestProvider : Provider
         {
             public TestProvider() { }
@@ -27,12 +23,8 @@ namespace UnityEngine.XR.ARSubsystems.Tests
             XRDepthSubsystemDescriptor.RegisterDescriptor(new XRDepthSubsystemDescriptor.Cinfo
             {
                 id = "Test-Depth",
-#if UNITY_2020_2_OR_NEWER
                 providerType = typeof(XRDepthSubsystemImpl.TestProvider),
                 subsystemTypeOverride = typeof(XRDepthSubsystemImpl)
-#else
-                implementationType = typeof(XRDepthSubsystemImpl)
-#endif
             });
         }
 

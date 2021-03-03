@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -15,38 +12,12 @@ namespace UnityEngine.XR.ARSubsystems
     /// It can also be extended to provide an implementation of a provider which provides the depth detection data
     /// to the higher level code.
     /// </remarks>
-#if UNITY_2020_2_OR_NEWER
     public class XRDepthSubsystem
         : TrackingSubsystem<XRPointCloud, XRDepthSubsystem, XRDepthSubsystemDescriptor, XRDepthSubsystem.Provider>
-#else
-    public abstract class XRDepthSubsystem
-        : TrackingSubsystem<XRPointCloud, XRDepthSubsystemDescriptor>
-#endif
     {
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Constructs a depth subsystem. Do not invoked directly; call <c>Create</c> on the <see cref="XRDepthSubsystemDescriptor"/> instead.
-        /// </summary>
-        protected XRDepthSubsystem() => provider = CreateProvider();
 
         /// <summary>
-        /// Start the depth subsystem, i.e., start collecting depth data.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Start();
-
-        /// <summary>
-        /// Destroy the depth subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-
-        /// <summary>
-        /// Stop the subsystem, i.e., stop collecting depth data.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Stop();
-#endif
-
-        /// <summary>
-        /// Get the changes (added, updated, and removed) point clouds since the last call to <see cref="GetChanges(Allocator)"/>.
+        /// Get the changes to point clouds (added, updated, and removed) since the last call to <see cref="GetChanges(Allocator)"/>.
         /// </summary>
         /// <param name="allocator">An <c>Allocator</c> to use when allocating the returned <c>NativeArray</c>s.</param>
         /// <returns>
@@ -86,51 +57,28 @@ namespace UnityEngine.XR.ARSubsystems
             return provider.GetPointCloudData(trackableId, allocator);
         }
 
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Implement this and return an instance of the <see cref="Provider"/>.
-        /// </summary>
-        /// <returns>An implementation of the <see cref="Provider"/>.</returns>
-        protected abstract Provider CreateProvider();
-#endif
-
         /// <summary>
         /// The interface that each derived class must implement.
         /// </summary>
-        public abstract class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRDepthSubsystem>
-#endif
+        public abstract class Provider : SubsystemProvider<XRDepthSubsystem>
         {
             /// <summary>
-            /// Called when the subsystem is started. Will not be called again until <see cref="Stop"/>.
+            /// Called when the subsystem starts. Will not be called again until <see cref="Stop"/>.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Start() { }
-#else
-            public virtual void Start() { }
-#endif
 
             /// <summary>
-            /// Called when the subsystem is stopped. Will not be called before <see cref="Start"/>.
+            /// Called when the subsystem stops. Will not be called before <see cref="Start"/>.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Stop() { }
-#else
-            public virtual void Stop() { }
-#endif
 
             /// <summary>
             /// Called when the subsystem is destroyed. <see cref="Stop"/> will be called first if the subsystem is running.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Destroy() { }
-#else
-            public virtual void Destroy() { }
-#endif
 
             /// <summary>
-            /// Get the changes (added, updated, and removed) planes since the last call to
+            /// Get the changes to planes (added, updated, and removed) since the last call to
             /// <see cref="GetChanges(XRPointCloud,Allocator)"/>.
             /// </summary>
             /// <param name="defaultPointCloud">
@@ -157,13 +105,6 @@ namespace UnityEngine.XR.ARSubsystems
             /// </returns>
             public abstract XRPointCloudData GetPointCloudData(TrackableId trackableId, Allocator allocator);
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required depth functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRPointCloud> m_ValidationUtility =

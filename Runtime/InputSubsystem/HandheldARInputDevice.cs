@@ -6,7 +6,8 @@ using UnityEngine.InputSystem.Layouts;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// A Handheld AR device layout, for use with the Input System, representing a mobile AR device.
+    /// A Handheld AR device layout that represents a mobile AR device, for use with the
+    /// [Input System package](xref:https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/index.html).
     /// </summary>
     [Preserve]
     [InputControlLayout]

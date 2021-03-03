@@ -48,12 +48,12 @@ namespace UnityEngine.XR.ARSubsystems
         public IntPtr nativePtr => m_NativePtr;
 
         /// <summary>
-        /// The <c>Guid</c> associated with the source <see cref="XRReferenceObject"/>.
+        /// The <c>GUID</c> associated with the source <see cref="XRReferenceObject"/>.
         /// </summary>
         public Guid referenceObjectGuid => m_ReferenceObjectGuid;
 
         /// <summary>
-        /// Constructs a <see cref="XRTrackedObject"/>
+        /// Constructs an <see cref="XRTrackedObject"/>.
         /// </summary>
         /// <param name="trackableId">The <see cref="TrackableId"/> associated with this tracked object.</param>
         /// <param name="pose">The <c>Pose</c> of this tracked object.</param>
@@ -61,7 +61,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="nativePtr">A native pointer associated with this tracked object. If not <c>null</c>,
         /// the object pointed to by this pointer should be valid at least until the next call to
         /// <see cref="XRObjectTrackingSubsystem.GetChanges(Unity.Collections.Allocator)"/>.</param>
-        /// <param name="referenceObjectGuid">The <c>Guid</c> of the reference object which was used to detect this tracked object.</param>
+        /// <param name="referenceObjectGuid">The <c>GUID</c> of the reference object which was used to detect this tracked object.</param>
         public XRTrackedObject(
             TrackableId trackableId,
             Pose pose,

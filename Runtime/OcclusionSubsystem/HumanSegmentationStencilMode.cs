@@ -17,7 +17,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The segmentation stencil is enabled and will be generated at the fastest resolution.
         /// </summary>
         /// <remarks>
-        /// On <see cref="Fastest"/> mode, there is no smoothing or other post processing applied to the texture.
+        /// On <see cref="Fastest"/> mode, there is no smoothing or other post-processing applied to the texture.
         /// </remarks>
         [Description("Fastest")]
         Fastest = 1,

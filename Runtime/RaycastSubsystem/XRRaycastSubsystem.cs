@@ -1,9 +1,6 @@
 using System;
 using Unity.Collections;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -14,45 +11,18 @@ namespace UnityEngine.XR.ARSubsystems
     /// This abstract class should be implemented by an XR provider and instantiated using the <c>SubsystemManager</c>
     /// to enumerate the available <see cref="XRRaycastSubsystemDescriptor"/>s.
     /// </remarks>
-#if UNITY_2020_2_OR_NEWER
     public class XRRaycastSubsystem
         : TrackingSubsystem<XRRaycast, XRRaycastSubsystem, XRRaycastSubsystemDescriptor, XRRaycastSubsystem.Provider>
-#else
-    public abstract class XRRaycastSubsystem
-        : TrackingSubsystem<XRRaycast, XRRaycastSubsystemDescriptor>
-#endif
     {
         /// <summary>
         /// Constructor. Do not invoke directly; use the <c>SubsystemManager</c>
         /// to enumerate the available <see cref="XRRaycastSubsystemDescriptor"/>s
         /// and call <c>Create</c> on the desired descriptor.
         /// </summary>
-        public XRRaycastSubsystem()
-        {
-#if !UNITY_2020_2_OR_NEWER
-            provider = CreateProvider();
-#endif
-        }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Starts the subsystem.
-        /// </summary>
-        protected sealed override void OnStart() => provider.Start();
+        public XRRaycastSubsystem() { }
 
         /// <summary>
-        /// Stops the subsystem.
-        /// </summary>
-        protected sealed override void OnStop() => provider.Stop();
-
-        /// <summary>
-        /// Destroys the subsystem.
-        /// </summary>
-        protected sealed override void OnDestroyed() => provider.Destroy();
-#endif
-
-        /// <summary>
-        /// Get the changes (arrays of added, updated and removed) to the tracked raycasts since the last call to this
+        /// Get the changes to the tracked raycasts (arrays of added, updated and removed) since the last call to this
         /// method.
         /// </summary>
         /// <param name="allocator">An [allocator](https://docs.unity3d.com/ScriptReference/Unity.Collections.Allocator.html)
@@ -73,7 +43,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// this subsystem is stopped or destroyed, or the the raycast is removed with
         /// <see cref="RemoveRaycast(TrackableId)"/>.
         /// </summary>
-        /// <param name="screenPoint">A point on the screen, in normalized screen coorindates (0, 0)..(1, 1)</param>
+        /// <param name="screenPoint">A point on the screen, in normalized screen coorindates (0, 0)..(1, 1).</param>
         /// <param name="estimatedDistance">The estimated distance to the raycast target. For example, an average
         /// human height might be used to estimate the distance to the floor.</param>
         /// <param name="raycast">The newly added raycast. All spatial data is relative to the session origin.</param>
@@ -116,7 +86,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Casts a ray originating from <paramref name="screenPoint"/> against trackables specified with <paramref name="trackableTypeMask"/>.
         /// </summary>
-        /// <param name="screenPoint">A point on the screen in normalized screen coordinates (0, 0) - (1, 1)</param>
+        /// <param name="screenPoint">A point on the screen in normalized screen coordinates (0, 0) - (1, 1).</param>
         /// <param name="trackableTypeMask">The types of trackables to test for ray intersections.</param>
         /// <param name="allocator">The <c>Allocator</c> used to allocate the returned <c>NativeArray</c>.</param>
         /// <returns>A <c>NativeArray</c> of all the resulting ray intersections.</returns>
@@ -128,55 +98,32 @@ namespace UnityEngine.XR.ARSubsystems
             return provider.Raycast(XRRaycastHit.defaultValue, screenPoint, trackableTypeMask, allocator);
         }
 
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// Should return an instance of <see cref="Provider"/>.
-        /// </summary>
-        /// <returns>The interface to the implementation-specific provider.</returns>
-        protected abstract Provider CreateProvider();
-#endif
-
         /// <summary>
         /// An interface to be implemented by providers of this subsystem.
         /// </summary>
-        public class Provider
-#if UNITY_2020_2_OR_NEWER
-            : SubsystemProvider<XRRaycastSubsystem>
-#endif
+        public class Provider : SubsystemProvider<XRRaycastSubsystem>
         {
             /// <summary>
             /// Called when the subsystem is started. Will not be called again until <see cref="Stop"/>.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Start() { }
-#else
-            public virtual void Start() { }
-#endif
 
             /// <summary>
             /// Called when the subsystem is stopped. Will not be called before <see cref="Start"/>.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Stop() { }
-#else
-            public virtual void Stop() { }
-#endif
 
             /// <summary>
             /// Called when the subsystem is destroyed. <see cref="Stop"/> will be called first if the subsystem is running.
             /// </summary>
-#if UNITY_2020_2_OR_NEWER
             public override void Destroy() { }
-#else
-            public virtual void Destroy() { }
-#endif
 
             /// <summary>
             /// Adds a new persistent raycast. Persistent raycasts should be updated automatically until this
             /// provider is stopped or destroyed or the raycast is removed with
             /// <see cref="RemoveRaycast(TrackableId)"/>.
             /// </summary>
-            /// <param name="screenPoint">A position on the screen in normalized screen coordinates (0, 0)..(1, 1)</param>
+            /// <param name="screenPoint">A position on the screen in normalized screen coordinates (0, 0)..(1, 1).</param>
             /// <param name="estimatedDistance">The estimated distance to the raycast target.</param>
             /// <param name="raycast">The newly added raycast. All spatial data should be reported relative to the session origin.</param>
             /// <returns>`True` if the raycast was added; otherwise `false`.</returns>
@@ -191,7 +138,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// provider is stopped or destroyed or the raycast is removed with
             /// <see cref="RemoveRaycast(TrackableId)"/>.
             /// </summary>
-            /// <param name="ray">A ray in session-space defining the raycast</param>
+            /// <param name="ray">A ray in session space defining the raycast.</param>
             /// <param name="estimatedDistance">The estimated distance to the raycast target.</param>
             /// <param name="raycast">The newly added raycast. All spatial data should be reported relative to the session origin.</param>
             /// <returns>`True` if the raycast was added; otherwise `false`.</returns>
@@ -211,10 +158,10 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual void RemoveRaycast(TrackableId trackableId) { }
 
             /// <summary>
-            /// Get the changes (arrays of added, updated, and removed) raycasts since the last call to this method.
+            /// Get the changes to raycasts (arrays of added, updated, and removed) since the last call to this method.
             /// </summary>
             /// <param name="defaultRaycast">A default value for <see cref="XRRaycast"/>s. For backwards compatibility,
-            /// this should be used to initialized the returned
+            /// this should be used to initialize the returned
             /// [NativeArray](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.html)s.</param>
             /// <param name="allocator">The [Allocator](https://docs.unity3d.com/ScriptReference/Unity.Collections.Allocator.html)
             /// to use when allocating the returned [NativeArray](https://docs.unity3d.com/ScriptReference/Unity.Collections.NativeArray_1.html)s.</param>
@@ -247,7 +194,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// should be sorted by distance from the ray origin.
             /// </summary>
             /// <param name="defaultRaycastHit">The default raycast hit that should be used as a template when populating the returned <c>NativeArray</c>.</param>
-            /// <param name="screenPoint">A point on the screen in normalized (0...1) coordinates</param>
+            /// <param name="screenPoint">A point on the screen in normalized (0..1) coordinates.</param>
             /// <param name="trackableTypeMask">The types to raycast against.</param>
             /// <param name="allocator">The allocator with which to allocate the returned <c>NativeArray</c>.</param>
             /// <returns>A <c>NativeArray</c> of all the resulting ray intersections.</returns>
@@ -260,13 +207,6 @@ namespace UnityEngine.XR.ARSubsystems
                 throw new NotSupportedException("Raycasting using a screen point is not supported.");
             }
         }
-
-#if !UNITY_2020_2_OR_NEWER
-        /// <summary>
-        /// The provider created by the implementation that contains the required raycast functionality.
-        /// </summary>
-        protected Provider provider { get; }
-#endif
 
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
         ValidationUtility<XRRaycast> m_ValidationUtility = new ValidationUtility<XRRaycast>();

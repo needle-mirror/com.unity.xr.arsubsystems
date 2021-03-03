@@ -14,7 +14,7 @@ namespace UnityEngine.XR.ARSubsystems
         None = 0,
 
         /// <summary>
-        /// The current device is AR capable (but may require a software update).
+        /// The current device is AR capable (but might require a software update).
         /// </summary>
         Supported = 1 << 1,
 
@@ -32,8 +32,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// A helper method for <see cref="SessionAvailability"/> flags.
         /// </summary>
-        /// <param name="availability">A <see cref="SessionAvailability"/> enum</param>
-        /// <returns>True if the <see cref="SessionAvailability.Supported"/> flag is set.</returns>
+        /// <param name="availability">A <see cref="SessionAvailability"/> enum.</param>
+        /// <returns>`True` if the <see cref="SessionAvailability.Supported"/> flag is set.</returns>
         public static bool IsSupported(this SessionAvailability availability)
         {
             return (availability & SessionAvailability.Supported) != SessionAvailability.None;
@@ -42,8 +42,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// A helper method for <see cref="SessionAvailability"/> flags.
         /// </summary>
-        /// <param name="availability">A <see cref="SessionAvailability"/> enum</param>
-        /// <returns>True if the <see cref="SessionAvailability.Installed"/> flag is set.</returns>
+        /// <param name="availability">A <see cref="SessionAvailability"/> enum.</param>
+        /// <returns>`True` if the <see cref="SessionAvailability.Installed"/> flag is set.</returns>
         public static bool IsInstalled(this SessionAvailability availability)
         {
             return (availability & SessionAvailability.Installed) != SessionAvailability.None;

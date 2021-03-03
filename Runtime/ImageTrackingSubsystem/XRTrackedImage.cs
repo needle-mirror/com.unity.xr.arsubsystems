@@ -15,7 +15,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="trackableId">The <see cref="TrackableId"/> associated with this tracked image.</param>
         /// <param name="sourceImageId">A <c>GUID</c> associated with the source image.</param>
         /// <param name="pose">The <c>Pose</c> associated with the detected image.</param>
-        /// <param name="size">The size (i.e., dimensions) of the detected image.</param>
+        /// <param name="size">The size (dimensions) of the detected image.</param>
         /// <param name="trackingState">The <see cref="TrackingState"/> of the detected image.</param>
         /// <param name="nativePtr">A native pointer associated with the detected image.</param>
         public XRTrackedImage(
@@ -62,7 +62,7 @@ namespace UnityEngine.XR.ARSubsystems
         public Pose pose => m_Pose;
 
         /// <summary>
-        /// The size (i.e., dimensions) of this tracked image.
+        /// The size (dimensions) of this tracked image.
         /// </summary>
         public Vector2 size => m_Size;
 
@@ -76,7 +76,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The data pointed to by this pointer is implementation-defined.
         /// While its lifetime is also implementation-defined, it should be
         /// valid at least until the next call to
-        /// <see cref="TrackingSubsystem{TTrackable,TSubsystemDescriptor}.GetChanges(Unity.Collections.Allocator)"/>.
+        /// <see cref="TrackingSubsystem{TTrackable, TSubsystem, TSubsystemDescriptor, TProvider}.GetChanges(Unity.Collections.Allocator)"/>.
         /// </summary>
         public IntPtr nativePtr => m_NativePtr;
 

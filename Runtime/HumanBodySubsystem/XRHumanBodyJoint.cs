@@ -26,7 +26,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// The index for the parent joint in the skeleton hierachy.
         /// </value>
         /// <remarks>
-        /// A parent index that is negative represents that the joint has no parent in the hierachy.
+        /// A negative parent index means the joint has no parent in the hierachy.
         /// </remarks>
         public int parentIndex => m_ParentIndex;
         int m_ParentIndex;

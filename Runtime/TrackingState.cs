@@ -2,7 +2,7 @@ namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
     /// Represents pose tracking quality.
-    /// May apply to a device or trackables it is tracking in the environment.
+    /// Can apply to a device or trackables it is tracking in the environment.
     /// </summary>
     public enum TrackingState
     {

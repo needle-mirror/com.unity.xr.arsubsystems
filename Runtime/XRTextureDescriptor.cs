@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Encapsulates a native texture object and includes various metadata about the texture.
+    /// Contains a native texture object and includes various metadata about the texture.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct XRTextureDescriptor : IEquatable<XRTextureDescriptor>
@@ -105,7 +105,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// This specifies the depth dimension of the native texture. For a 3D texture, depth would be greater than zero.
+        /// This specifies the depth dimension of the native texture. For a 3D texture, depth is greater than zero.
         /// For any other kind of valid texture, depth is one.
         /// </summary>
         /// <value>
@@ -170,7 +170,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Tests for equality.
         /// </summary>
         /// <param name="other">The other <see cref="XRTextureDescriptor"/> to compare against.</param>
-        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRTextureDescriptor"/>, otherwise false.</returns>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRTextureDescriptor"/>, otherwise `false`.</returns>
         public bool Equals(XRTextureDescriptor other)
         {
             return

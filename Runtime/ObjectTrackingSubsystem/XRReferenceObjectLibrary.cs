@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -21,7 +20,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// The number of reference objects in the library.
         /// </summary>
-        public int count { get { return m_ReferenceObjects.Count; } }
+        public int count => m_ReferenceObjects.Count;
 
         /// <summary>
         /// Gets an enumerator which can be used to iterate over the reference objects in this library.
@@ -35,10 +34,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// </code>
         /// </example>
         /// <returns>An <c>IEnumerator</c> which can be used to iterate over the reference objects in the library.</returns>
-        public List<XRReferenceObject>.Enumerator GetEnumerator()
-        {
-            return m_ReferenceObjects.GetEnumerator();
-        }
+        public List<XRReferenceObject>.Enumerator GetEnumerator() => m_ReferenceObjects.GetEnumerator();
 
         /// <summary>
         /// Get a reference object by index.
@@ -46,37 +42,48 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="index">The index in the array of reference objects.
         /// Must be greater than or equal to 0 and less than <see cref="count"/>.</param>
         /// <returns>The <see cref="XRReferenceObject"/> at <paramref name="index"/>.</returns>
-        public XRReferenceObject this[int index]
-        {
-            get
-            {
-                return m_ReferenceObjects[index];
-            }
-        }
+        public XRReferenceObject this[int index] => m_ReferenceObjects[index];
 
         /// <summary>
-        /// A <c>Guid</c> associated with this reference library.
-        /// The Guid is used to uniquely identify this library at runtime.
+        /// A <c>GUID</c> associated with this reference library.
+        /// The GUID is used to uniquely identify this library at runtime.
         /// </summary>
-        public Guid guid
-        {
-            get { return GuidUtil.Compose(m_GuidLow, m_GuidHigh); }
-        }
+        public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
         /// <summary>
         /// Get the index of <paramref name="referenceObject"/> in the object library.
         /// </summary>
         /// <param name="referenceObject">The <see cref="XRReferenceObject"/> to find.</param>
         /// <returns>The zero-based index of the <paramref name="referenceObject"/>, or -1 if not found.</returns>
-        public int indexOf(XRReferenceObject referenceObject)
+        [Obsolete("Use IndexOf instead (deprecated 2021-02-01).")]
+        public int indexOf(XRReferenceObject referenceObject) => IndexOf(referenceObject);
+
+        /// <summary>
+        /// Get the index of <paramref name="referenceObject"/> in the object library.
+        /// </summary>
+        /// <param name="referenceObject">The <see cref="XRReferenceObject"/> to find.</param>
+        /// <returns>Returns the zero-based index of the <paramref name="referenceObject"/> if found. Returns -1 if not
+        ///     found.</returns>
+        public int IndexOf(XRReferenceObject referenceObject) => m_ReferenceObjects.IndexOf(referenceObject);
+
+        /// <summary>
+        /// Adds a new <see cref="XRReferenceObject"/> to this library.
+        /// </summary>
+        /// <param name="referenceObject">The reference object to add.</param>
+        public void Add(XRReferenceObject referenceObject)
         {
-            return m_ReferenceObjects.IndexOf(referenceObject);
+            referenceObject.OnAddToLibrary(this);
+            m_ReferenceObjects.Add(referenceObject);
+
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(this);
+#endif
         }
 
 #if UNITY_EDITOR
         void Awake()
         {
-            if ((m_GuidLow == 0) && (m_GuidHigh == 0))
+            if (m_GuidLow == 0 && m_GuidHigh == 0)
             {
                 var bytes = Guid.NewGuid().ToByteArray();
                 m_GuidLow = BitConverter.ToUInt64(bytes, 0);

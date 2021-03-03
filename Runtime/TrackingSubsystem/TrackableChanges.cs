@@ -5,7 +5,7 @@ using Unity.Collections.LowLevel.Unsafe;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Holds arrays of changes (added, updated, and removed) to trackables.
+    /// Holds arrays of changes to trackables (added, updated, and removed).
     /// This is typically used by subsystems to report changes each frame.
     /// </summary>
     /// <typeparam name="T">The <see cref="ITrackable"/> that can be added and updated.</typeparam>
@@ -14,17 +14,17 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// An array of added trackables.
         /// </summary>
-        public NativeArray<T> added { get { return m_Added; } }
+        public NativeArray<T> added => m_Added;
 
         /// <summary>
         /// An array of updated trackables.
         /// </summary>
-        public NativeArray<T> updated { get { return m_Updated; } }
+        public NativeArray<T> updated => m_Updated;
 
         /// <summary>
         /// An array of <see cref="TrackableId"/>s that have been removed.
         /// </summary>
-        public NativeArray<TrackableId> removed { get { return m_Removed; } }
+        public NativeArray<TrackableId> removed => m_Removed;
 
         /// <summary>
         /// Whether the <c>NativeArray</c>s have been created.
@@ -82,7 +82,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Constructs a <see cref="TrackableChanges{T}"/> from native memory.
         /// </summary>
         /// <remarks>
-        /// Because native code may be using an older version of <typeparamref name="T"/>,
+        /// Because native code might be using an older version of <typeparamref name="T"/>,
         /// this constructor first fills the <see cref="added"/> and <see cref="updated"/>
         /// arrays with copies of <paramref name="defaultT"/> before copying the data from
         /// the <paramref name="addedPtr"/> and <paramref name="updatedPtr"/> pointers.
@@ -123,7 +123,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="updated">An array of updated elements.</param>
         /// <param name="removed">An array of removed elements.</param>
         /// <param name="allocator">The allocator to use for each of the <see cref="added"/>, <see cref="updated"/>, and <see cref="removed"/> arrays.</param>
-        /// <returns>a new <see cref="TrackableChanges{T}"/> from existing <c>NativeArrays</c>. The caller must <see cref="Dispose"/>
+        /// <returns>A new <see cref="TrackableChanges{T}"/> from existing <c>NativeArrays</c>. The caller must <see cref="Dispose"/>
         /// the returned <see cref="TrackableChanges{T}"/> to avoid memory leaks.</returns>
         public static TrackableChanges<T> CopyFrom(
             NativeArray<T> added,

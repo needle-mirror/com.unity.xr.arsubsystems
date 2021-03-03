@@ -7,8 +7,8 @@ namespace UnityEngine.XR.ARSubsystems
     /// Represents a 3D scan of a real object that can be recognized in the environment.
     /// </summary>
     /// <remarks>
-    /// Reference objects contain a list of provider-specific "entries".
-    /// Each "entry" must have previously been generated in a
+    /// Reference objects contain a list of provider-specific entries.
+    /// Each entry must have previously been generated in a
     /// format specific to its implementation of the <see cref="XRObjectTrackingSubsystem"/>.
     /// </remarks>
     /// <seealso cref="XRReferenceObjectLibrary"/>
@@ -17,12 +17,38 @@ namespace UnityEngine.XR.ARSubsystems
     public struct XRReferenceObject : IEquatable<XRReferenceObject>
     {
         /// <summary>
+        /// Creates a new reference object. This is most commonly used to construct a new reference object at runtime.
+        /// See <see cref="XRReferenceObjectLibrary.Add(XRReferenceObject)"/>
+        /// </summary>
+        /// <param name="name">The name of the new reference object.</param>
+        public XRReferenceObject(string name)
+        {
+            m_Name = name;
+            (m_GuidLow, m_GuidHigh) = GuidUtil.Decompose(Guid.NewGuid());
+            m_Entries = new List<XRReferenceObjectEntry>();
+        }
+
+        /// <summary>
+        /// Adds a provider-specific entry to this reference object.
+        /// </summary>
+        /// <param name="entry">The entry to add.</param>
+        /// <exception cref="System.ArgumentException">Thrown if an entry of the same type as <paramref name="entry"/>
+        ///     has already been added.</exception>
+        public void AddEntry(XRReferenceObjectEntry entry)
+        {
+            if (FindEntry(entry.GetType()) != null)
+                throw new ArgumentException($"The {nameof(XRReferenceObject)} already contains an entry for type {entry.GetType()}");
+
+            m_Entries.Add(entry);
+        }
+
+        /// <summary>
         /// A string name for this reference object.
         /// </summary>
         public string name => m_Name;
 
         /// <summary>
-        /// A <c>Guid</c> unique to this reference object.
+        /// A <c>GUID</c> unique to this reference object.
         /// </summary>
         public Guid guid => GuidUtil.Compose(m_GuidLow, m_GuidHigh);
 
@@ -44,22 +70,32 @@ namespace UnityEngine.XR.ARSubsystems
         public XRReferenceObjectEntry FindEntry(Type type)
         {
             if (type == null)
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
 
             foreach (var entry in m_Entries)
             {
-                if ((entry != null) && (entry.GetType() == type))
+                if (entry != null && entry.GetType() == type)
+                {
                     return entry;
+                }
             }
 
             return null;
+        }
+
+        internal void OnAddToLibrary(XRReferenceObjectLibrary library)
+        {
+            foreach (var entry in m_Entries)
+            {
+                entry.OnAddToLibrary(library, this);
+            }
         }
 
         /// <summary>
         /// Tests for equality.
         /// </summary>
         /// <param name="other">The other <see cref="XRReferenceObject"/> to compare against.</param>
-        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRReferenceObject"/>, otherwise false.</returns>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRReferenceObject"/>, otherwise `false`.</returns>
         public bool Equals(XRReferenceObject other)
         {
             return

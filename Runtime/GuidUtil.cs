@@ -8,9 +8,9 @@ namespace UnityEngine.XR.ARSubsystems
     public static class GuidUtil
     {
         /// <summary>
-        /// Reconstructs a <c>Guid</c> from two <c>ulong</c>s representing the low and high bytes.
-        /// Use <c>UnityEditor.XR.ARSubsystems.GuidExtensions.Decompose</c> to decompose the guid
-        /// into its low and high components.
+        /// Reconstructs a [Guid](xref:System.Guid) from two <c>ulong</c>s representing the low and high bytes.
+        /// Use [UnityEditor.XR.ARSubsystems.GuidExtensions.Decompose](xref:UnityEditor.XR.ARSubsystems.GuidExtensions.Decompose(System.Guid,System.UInt64@,System.UInt64@))
+        /// to decompose the guid into its low and high components.
         /// </summary>
         /// <param name="low">The low 8 bytes of the guid</param>
         /// <param name="high">The high 8 bytes of the guid.</param>
@@ -29,6 +29,21 @@ namespace UnityEngine.XR.ARSubsystems
                 (byte)((high  & 0x0000ff0000000000) >> 40),
                 (byte)((high  & 0x00ff000000000000) >> 48),
                 (byte)((high  & 0xff00000000000000) >> 56));
+        }
+
+        struct GuidParts
+        {
+            public ulong low;
+            public ulong high;
+        }
+
+        internal static (ulong low, ulong high) Decompose(Guid guid)
+        {
+            unsafe
+            {
+                var parts = *(GuidParts*)&guid;
+                return (parts.low, parts.high);
+            }
         }
     }
 }

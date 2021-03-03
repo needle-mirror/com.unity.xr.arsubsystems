@@ -1,13 +1,10 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Encapsulates the parameters for creating a new <see cref="XRCameraSubsystemDescriptor"/>.
+    /// Contains the parameters for creating a new <see cref="XRCameraSubsystemDescriptor"/>.
     /// </summary>
     public struct XRCameraSubsystemCinfo : IEquatable<XRCameraSubsystemCinfo>
     {
@@ -19,7 +16,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public string id { get; set; }
 
-#if UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
         /// </summary>
@@ -35,7 +31,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// The type of the subsystem to use for instantiation. If null, <c>XRCameraSubsystem</c> will be instantiated.
         /// </value>
         public Type subsystemTypeOverride { get; set; }
-#endif
 
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
@@ -43,24 +38,22 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// The provider implementation type to use for instantiation.
         /// </value>
-#if UNITY_2020_2_OR_NEWER
         [Obsolete("XRCameraSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
-#endif
         public Type implementationType { get; set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide average brightness.
+        /// Specifies if the current subsystem is allowed to provide the average brightness.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide average brightness. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide the average brightness. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageBrightness { get; set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide average camera temperature.
+        /// Specifies if the current subsystem is allowed to provide the average camera temperature.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide average camera temperature. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide the average camera temperature. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageColorTemperature { get; set; }
 
@@ -70,26 +63,26 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsColorCorrection { get; set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide display matrix.
+        /// Specifies if the current subsystem is allowed to provide a display matrix.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide display matrix. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide a display matrix. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsDisplayMatrix { get; set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide projection matrix.
+        /// Specifies if the current subsystem is allowed to provide a projection matrix.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide projection matrix. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide a projection matrix. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsProjectionMatrix { get; set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide timestamp.
+        /// Specifies if the current subsystem is allowed to provide a timestamp.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide timestamp. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide a timestamp. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsTimestamp { get; set; }
 
@@ -110,10 +103,10 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsCameraImage { get; set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide average intensity in lumens.
+        /// Specifies if current subsystem is allowed to provide the average intensity in lumens.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide average intensity in lumens. Otherwise, <c>false</c>.
+        /// <c>true</c> if current subsystem is allowed to provide the average intensity in lumens. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageIntensityInLumens { get; set; }
 
@@ -143,7 +136,7 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsFocusModes { get; set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports camera grain effect.
+        /// Specifies whether the subsystem supports a camera grain effect.
         /// </summary>
         public bool supportsCameraGrain { get; set; }
 
@@ -156,12 +149,8 @@ namespace UnityEngine.XR.ARSubsystems
         {
             return
                 ReferenceEquals(id, other.id)
-#if UNITY_2020_2_OR_NEWER
                 && ReferenceEquals(providerType, other.providerType)
                 && ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride)
-#else
-                && ReferenceEquals(implementationType, other.implementationType)
-#endif
                 && supportsAverageBrightness.Equals(other.supportsAverageBrightness)
                 && supportsAverageColorTemperature.Equals(other.supportsAverageColorTemperature)
                 && supportsColorCorrection.Equals(other.supportsColorCorrection)
@@ -216,12 +205,8 @@ namespace UnityEngine.XR.ARSubsystems
             unchecked
             {
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
-#if UNITY_2020_2_OR_NEWER
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
-#else
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
-#endif
                 hashCode = (hashCode * 486187739) + supportsAverageBrightness.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageColorTemperature.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsColorCorrection.GetHashCode();
@@ -243,15 +228,11 @@ namespace UnityEngine.XR.ARSubsystems
     }
 
     /// <summary>
-    /// Specifies a functionality description that may be registered for each implementation that provides the
+    /// Specifies a functionality description that can be registered for each implementation that provides the
     /// <see cref="XRCameraSubsystem"/> interface.
     /// </summary>
     public sealed class XRCameraSubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
         SubsystemDescriptorWithProvider<XRCameraSubsystem, XRCameraSubsystem.Provider>
-#else
-        SubsystemDescriptor<XRCameraSubsystem>
-#endif
     {
         /// <summary>
         /// Constructs a <c>XRCameraSubsystemDescriptor</c> based on the given parameters.
@@ -260,12 +241,8 @@ namespace UnityEngine.XR.ARSubsystems
         XRCameraSubsystemDescriptor(XRCameraSubsystemCinfo cameraSubsystemParams)
         {
             id = cameraSubsystemParams.id;
-#if UNITY_2020_2_OR_NEWER
             providerType = cameraSubsystemParams.providerType;
             subsystemTypeOverride = cameraSubsystemParams.subsystemTypeOverride;
-#else
-            subsystemImplementationType = cameraSubsystemParams.implementationType;
-#endif
             supportsAverageBrightness = cameraSubsystemParams.supportsAverageBrightness;
             supportsAverageColorTemperature = cameraSubsystemParams.supportsAverageColorTemperature;
             supportsColorCorrection = cameraSubsystemParams.supportsColorCorrection;
@@ -284,47 +261,47 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide average brightness.
+        /// Specifies if the current subsystem is allowed to provide the average brightness.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide average brightness. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide the average brightness. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageBrightness { get; private set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide average camera temperature.
+        /// Specifies if the current subsystem is allowed to provide the average camera temperature.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide average camera temperature. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide the average camera temperature. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageColorTemperature { get; private set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide color correction.
+        /// Specifies if the current subsystem is allowed to provide color correction.
         /// </summary>
         public bool supportsColorCorrection { get; private set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide display matrix.
+        /// Specifies if the current subsystem is allowed to provide a display matrix.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide display matrix. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide a display matrix. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsDisplayMatrix { get; private set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide projection matrix.
+        /// Specifies if the current subsystem is allowed to provide a projection matrix.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide projection matrix. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide a projection matrix. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsProjectionMatrix { get; private set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide timestamp.
+        /// Specifies if the current subsystem is allowed to provide the timestamp.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide timestamp. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide the timestamp. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsTimestamp { get; private set; }
 
@@ -345,64 +322,64 @@ namespace UnityEngine.XR.ARSubsystems
         public bool supportsCameraImage { get; private set; }
 
         /// <summary>
-        /// Specifies if current subsystem is allowed to provide average intensity in lumens.
+        /// Specifies if the current subsystem is allowed to provide the average intensity in lumens.
         /// </summary>
         /// <value>
-        /// <c>true</c> if current subsystem is allowed to provide average intensity in lumens. Otherwise, <c>false</c>.
+        /// <c>true</c> if the current subsystem is allowed to provide the average intensity in lumens. Otherwise, <c>false</c>.
         /// </value>
         public bool supportsAverageIntensityInLumens { get; private set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports setting the camera's focus mode.
+        /// <c>True</c> if the subsystem supports setting the camera's focus mode.
         /// </summary>
         public bool supportsFocusModes { get; private set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports ambient intensity light estimation while face tracking.
+        /// <c>True</c> if the subsystem supports ambient intensity light estimation while face tracking.
         /// </summary>
         public bool supportsFaceTrackingAmbientIntensityLightEstimation { get; private set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports HDR light estimation while face tracking.
+        /// <c>True</c> if the subsystem supports HDR light estimation while face tracking.
         /// </summary>
         public bool supportsFaceTrackingHDRLightEstimation { get; private set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports ambient intensity light estimation while world tracking.
+        /// <c>True</c> if the subsystem supports ambient intensity light estimation while world tracking.
         /// </summary>
         public bool supportsWorldTrackingAmbientIntensityLightEstimation { get; private set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports HDR light estimation while world tracking.
+        /// <c>True</c> if the subsystem supports HDR light estimation while world tracking.
         /// </summary>
         public bool supportsWorldTrackingHDRLightEstimation { get; private set; }
 
         /// <summary>
-        /// Specifies whether the subsystem supports camera grain effect.
+        /// <c>True</c> if the subsystem supports the camera grain effect.
         /// </summary>
         public bool supportsCameraGrain { get; private set; }
 
         /// <summary>
-        /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters validating that the
+        /// Creates a <c>XRCameraSubsystemDescriptor</c> based on the given parameters and validates that the
         /// <see cref="XRCameraSubsystemCinfo.id"/> and <see cref="XRCameraSubsystemCinfo.implementationType"/>
         /// properties are properly specified.
         /// </summary>
-        /// <param name="cameraSubsystemParams">The parameters defining how to initialize the descriptor.</param>
+        /// <param name="cameraSubsystemParams">The parameters that define how to initialize the descriptor.</param>
         /// <returns>
         /// The created <c>XRCameraSubsystemDescriptor</c>.
         /// </returns>
         /// <exception cref="System.ArgumentException">Thrown when the values specified in the
-        /// <see cref="XRCameraSubsystemCinfo"/> parameter are invalid. Typically, this will occur
+        /// <see cref="XRCameraSubsystemCinfo"/> parameter are invalid. Typically, this happens:
         /// <list type="bullet">
         /// <item>
-        /// <description>if <see cref="XRCameraSubsystemCinfo.id"/> is <c>null</c> or empty</description>
+        /// <description>If <see cref="XRCameraSubsystemCinfo.id"/> is <c>null</c> or empty.</description>
         /// </item>
         /// <item>
-        /// <description>if <see cref="XRCameraSubsystemCinfo.implementationType"/> is <c>null</c></description>
+        /// <description>If <see cref="XRCameraSubsystemCinfo.implementationType"/> is <c>null</c>.</description>
         /// </item>
         /// <item>
-        /// <description>if <see cref="XRCameraSubsystemCinfo.implementationType"/> does not derive from the
-        /// <see cref="XRCameraSubsystem"/> class
+        /// <description>If <see cref="XRCameraSubsystemCinfo.implementationType"/> does not derive from the
+        /// <see cref="XRCameraSubsystem"/> class.
         /// </description>
         /// </item>
         /// </list>
@@ -415,7 +392,6 @@ namespace UnityEngine.XR.ARSubsystems
                                             "cameraSubsystemParams");
             }
 
-#if UNITY_2020_2_OR_NEWER
             if (cameraSubsystemParams.providerType == null
                 || !cameraSubsystemParams.providerType.IsSubclassOf(typeof(XRCameraSubsystem.Provider)))
             {
@@ -427,14 +403,6 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 throw new ArgumentException("Cannot create camera subsystem descriptor because subsystemTypeOverride is invalid", "cameraSubsystemParams");
             }
-#else
-            if ((cameraSubsystemParams.implementationType == null)
-                || !cameraSubsystemParams.implementationType.IsSubclassOf(typeof(XRCameraSubsystem)))
-            {
-                throw new ArgumentException("Cannot create camera subsystem descriptor because implementationType is invalid",
-                                            "cameraSubsystemParams");
-            }
-#endif
 
             return new XRCameraSubsystemDescriptor(cameraSubsystemParams);
         }

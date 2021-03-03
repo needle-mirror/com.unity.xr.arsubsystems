@@ -16,13 +16,13 @@ namespace UnityEngine.XR.ARSubsystems
 
         /// <summary>
         /// A default-initialized raycast hit.
-        /// This may be different from a zero-initialized raycast hit.
+        /// This can be different from a zero-initialized raycast hit.
         /// </summary>
         public static XRRaycastHit defaultValue => s_Default;
 
         /// <summary>
-        /// The <see cref="TrackableId"/> of the trackable which was hit. This may be <see cref="TrackableId.invalidId"/>
-        /// as not all trackables have ids, e.g., feature points.
+        /// The <see cref="TrackableId"/> of the trackable which was hit. This can be <see cref="TrackableId.invalidId"/>
+        /// as some trackables (for example, feature points) don't have ids.
         /// </summary>
         public TrackableId trackableId
         {
@@ -49,7 +49,7 @@ namespace UnityEngine.XR.ARSubsystems
         }
 
         /// <summary>
-        /// The type(s) of trackables which were hit by the ray.
+        /// The types of trackables which were hit by the ray.
         /// </summary>
         public TrackableType hitType
         {
@@ -63,7 +63,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="trackableId">The <see cref="TrackableId"/> of the trackable which was hit.</param>
         /// <param name="pose">The session-space <c>Pose</c> of the intersection.</param>
         /// <param name="distance">The session-space distance from the raycast origin to the intersection point.</param>
-        /// <param name="hitType">The type(s) of trackables which were hit by the ray.</param>
+        /// <param name="hitType">The types of trackables which were hit by the ray.</param>
         public XRRaycastHit(
             TrackableId trackableId,
             Pose pose,

@@ -15,10 +15,10 @@ namespace UnityEngine.XR.ARSubsystems
     {
         /// <summary>
         /// Performs validation checks that ensure a trackable does not exist in multiple lists
-        /// simultaneously, e.g., added and removed. Also ensures that a trackable cannot be
+        /// simultaneously (for example, both added and removed). Also ensures that a trackable cannot be
         /// removed before being added.
         /// </summary>
-        /// <param name="changes">A set of trackable changes (added, updated and removed)</param>
+        /// <param name="changes">A set of changes to trackables (added, updated and removed).</param>
         public void ValidateAndThrow(TrackableChanges<T> changes)
         {
             s_IdSet.Clear();
@@ -41,7 +41,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Same as <see cref="ValidateAndThrow(TrackableChanges{T})"/> but also disposes the <paramref name="changes"/>.
         /// </summary>
-        /// <param name="changes">A set of trackable changes (added, updated and removed)</param>
+        /// <param name="changes">A set of changes to trackables (added, updated and removed).</param>
         public void ValidateAndDisposeIfThrown(TrackableChanges<T> changes)
         {
             try

@@ -22,8 +22,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// The specific <see cref="Feature"/>(s) that should be enabled by this configuration.
         /// </summary>
         /// <remarks>
-        /// Exactly zero or one camera mode must be enabled (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
-        /// If zero camera modes are enabled, no camera texture will be available. Some platforms may support a configuration that does
+        /// You can ony enable exactly zero or one camera modes (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
+        /// If zero camera modes are enabled, no camera texture will be available. Some platforms might support a configuration that does
         /// not provide camera textures, which can be more performant if they are not necessary.
         /// All enabled features must be supported by the <see cref="descriptor"/>.
         /// </remarks>
@@ -34,8 +34,8 @@ namespace UnityEngine.XR.ARSubsystems
         /// </summary>
         /// <param name="descriptor">A <see cref="ConfigurationDescriptor"/> for this configuration.</param>
         /// <param name="features">A set of <see cref="Feature"/>(s) that should be enabled for this configuration.
-        /// Exactly zero or one camera mode must be enabled (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
-        /// If zero camera modes are enabled, no camera texture will be available. Some platforms may support a configuration that does
+        /// You can only enable exactly zero or one camera modes (see <see cref="Feature.UserFacingCamera"/> and <see cref="Feature.WorldFacingCamera"/>).
+        /// If zero camera modes are enabled, no camera texture will be available. Some platforms might support a configuration that does
         /// not provide camera textures, which can be more performant if they are not necessary.
         /// All <paramref name="features"/> must be supported by the <paramref name="descriptor"/>.</param>
         /// <exception cref="System.InvalidOperationException">Thrown if multiple camera modes are enabled.</exception>

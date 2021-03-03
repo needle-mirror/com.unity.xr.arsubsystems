@@ -40,8 +40,8 @@ namespace UnityEngine.XR.ARSubsystems
     public static class XRCpuImageAsyncConversionStatusExtensions
     {
         /// <summary>
-        /// Whether the request has completed. It may have completed with an error or be
-        /// an invalid / disposed request. See <see cref="IsError(XRCpuImage.AsyncConversionStatus)"/>.
+        /// Whether the request has completed. It might have completed with an error or be
+        /// an invalid or disposed request. See <see cref="IsError(XRCpuImage.AsyncConversionStatus)"/>.
         /// </summary>
         /// <param name="status">The <see cref="XRCpuImage.AsyncConversionStatus"/> being extended.</param>
         /// <returns><c>true</c> if the <see cref="XRCpuImage.AsyncConversionStatus"/> has completed.</returns>

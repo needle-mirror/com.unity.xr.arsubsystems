@@ -1,8 +1,5 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -19,7 +16,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public string id { get; set; }
 
-#if UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
         /// </summary>
@@ -35,7 +31,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// The type of the subsystem to use for instantiation. If null, <c>XRHumanBodySubsystem</c> will be instantiated.
         /// </value>
         public Type subsystemTypeOverride { get; set; }
-#endif
 
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
@@ -43,9 +38,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Specifies the provider implementation type to use for instantiation.
         /// </value>
-#if UNITY_2020_2_OR_NEWER
         [Obsolete("XRHumanBodySubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
-#endif
         public Type implementationType { get; set; }
 
         /// <summary>
@@ -81,12 +74,8 @@ namespace UnityEngine.XR.ARSubsystems
         {
             return
                 ReferenceEquals(id, other.id)
-#if UNITY_2020_2_OR_NEWER
                 && ReferenceEquals(providerType, other.providerType)
                 && ReferenceEquals(subsystemTypeOverride, subsystemTypeOverride)
-#else
-                && ReferenceEquals(implementationType, other.implementationType)
-#endif
                 && supportsHumanBody2D.Equals(other.supportsHumanBody2D)
                 && supportsHumanBody3D.Equals(other.supportsHumanBody3D)
                 && supportsHumanBody3DScaleEstimation.Equals(other.supportsHumanBody3DScaleEstimation);
@@ -135,12 +124,8 @@ namespace UnityEngine.XR.ARSubsystems
             unchecked
             {
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
-#if UNITY_2020_2_OR_NEWER
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
-#else
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
-#endif
                 hashCode = (hashCode * 486187739) + supportsHumanBody2D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3D.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsHumanBody3DScaleEstimation.GetHashCode();
@@ -152,22 +137,13 @@ namespace UnityEngine.XR.ARSubsystems
     /// <summary>
     /// The descriptor for the <see cref="XRHumanBodySubsystem"/>.
     /// </summary>
-    public class XRHumanBodySubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
-        SubsystemDescriptorWithProvider<XRHumanBodySubsystem, XRHumanBodySubsystem.Provider>
-#else
-        SubsystemDescriptor<XRHumanBodySubsystem>
-#endif
+    public class XRHumanBodySubsystemDescriptor : SubsystemDescriptorWithProvider<XRHumanBodySubsystem, XRHumanBodySubsystem.Provider>
     {
         XRHumanBodySubsystemDescriptor(XRHumanBodySubsystemCinfo humanBodySubsystemCinfo)
         {
             id = humanBodySubsystemCinfo.id;
-#if UNITY_2020_2_OR_NEWER
             providerType = humanBodySubsystemCinfo.providerType;
             subsystemTypeOverride = humanBodySubsystemCinfo.subsystemTypeOverride;
-#else
-            subsystemImplementationType = humanBodySubsystemCinfo.implementationType;
-#endif
             supportsHumanBody2D = humanBodySubsystemCinfo.supportsHumanBody2D;
             supportsHumanBody3D = humanBodySubsystemCinfo.supportsHumanBody3D;
             supportsHumanBody3DScaleEstimation = humanBodySubsystemCinfo.supportsHumanBody3DScaleEstimation;
@@ -205,7 +181,6 @@ namespace UnityEngine.XR.ARSubsystems
                                             "humanBodySubsystemCinfo");
             }
 
-#if UNITY_2020_2_OR_NEWER
             if (humanBodySubsystemCinfo.providerType == null
                 || !humanBodySubsystemCinfo.providerType.IsSubclassOf(typeof(XRHumanBodySubsystem.Provider)))
             {
@@ -219,14 +194,6 @@ namespace UnityEngine.XR.ARSubsystems
                 throw new ArgumentException("Cannot create human body subsystem descriptor because subsystemTypeOverride is invalid",
                                             "humanBodySubsystemCinfo");
             }
-#else
-            if ((humanBodySubsystemCinfo.implementationType == null)
-                || !humanBodySubsystemCinfo.implementationType.IsSubclassOf(typeof(XRHumanBodySubsystem)))
-            {
-                throw new ArgumentException("Cannot create human body subsystem descriptor because implementationType is invalid",
-                                            "humanBodySubsystemCinfo");
-            }
-#endif
 
             return new XRHumanBodySubsystemDescriptor(humanBodySubsystemCinfo);
         }

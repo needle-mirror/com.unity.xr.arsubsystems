@@ -1,8 +1,5 @@
 using System;
-
-#if UNITY_2020_2_OR_NEWER
 using UnityEngine.SubsystemsImplementation;
-#endif
 
 namespace UnityEngine.XR.ARSubsystems
 {
@@ -19,7 +16,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// </value>
         public string id { get; set; }
 
-#if UNITY_2020_2_OR_NEWER
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
         /// </summary>
@@ -35,7 +31,6 @@ namespace UnityEngine.XR.ARSubsystems
         /// The type of the subsystem to use for instantiation. If null, <c>XRAnchorSubsystem</c> will be instantiated.
         /// </value>
         public Type subsystemTypeOverride { get; set; }
-#endif
 
         /// <summary>
         /// Specifies the provider implementation type to use for instantiation.
@@ -43,42 +38,68 @@ namespace UnityEngine.XR.ARSubsystems
         /// <value>
         /// Specifies the provider implementation type to use for instantiation.
         /// </value>
-#if UNITY_2020_2_OR_NEWER
         [Obsolete("XROcclusionSubsystem no longer supports the deprecated set of base classes for subsystems as of Unity 2020.2. Use providerType and, optionally, subsystemTypeOverride instead.", true)]
-#endif
         public Type implementationType { get; set; }
 
         /// <summary>
-        /// Specifies if the current subsystem supports human segmentation stencil image.
+        /// Specifies if the current subsystem supports human segmentation stencil image. This property is deprecated.
+        /// Use <see cref="humanSegmentationStencilImageSupportedDelegate"/> instead.
         /// </summary>
         /// <value>
         /// <c>true</c> if the current subsystem supports human segmentation stencil image. Otherwise, <c>false</c>.
         /// </value>
+        [Obsolete("Use " + nameof(humanSegmentationStencilImageSupportedDelegate) + " instead.")]
         public bool supportsHumanSegmentationStencilImage { get; set; }
 
         /// <summary>
-        /// Specifies if the current subsystem supports human segmentation depth image.
+        /// Specifies whether a subsystem supports human segmentation stencil image.
+        /// </summary>
+        public Func<Supported> humanSegmentationStencilImageSupportedDelegate { get; set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports human segmentation depth image. This property is deprecated.
+        /// Use <see cref="humanSegmentationDepthImageSupportedDelegate"/> instead.
         /// </summary>
         /// <value>
         /// <c>true</c> if the current subsystem supports human segmentation depth image. Otherwise, <c>false</c>.
         /// </value>
+        [Obsolete("Use " + nameof(humanSegmentationDepthImageSupportedDelegate) + " instead.")]
         public bool supportsHumanSegmentationDepthImage { get; set; }
 
         /// <summary>
-        /// Query for whether the current subsystem supports environment depth image.
+        /// Specifies whether a subsystem supports human segmentation depth image.
+        /// </summary>
+        public Func<Supported> humanSegmentationDepthImageSupportedDelegate { get; set; }
+
+        /// <summary>
+        /// Query for whether the current subsystem supports environment depth image. This property is deprecated. Use
+        /// <see cref="environmentDepthImageSupportedDelegate"/> instead.
         /// </summary>
         /// <value>
         /// <c>true</c> if the current subsystem supports environment depth image. Otherwise, <c>false</c>.
         /// </value>
+        [Obsolete("Use " + nameof(environmentDepthImageSupportedDelegate) + " instead.")]
         public Func<bool> queryForSupportsEnvironmentDepthImage { get; set; }
 
         /// <summary>
-        /// Specifies if the current subsystem supports environment depth confidence image.
+        /// Query for whether the current subsystem supports environment depth image.
+        /// </summary>
+        public Func<Supported> environmentDepthImageSupportedDelegate { get; set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth confidence image. This property is deprecated.
+        /// Use <see cref="environmentDepthConfidenceImageSupportedDelegate"/> instead.
         /// </summary>
         /// <value>
         /// <c>true</c> if the current subsystem supports environment depth confidence image. Otherwise, <c>false</c>.
         /// </value>
+        [Obsolete("Use " + nameof(environmentDepthConfidenceImageSupportedDelegate) + " instead.")]
         public Func<bool> queryForSupportsEnvironmentDepthConfidenceImage { get; set; }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth confidence image.
+        /// </summary>
+        public Func<Supported> environmentDepthConfidenceImageSupportedDelegate { get; set; }
 
         /// <summary>
         /// Tests for equality.
@@ -89,16 +110,18 @@ namespace UnityEngine.XR.ARSubsystems
         {
             return
                 ReferenceEquals(id, other.id)
-#if UNITY_2020_2_OR_NEWER
                 && ReferenceEquals(providerType, other.providerType)
                 && ReferenceEquals(subsystemTypeOverride, other.subsystemTypeOverride)
-#else
-                && ReferenceEquals(implementationType, other.implementationType)
-#endif
+#pragma warning disable CS0618 // obsolete
                 && supportsHumanSegmentationStencilImage.Equals(other.supportsHumanSegmentationStencilImage)
                 && supportsHumanSegmentationDepthImage.Equals(other.supportsHumanSegmentationDepthImage)
                 && ReferenceEquals(queryForSupportsEnvironmentDepthImage, other.queryForSupportsEnvironmentDepthImage)
-                && ReferenceEquals(queryForSupportsEnvironmentDepthConfidenceImage, other.queryForSupportsEnvironmentDepthConfidenceImage);
+                && ReferenceEquals(queryForSupportsEnvironmentDepthConfidenceImage, other.queryForSupportsEnvironmentDepthConfidenceImage)
+#pragma warning restore CS0618
+                && humanSegmentationDepthImageSupportedDelegate == other.humanSegmentationDepthImageSupportedDelegate
+                && humanSegmentationStencilImageSupportedDelegate == other.humanSegmentationStencilImageSupportedDelegate
+                && environmentDepthImageSupportedDelegate == other.environmentDepthImageSupportedDelegate
+                && environmentDepthConfidenceImageSupportedDelegate == other.environmentDepthConfidenceImageSupportedDelegate;
         }
 
         /// <summary>
@@ -135,16 +158,19 @@ namespace UnityEngine.XR.ARSubsystems
             unchecked
             {
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
-#if UNITY_2020_2_OR_NEWER
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
                 hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
-#else
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(implementationType);
-#endif
-                hashCode = (hashCode * 486187739) + supportsHumanSegmentationStencilImage.GetHashCode();
-                hashCode = (hashCode * 486187739) + supportsHumanSegmentationDepthImage.GetHashCode();
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(queryForSupportsEnvironmentDepthImage);
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(queryForSupportsEnvironmentDepthConfidenceImage);
+                hashCode = HashCode.Combine(hashCode,
+#pragma warning disable CS0618 // obsolete
+                    supportsHumanSegmentationStencilImage.GetHashCode(),
+                    supportsHumanSegmentationDepthImage.GetHashCode(),
+                    HashCode.ReferenceHash(queryForSupportsEnvironmentDepthImage),
+                    HashCode.ReferenceHash(queryForSupportsEnvironmentDepthConfidenceImage),
+#pragma warning restore CS0618
+                    HashCode.ReferenceHash(humanSegmentationStencilImageSupportedDelegate),
+                    HashCode.ReferenceHash(humanSegmentationDepthImageSupportedDelegate),
+                    HashCode.ReferenceHash(environmentDepthImageSupportedDelegate),
+                    HashCode.ReferenceHash(environmentDepthConfidenceImageSupportedDelegate));
             }
             return hashCode;
         }
@@ -154,25 +180,23 @@ namespace UnityEngine.XR.ARSubsystems
     /// Descriptor for the XROcclusionSubsystem.
     /// </summary>
     public class XROcclusionSubsystemDescriptor :
-#if UNITY_2020_2_OR_NEWER
         SubsystemDescriptorWithProvider<XROcclusionSubsystem, XROcclusionSubsystem.Provider>
-#else
-        SubsystemDescriptor<XROcclusionSubsystem>
-#endif
     {
         XROcclusionSubsystemDescriptor(XROcclusionSubsystemCinfo occlusionSubsystemCinfo)
         {
             id = occlusionSubsystemCinfo.id;
-#if UNITY_2020_2_OR_NEWER
             providerType = occlusionSubsystemCinfo.providerType;
             subsystemTypeOverride = occlusionSubsystemCinfo.subsystemTypeOverride;
-#else
-            subsystemImplementationType = occlusionSubsystemCinfo.implementationType;
-#endif
-            supportsHumanSegmentationStencilImage = occlusionSubsystemCinfo.supportsHumanSegmentationStencilImage;
-            supportsHumanSegmentationDepthImage = occlusionSubsystemCinfo.supportsHumanSegmentationDepthImage;
+#pragma warning disable CS0618 // obsolete
+            m_SupportsHumanSegmentationStencilImage = occlusionSubsystemCinfo.supportsHumanSegmentationStencilImage;
+            m_SupportsHumanSegmentationDepthImage = occlusionSubsystemCinfo.supportsHumanSegmentationDepthImage;
             m_QueryForSupportsEnvironmentDepthImage = occlusionSubsystemCinfo.queryForSupportsEnvironmentDepthImage;
             m_QueryForSupportsEnvironmentDepthConfidenceImage = occlusionSubsystemCinfo.queryForSupportsEnvironmentDepthConfidenceImage;
+#pragma warning restore CS0618
+            m_EnvironmentDepthImageSupportedDelegate = occlusionSubsystemCinfo.environmentDepthImageSupportedDelegate;
+            m_EnvironmentDepthConfidenceImageSupportedDelegate = occlusionSubsystemCinfo.environmentDepthConfidenceImageSupportedDelegate;
+            m_HumanSegmentationStencilImageSupportedDelegate = occlusionSubsystemCinfo.humanSegmentationStencilImageSupportedDelegate;
+            m_HumanSegmentationDepthImageSupportedDelegate = occlusionSubsystemCinfo.humanSegmentationDepthImageSupportedDelegate;
         }
 
         /// <summary>
@@ -184,7 +208,13 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// On some platforms, this is a runtime check that requires an active session.
         /// </remarks>
+        [Obsolete("Use " + nameof(m_EnvironmentDepthImageSupportedDelegate) + " instead.")]
         Func<bool> m_QueryForSupportsEnvironmentDepthImage;
+
+        /// <summary>
+        /// Query for whether environment depth is supported.
+        /// </summary>
+        Func<Supported> m_EnvironmentDepthImageSupportedDelegate;
 
         /// <summary>
         /// Query for whether environment depth confidence is supported.
@@ -195,39 +225,158 @@ namespace UnityEngine.XR.ARSubsystems
         /// <remarks>
         /// On some platforms, this is a runtime check that requires an active session.
         /// </remarks>
+        [Obsolete("Use " + nameof(m_EnvironmentDepthConfidenceImageSupportedDelegate) + " instead.")]
         Func<bool> m_QueryForSupportsEnvironmentDepthConfidenceImage;
 
         /// <summary>
-        /// Specifies if the current subsystem supports human segmentation stencil image.
+        /// Query for whether environment depth confidence is supported.
         /// </summary>
+        Func<Supported> m_EnvironmentDepthConfidenceImageSupportedDelegate;
+
+        /// <summary>
+        /// Specifies if the current subsystem supports human segmentation stencil image. This property is deprecated.
+        /// Use <see cref="humanSegmentationStencilImageSupported"/> instead.
+        /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > This is a runtime check which might require some initialization to determine support. During this period,
+        /// > this property may return `false` for a time before becoming `true`.
+        /// </remarks>
         /// <value>
         /// <c>true</c> if the current subsystem supports human segmentation stencil image. Otherwise, <c>false</c>.
         /// </value>
-        public bool supportsHumanSegmentationStencilImage { get; private set; }
+        [Obsolete("Use " + nameof(humanSegmentationStencilImageSupported) + " instead.")]
+        public bool supportsHumanSegmentationStencilImage => humanSegmentationStencilImageSupported == Supported.Supported;
+        bool m_SupportsHumanSegmentationStencilImage;
 
         /// <summary>
-        /// Specifies if the current subsystem supports human segmentation depth image.
+        /// (Read Only) Whether a subsystem supports human segmentation stencil image.
         /// </summary>
+        public Supported humanSegmentationStencilImageSupported
+        {
+            get
+            {
+                if (m_HumanSegmentationStencilImageSupportedDelegate != null)
+                {
+                    return m_HumanSegmentationStencilImageSupportedDelegate();
+                }
+
+                return m_SupportsHumanSegmentationStencilImage ? Supported.Supported : Supported.Unsupported;
+            }
+        }
+        Func<Supported> m_HumanSegmentationStencilImageSupportedDelegate;
+
+        /// <summary>
+        /// Specifies if the current subsystem supports human segmentation depth image. This property is deprecated.
+        /// Use <see cref="humanSegmentationDepthImageSupported"/> instead.
+        /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > This is a runtime check which might require some initialization to determine support. During this period,
+        /// > this property might return `false` for a time before becoming `true`.
+        /// </remarks>
         /// <value>
         /// <c>true</c> if the current subsystem supports human segmentation depth image. Otherwise, <c>false</c>.
         /// </value>
-        public bool supportsHumanSegmentationDepthImage { get; private set; }
+        [Obsolete("Use " + nameof(humanSegmentationDepthImageSupported) + " instead.")]
+        public bool supportsHumanSegmentationDepthImage => humanSegmentationDepthImageSupported == Supported.Supported;
+        bool m_SupportsHumanSegmentationDepthImage;
 
         /// <summary>
-        /// Specifies if the current subsystem supports environment depth image.
+        /// (Read Only) Whether a subsystem supports human segmentation depth image.
         /// </summary>
+        public Supported humanSegmentationDepthImageSupported
+        {
+            get
+            {
+                if (m_HumanSegmentationDepthImageSupportedDelegate != null)
+                {
+                    return m_HumanSegmentationDepthImageSupportedDelegate();
+                }
+
+                return m_SupportsHumanSegmentationDepthImage ? Supported.Supported : Supported.Unsupported;
+            }
+        }
+
+        Func<Supported> m_HumanSegmentationDepthImageSupportedDelegate;
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth image. This property is deprecated.
+        /// Use <see cref="environmentDepthImageSupported"/> instead.
+        /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > This is a runtime check which might require some initialization to determine support. During this period,
+        /// > this property might return `false` for a time before becoming `true`.
+        /// </remarks>
         /// <value>
         /// <c>true</c> if the current subsystem supports environment depth image. Otherwise, <c>false</c>.
         /// </value>
-        public bool supportsEnvironmentDepthImage => (m_QueryForSupportsEnvironmentDepthImage == null) ? false : m_QueryForSupportsEnvironmentDepthImage();
+        [Obsolete("Use " + nameof(environmentDepthImageSupported) + " instead.")]
+        public bool supportsEnvironmentDepthImage => environmentDepthImageSupported == Supported.Supported;
 
         /// <summary>
-        /// Specifies if the current subsystem supports environment depth confidence image.
+        /// (Read Only) Whether the subsystem supports environment depth image.
         /// </summary>
+        /// <remarks>
+        /// The supported status might take time to determine. If support is still being determined, the value will be <see cref="Supported.Unknown"/>.
+        /// </remarks>
+        public Supported environmentDepthImageSupported
+        {
+            get
+            {
+                if (m_EnvironmentDepthImageSupportedDelegate != null)
+                {
+                    return m_EnvironmentDepthImageSupportedDelegate();
+                }
+
+#pragma warning disable CS0618 // obsolete
+                // Check deprecated fallback
+                return m_QueryForSupportsEnvironmentDepthImage?.Invoke() == true
+                    ? Supported.Supported
+                    : Supported.Unsupported;
+#pragma warning restore CS0618
+            }
+        }
+
+        /// <summary>
+        /// Specifies if the current subsystem supports environment depth confidence image. This property is deprecated.
+        /// Use <see cref="environmentDepthConfidenceImageSupported"/> instead.
+        /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > This is a runtime check which might require some initialization to determine support. During this period,
+        /// > this property might return `false` for a time before becoming `true`.
+        /// </remarks>
         /// <value>
         /// <c>true</c> if the current subsystem supports environment depth confidence image. Otherwise, <c>false</c>.
         /// </value>
-        public bool supportsEnvironmentDepthConfidenceImage => (m_QueryForSupportsEnvironmentDepthConfidenceImage == null) ? false : m_QueryForSupportsEnvironmentDepthConfidenceImage();
+        [Obsolete("Use " + nameof(environmentDepthConfidenceImageSupported) + " instead.")]
+        public bool supportsEnvironmentDepthConfidenceImage => environmentDepthConfidenceImageSupported == Supported.Supported;
+
+        /// <summary>
+        /// (Read Only) Whether the subsystem supports environment depth confidence image.
+        /// </summary>
+        /// <remarks>
+        /// The supported status might take time to determine. If support is still being determined, the value will be <see cref="Supported.Unknown"/>.
+        /// </remarks>
+        public Supported environmentDepthConfidenceImageSupported
+        {
+            get
+            {
+                if (m_EnvironmentDepthConfidenceImageSupportedDelegate != null)
+                {
+                    return m_EnvironmentDepthConfidenceImageSupportedDelegate();
+                }
+
+#pragma warning disable CS0618 // obsolete
+                // Check deprecated fallback
+                return m_QueryForSupportsEnvironmentDepthConfidenceImage?.Invoke() == true
+                    ? Supported.Supported
+                    : Supported.Unsupported;
+#pragma warning restore CS0618
+            }
+        }
 
         /// <summary>
         /// Creates the occlusion subsystem descriptor from the construction info.
@@ -235,34 +384,25 @@ namespace UnityEngine.XR.ARSubsystems
         /// <param name="occlusionSubsystemCinfo">The occlusion subsystem descriptor constructor information.</param>
         internal static XROcclusionSubsystemDescriptor Create(XROcclusionSubsystemCinfo occlusionSubsystemCinfo)
         {
-            if (String.IsNullOrEmpty(occlusionSubsystemCinfo.id))
+            if (string.IsNullOrEmpty(occlusionSubsystemCinfo.id))
             {
                 throw new ArgumentException("Cannot create occlusion subsystem descriptor because id is invalid",
-                                            "occlusionSubsystemCinfo");
+                                            nameof(occlusionSubsystemCinfo));
             }
 
-#if UNITY_2020_2_OR_NEWER
             if (occlusionSubsystemCinfo.providerType == null
                 || !occlusionSubsystemCinfo.providerType.IsSubclassOf(typeof(XROcclusionSubsystem.Provider)))
             {
                 throw new ArgumentException("Cannot create occlusion subsystem descriptor because providerType is invalid",
-                                            "occlusionSubsystemCinfo");
+                                            nameof(occlusionSubsystemCinfo));
             }
 
             if (occlusionSubsystemCinfo.subsystemTypeOverride == null
-                && !occlusionSubsystemCinfo.subsystemTypeOverride.IsSubclassOf(typeof(XROcclusionSubsystem)))
+                || !occlusionSubsystemCinfo.subsystemTypeOverride.IsSubclassOf(typeof(XROcclusionSubsystem)))
             {
                 throw new ArgumentException("Cannot create occlusion subsystem descriptor because subsystemTypeOverride is invalid",
-                                            "occlusionSubsystemCinfo");
+                                            nameof(occlusionSubsystemCinfo));
             }
-#else
-            if ((occlusionSubsystemCinfo.implementationType == null)
-                || !occlusionSubsystemCinfo.implementationType.IsSubclassOf(typeof(XROcclusionSubsystem)))
-            {
-                throw new ArgumentException("Cannot create occlusion subsystem descriptor because implementationType is invalid",
-                                            "occlusionSubsystemCinfo");
-            }
-#endif
 
             return new XROcclusionSubsystemDescriptor(occlusionSubsystemCinfo);
         }

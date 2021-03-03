@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UnityEngine.XR.ARSubsystems
 {
     /// <summary>
-    /// Parameters of the Unity <c>Camera</c> that may be necessary/useful to the provider.
+    /// Parameters of the Unity <c>Camera</c> that might be necessary or useful to the provider.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct XRCameraParams : IEquatable<XRCameraParams>

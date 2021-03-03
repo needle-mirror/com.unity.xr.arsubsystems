@@ -8,9 +8,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// An API for interacting with <see cref="XRCpuImage"/>s.
         /// </summary>
         /// <remarks>
-        /// This interface is intended to be implemented by AR platform providers (e.g., ARCore, ARKit, Magic Leap,
-        /// &amp; HoloLens). The <see cref="XRCpuImage"/> uses it to make platform-specific API calls. Unity developers
-        /// need not interact directly with this class; use the <see cref="XRCpuImage"/> instead.
+        /// This interface is intended to be implemented by AR platform providers (for example, ARCore, ARKit, Magic Leap,
+        /// and HoloLens). The <see cref="XRCpuImage"/> uses it to make platform-specific API calls. Unity developers
+        /// don't need to interact directly with this class; use the <see cref="XRCpuImage"/> instead.
         /// </remarks>
         public abstract class Api
         {
@@ -46,7 +46,7 @@ namespace UnityEngine.XR.ARSubsystems
                 int planeIndex,
                 out Plane.Cinfo planeCinfo)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -83,7 +83,7 @@ namespace UnityEngine.XR.ARSubsystems
                 IntPtr destinationBuffer,
                 int bufferLength)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -100,12 +100,12 @@ namespace UnityEngine.XR.ARSubsystems
                 int nativeHandle,
                 ConversionParams conversionParams)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
             /// Method to be implemented by the provider to determine whether a native image handle is currently valid.
-            /// An image may become invalid if it has been disposed.
+            /// An image can become invalid if it has been disposed.
             /// </summary>
             /// <remarks>
             /// If a handle is valid, <see cref="TryConvert"/> and <see cref="TryGetConvertedDataSize"/> should not fail.
@@ -118,7 +118,7 @@ namespace UnityEngine.XR.ARSubsystems
             public virtual bool NativeHandleValid(
                 int nativeHandle)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -135,18 +135,18 @@ namespace UnityEngine.XR.ARSubsystems
             /// image.</exception>
             public virtual bool TryGetAsyncRequestData(int requestId, out IntPtr dataPtr, out int dataLength)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
-            /// Method to be implemented by the provider to similar to
+            /// Method to be implemented by the provider. It is similar to
             /// <see cref="ConvertAsync(int, ConversionParams)"/> but takes a delegate to invoke when the
             /// request is complete, rather than returning a request id.
             /// </summary>
             /// <remarks>
             /// If the first parameter to <paramref name="callback"/> is
-            /// <see cref="AsyncConversionStatus.Ready"/> then the <c>dataPtr</c> parameter must be valid
-            /// for the duration of the invocation. The data may be destroyed immediately upon return. The
+            /// <see cref="AsyncConversionStatus.Ready"/>, the <c>dataPtr</c> parameter must be valid
+            /// for the duration of the invocation. The data can be destroyed immediately upon return. The
             /// <paramref name="context"/> parameter must be passed back to the <paramref name="callback"/>.
             /// </remarks>
             /// <param name="nativeHandle">A unique identifier for the camera image to convert.</param>
@@ -163,7 +163,7 @@ namespace UnityEngine.XR.ARSubsystems
                 OnImageRequestCompleteDelegate callback,
                 IntPtr context)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -175,7 +175,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// image.</exception>
             public virtual void DisposeImage(int nativeHandle)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -187,7 +187,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// <seealso cref="ConvertAsync(int, ConversionParams)"/>
             public virtual void DisposeAsyncRequest(int requestId)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
@@ -201,19 +201,19 @@ namespace UnityEngine.XR.ARSubsystems
             /// <seealso cref="ConvertAsync(int, ConversionParams)"/>
             public virtual AsyncConversionStatus GetAsyncRequestStatus(int requestId)
             {
-                throw new NotSupportedException("camera image conversion is not supported by this implementation");
+                throw new NotSupportedException("Camera image conversion is not supported by this implementation");
             }
 
             /// <summary>
             /// Determines whether a given
-            /// [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html) is supported for image
+            /// [TextureFormat](https://docs.unity3d.com/ScriptReference/TextureFormat.html) is supported for image
             /// conversion.
             /// </summary>
             /// <param name="image">The <see cref="XRCpuImage"/> to convert.</param>
             /// <param name="format">The [`TextureFormat`](https://docs.unity3d.com/ScriptReference/TextureFormat.html)
-            ///     to test.</param>
+            /// to test.</param>
             /// <returns>Returns `true` if <paramref name="image"/> can be converted to <paramref name="format"/>.
-            ///     Returns `false` otherwise.</returns>
+            /// Returns `false` otherwise.</returns>
             public virtual bool FormatSupported(XRCpuImage image, TextureFormat format) => false;
         }
     }
