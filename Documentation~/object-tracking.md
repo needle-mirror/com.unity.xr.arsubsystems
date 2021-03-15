@@ -17,9 +17,9 @@ The object tracking subsystem attempts to detect three-dimensional objects in th
 
 You create reference object libraries in the Unity Editor, then fill it with reference objects. Each reference object requires a provider-specific representation for each provider package you have in your project.
 
-From Unity's main menu, go to **Assets &gt; Create &gt; XR &gt; Reference Object Library**.
+From Unity's main menu, go to **Assets** &gt; **Create** &gt; **XR** &gt; **Reference Object Library**.
 
-This creates a new Asset in your project. To create reference objects, select this Asset, then click **Add Entry**:
+This creates a new asset in your project. To create reference objects, select this asset, then select **Add Entry**:
 
 ![A reference object library](images/reference-object-library-inspector.png "A reference object library")
 

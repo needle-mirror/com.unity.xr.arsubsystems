@@ -1,9 +1,22 @@
+---
+uid: arsubsystems-changelog
+---
 # Changelog
 
 All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [4.2.0-pre.3] - 2021-03-15
+
+### Changes
+
+- Deprecated the [TextureImporterInternals](xref:UnityEditor.XR.ARSubsystems.InternalBridge.TextureImporterInternals) in 2021.2. This provided access to an internal method `GetSourceTextureWidthAndHeight` to get the source texture dimensions. The internal method is public in 2021.2 and should be used instead of the `TextureImporterInternals` helper.
+
+### Fixes
+
+- Exclude tests from scripting API docs.
 
 ## [4.2.0-pre.2] - 2021-03-03
 
@@ -15,7 +28,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changes
 
 - The [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) provides a means to query for the capabilities of an [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem). Previously, these capabilities were booleans, but some platforms may take a few frames to determine a capability. Those `bool` properties have been deprecated in favor of properties that return a [Supported](xref:UnityEngine.XR.ARSubsystems.Supported) state, which includes a `Supported.Unknown` state to indicate support for the feature or capability is not yet known.
-- Update documentation for [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) with notes describing the limitations of feature support detection.
+- Updated documentation for [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) with notes describing the limitations of feature support detection.
+- The minimum Unity version for this package is now 2020.3.
 
 ## [4.1.3] - 2021-01-05
 

@@ -15,10 +15,13 @@ namespace UnityEditor.XR.ARSubsystems.InternalBridge
         /// <param name="textureImporter">The <c>TextureImporter</c> on which to operate.</param>
         /// <returns>The original dimensions of the imported image.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="textureImporter"/> is <c>null</c>.</exception>
+#if UNITY_2021_2_OR_NEWER
+        [Obsolete("Use TextureImporter.GetSourceTextureWidthAndHeight instead.")]
+#endif
         public static Vector2Int GetSourceTextureDimensions(TextureImporter textureImporter)
         {
             if (textureImporter == null)
-                throw new ArgumentNullException("textureImporter");
+                throw new ArgumentNullException(nameof(textureImporter));
 
             int width = 0;
             int height = 0;

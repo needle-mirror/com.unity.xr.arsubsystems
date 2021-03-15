@@ -9,9 +9,9 @@ The plane subsystem detects flat, planar surfaces in the environment. It is a ty
 
 The plane subsystem informs the user about static surfaces. It's not meant to track moving or otherwise dynamic planes. When a plane is "removed", it generally doesn't mean a surface has been removed, but rather that the subsystem's understanding of the environment has improved or changed in a way that invalidates that plane.
 
-When a surface is first detected, the subsystem reports it as "added". Subsequent updates to the plane are refinements on this initial plane detection. A plane will typically grow as you scan more of the environment.
+When a surface is first detected, the subsystem reports it as "added". Subsequent updates to the plane are refinements on this initial plane detection. A plane typically grows as you scan more of the environment.
 
-Some platforms support the concept of planes merging. If a plane is merged into another one, the [BoundedPlane.subsumedById](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.subsumedById) will contain the id of the plane which subsumed the plane in question. Not all platforms support this. Some might remove one plane and make another plane larger to encompass the first.
+Some platforms support the concept of planes merging. If a plane is merged into another one, the [BoundedPlane.subsumedById](xref:UnityEngine.XR.ARSubsystems.BoundedPlane.subsumedById) will contain the ID of the plane which subsumed the plane in question. Not all platforms support this. Some might remove one plane and make another plane larger to encompass the first.
 
 ## Boundary
 

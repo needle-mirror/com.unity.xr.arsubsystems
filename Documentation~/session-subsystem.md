@@ -9,13 +9,13 @@ A "session" refers to an instance of AR. While the other AR subsystems provide s
 
 ## Determining availability
 
-Some platforms have AR capabilities built into the device's operating system. On others, AR software might be able to be installed on-demand. The question "is AR available on this device?" might require checking a remote server for software availability. Therefore, `XRSessionSubsystem.GetAvailabilityAsync` should be called to determine whether AR is presently available to the app. This method returns a `Promise<SessionAvailability>`which can be used in a coroutine.
+Some platforms have AR capabilities built into the device's operating system. On others, AR software might be able to be installed on-demand. The question "is AR available on this device?" might require checking a remote server for software availability. Therefore, `XRSessionSubsystem.GetAvailabilityAsync` should be called to determine whether AR is presently available to the app. This method returns a `Promise<SessionAvailability>`, which can be used in a coroutine.
 
 Once availability is determined, the device can be:
 
-* unsupported
-* supported but requiring an update or install
-* supported and ready
+* unsupported.
+* supported but requiring an update or install.
+* supported and ready.
 
 ## Installing additional AR software
 

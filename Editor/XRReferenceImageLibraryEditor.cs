@@ -264,7 +264,7 @@ namespace UnityEditor.XR.ARSubsystems
         static Vector2Int GetTextureSize(Texture2D texture)
         {
             if (texture == null)
-                throw new ArgumentNullException("texture");
+                throw new ArgumentNullException(nameof(texture));
 
             var textureImporter = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(texture)) as TextureImporter;
             if (textureImporter == null)
@@ -273,7 +273,12 @@ namespace UnityEditor.XR.ARSubsystems
             }
             else
             {
+#if UNITY_2021_2_OR_NEWER
+                textureImporter.GetSourceTextureWidthAndHeight(out var width, out var height);
+                return new Vector2Int(width, height);
+#else
                 return TextureImporterInternals.GetSourceTextureDimensions(textureImporter);
+#endif
             }
         }
 

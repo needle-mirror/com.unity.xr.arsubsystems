@@ -5,7 +5,7 @@ uid: arsubsystems-environment-probe-subsystem
 
 The environment probe subsystem provides an interface for managing and interacting with XR environment probes.
 
-Environment probes capture real-world imagery from a camera and organize that information into an environment texture, such as a cube map, that contains the view in all directions from a certain point in the scene. Rendering 3D objects using this environment texture allows for real-world imagery to be reflected in the rendered objects. The result is generally realistic reflections and lighting of virtual objects, as influenced by the real-world view, which enhances the appearance of rendered objects and allows them to better match the real-world environment.
+Environment probes capture real-world imagery from a camera and organize that information into an environment texture, such as a cube map, that contains the view in all directions from a certain point in the scene. Rendering 3D objects with this environment texture allows for real-world imagery to be reflected in the rendered objects. The result is generally realistic reflections and lighting of virtual objects, as influenced by the real-world view, which enhances the appearance of rendered objects and allows them to better match the real-world environment.
 
 The following image illustrates the use of the environment texture from an environment probe applied to a sphere as a reflection map.
 

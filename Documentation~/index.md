@@ -32,9 +32,9 @@ AR Subsystems is a dependency of platform-specific packages which use one or mor
 
 ## Using AR Subsystems
 
-All subsystems have the same lifecycle: they can be created, started, stopped, and destroyed. Each subsystem has a corresponding `SubsystemDescriptor`, which describes the capabilities of a particular provider. Use the `SubsystemManager` to enumerate the available subsystems of a particular type. Once you have a valid subsystem descriptor, you can `Create()` the subsystem. This is the only way to construct a valid subsystem.
+All subsystems have the same lifecycle: they can be created, started, stopped, and destroyed. Each subsystem has a corresponding `SubsystemDescriptor`, which describes the capabilities of a particular provider. Use the `SubsystemManager` to enumerate the available subsystems of a particular type. When you have a valid subsystem descriptor, you can `Create()` the subsystem. This is the only way to construct a valid subsystem.
 
-### Example: Picking a plane subsystem
+### Example: picking a plane subsystem
 
 This example iterates through all the `XRPlaneSubsystemDescriptor`s to look for one which supports a particular feature, then creates it. You can only have one subsystem per platform.
 
@@ -59,7 +59,7 @@ XRPlaneSubsystem CreatePlaneSubsystem()
 }
 ```
 
-Once created, you can `Start` and `Stop` the subsystem. The exact behavior of `Start` and `Stop` varies by subsystem, but generally corresponds to "start doing work" and "stop doing work". A subsystem can be started and stopped multiple times. To completely destroy the subsystem instance, call `Destroy` on the subsystem. It is not valid to access a subsystem after it has been destroyed.
+When created, you can `Start` and `Stop` the subsystem. The exact behavior of `Start` and `Stop` varies by subsystem, but generally corresponds to "start doing work" and "stop doing work". A subsystem can be started and stopped multiple times. To completely destroy the subsystem instance, call `Destroy` on the subsystem. It is not valid to access a subsystem after it has been destroyed.
 
 ```csharp
 var planeSubsystem = CreatePlaneSubsystem();
@@ -105,4 +105,6 @@ Each tracking subsystem requires you to implement a method called `GetChanges`. 
 
 This version of AR Foundation is compatible with the following versions of the Unity Editor:
 
+* 2020.3
+* 2021.1
 * 2021.2

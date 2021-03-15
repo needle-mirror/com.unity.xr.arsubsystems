@@ -15,9 +15,9 @@ The image tracking subsystem attempts to detect two-dimensional images in the en
 
 ## Creating a reference image library
 
-You create reference image libraries in the Unity Editor. From Unity's main menu, go to **Assets &gt; Create &gt; XR &gt; Reference Image Library**.
+You create reference image libraries in the Unity Editor. From Unity's main menu, go to **Assets** &gt; **Create** &gt; **XR** &gt; **Reference Image Library**.
 
-This creates a new reference image library Asset in your project. To add images, select this Asset, then click **Add Image** and complete the fields that appear:
+This creates a new reference image library asset in your project. To add images, select this Asset, then click **Add Image** and complete the fields that appear:
 
 ![Editing a reference image library](images/create-reference-image-library.gif "Editing a reference image library")
 
@@ -25,9 +25,9 @@ You can specify the following information:
 
 |**Field**|**Description**|
 |------|-------|
-|**Name**|A string name which will be available at runtime. This name isn't used by the subsystem, but it can be useful to identify which reference image has been detected. There is no check for duplicate name conflicts.|
+|**Name**|A string name that is available at runtime. This name isn't used by the subsystem, but it can be useful to identify which reference image has been detected. There is no check for duplicate name conflicts.|
 |**Specify Size**|If enabled, you can specify the physical size you expect the image to be in the real world. This field is mandatory for some providers and optional for others. For more information, see your provider's documentation. If you specify this field, the dimensions must be greater than zero. Editing one dimension (for example, width) causes the other dimension (height) to change automatically based on the image's aspect ratio.|
-|**Keep Texture at Runtime**|If enabled, `XRReferenceImage.texture` will contain a reference to the source texture. This can be useful if you need access to the source texture at runtime. By default, this is unchecked to reduce the built Player size. When unchecked, `XRReferenceImage.texture` is null.|
+|**Keep Texture at Runtime**|If enabled, `XRReferenceImage.texture` contains a reference to the source texture. This can be useful if you need access to the source texture at runtime. By default, this is unchecked to reduce the built Player size. When unchecked, `XRReferenceImage.texture` is null.|
 
 ## Using the library at runtime
 
