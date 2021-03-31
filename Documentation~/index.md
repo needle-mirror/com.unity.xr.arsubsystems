@@ -100,11 +100,12 @@ Each tracking subsystem requires you to implement a method called `GetChanges`. 
 `GetChanges` should report all added, updated, and removed trackables since the previous call to `GetChanges`. You should expect `GetChanges` to be called once per frame.
 
 ## Technical details
+
 ### Requirements
 
-This version of AR Foundation is compatible with the following versions of the Unity Editor:
+This version of AR Subsystems is compatible with the following versions of the Unity Editor:
 
 * 2019.4
-* 2020.1
-* 2020.2
+* 2020.3
 * 2021.1
+* 2021.2

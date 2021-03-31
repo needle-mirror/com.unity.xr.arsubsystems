@@ -216,6 +216,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Specifies if the current subsystem supports environment depth image.
         /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > This is a runtime check which may require some initialization to determine support. During this period,
+        /// > this property may return `false` for a time before becoming `true`.
+        /// </remarks>
         /// <value>
         /// <c>true</c> if the current subsystem supports environment depth image. Otherwise, <c>false</c>.
         /// </value>
@@ -224,6 +229,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Specifies if the current subsystem supports environment depth confidence image.
         /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > This is a runtime check which may require some initialization to determine support. During this period,
+        /// > this property may return `false` for a time before becoming `true`.
+        /// </remarks>
         /// <value>
         /// <c>true</c> if the current subsystem supports environment depth confidence image. Otherwise, <c>false</c>.
         /// </value>
