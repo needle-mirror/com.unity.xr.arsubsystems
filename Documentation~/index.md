@@ -97,15 +97,16 @@ Each tracking subsystem requires you to implement a method called `GetChanges`. 
 Refer to the [Scripting API Reference](../api/) for more details.
 
 # Technical details
+
 ## Requirements
 
-This version of AR Foundation is compatible with the following versions of the Unity Editor:
+This version of AR Subsystems is compatible with the following versions of the Unity Editor:
 
-* 2019.2a8 and later
+* 2018.4 and later
 
 ## Known limitations
 
-AR Foundation includes the following known limitations:
+AR Subsystems includes the following known limitations:
 
 * No known issues
 

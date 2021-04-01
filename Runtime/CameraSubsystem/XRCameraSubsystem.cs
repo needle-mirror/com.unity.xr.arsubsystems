@@ -519,6 +519,11 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Returns the camera intrinsics information.
         /// </summary>
+        /// <remarks>
+        /// > [!NOTE]
+        /// > The intrinsics may change each frame. You should call this each frame that you need intrinsics
+        /// > in order to ensure you are using the intrinsics for the current frame.
+        /// </remarks>
         /// <param name="cameraIntrinsics">The camera intrinsics information returned from the method.</param>
         /// <returns>
         /// <c>true</c> if the method successfully gets the camera intrinsics information. Otherwise, <c>false</c>.

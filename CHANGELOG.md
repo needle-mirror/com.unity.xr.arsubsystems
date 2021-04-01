@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.18] - 2021-04-01
+
+### Fixes
+
+- Exclude tests from scripting API docs.
+
 ## [2.1.16] - 2021-01-25
 
 ## [2.1.14] - 2021-01-05
