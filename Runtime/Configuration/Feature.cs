@@ -158,6 +158,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// A feature that allows environment depth images to be captured.
         /// </summary>
         EnvironmentDepth = 1 << 25,
+
+        /// <summary>
+        /// A feature that applies temporal smoothing to environment depth images.
+        /// </summary>
+        /// <seealso cref="EnvironmentDepth"/>
+        EnvironmentDepthTemporalSmoothing = 1 << 26,
     }
 
     /// <summary>
@@ -373,6 +379,9 @@ namespace UnityEngine.XR.ARSubsystems
                         break;
                     case Feature.EnvironmentDepth:
                         names.Add("Environment Depth");
+                        break;
+                    case Feature.EnvironmentDepthTemporalSmoothing:
+                        names.Add("Environment Depth Temporal Smoothing");
                         break;
                     default:
                         names.Add(feature.ToString());

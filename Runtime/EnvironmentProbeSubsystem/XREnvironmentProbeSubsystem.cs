@@ -116,19 +116,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <see cref="XREnvironmentProbeSubsystemDescriptor.supportsRemovalOfManual"/> and
         /// <see cref="XREnvironmentProbeSubsystemDescriptor.supportsRemovalOfAutomatic"/>.
         /// </remarks>
-        /// <exception cref="InvalidOperationException">Thrown when the environment probe subsystem is not running and
-        /// this method is called to an add environment probe.</exception>
         /// <exception cref="System.NotSupportedException">Thrown for platforms that do not support removal of the
         /// type of environment probe.</exception>
-        public bool RemoveEnvironmentProbe(TrackableId trackableId)
-        {
-            if (!running)
-            {
-                throw new InvalidOperationException("cannot remove environment probes when environment probe system is not running");
-            }
-
-            return provider.RemoveEnvironmentProbe(trackableId);
-        }
+        public bool RemoveEnvironmentProbe(TrackableId trackableId) =>
+            running && provider.RemoveEnvironmentProbe(trackableId);
 
         /// <summary>
         /// The class for providers to implement to support the <see cref="XREnvironmentProbeSubsystem"/>.

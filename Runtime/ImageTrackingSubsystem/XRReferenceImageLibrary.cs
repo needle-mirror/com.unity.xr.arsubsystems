@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
@@ -20,7 +21,11 @@ namespace UnityEngine.XR.ARSubsystems
     /// </remarks>
     [CreateAssetMenu(fileName="ReferenceImageLibrary", menuName="XR/Reference Image Library", order=1001)]
     [HelpURL(HelpUrls.Manual + "image-tracking.html")]
-    public class XRReferenceImageLibrary : ScriptableObject, IReferenceImageLibrary, ISerializationCallbackReceiver
+    public class XRReferenceImageLibrary
+        : ScriptableObject
+        , IReferenceImageLibrary
+        , ISerializationCallbackReceiver
+        , IEnumerable<XRReferenceImage>
     {
         /// <summary>
         /// The number of images in the library.
@@ -54,6 +59,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// </example>
         /// <returns>An <c>IEnumerator</c> which can be used to iterate over the images in the library.</returns>
         public List<XRReferenceImage>.Enumerator GetEnumerator() => m_Images.GetEnumerator();
+
+        /// <inheritdoc />
+        IEnumerator<XRReferenceImage> IEnumerable<XRReferenceImage>.GetEnumerator() => GetEnumerator();
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Get an image by index.

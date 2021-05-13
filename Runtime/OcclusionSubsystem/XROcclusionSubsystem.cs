@@ -67,6 +67,24 @@ namespace UnityEngine.XR.ARSubsystems
         public EnvironmentDepthMode currentEnvironmentDepthMode => provider.currentEnvironmentDepthMode;
 
         /// <summary>
+        /// Whether temporal smoothing should be applied to the environment depth image. Query for support with
+        /// <see cref="XROcclusionSubsystemDescriptor.environmentDepthTemporalSmoothingSupported"/>.
+        /// </summary>
+        /// <value>When `true`, temporal smoothing is applied to the environment depth image. Otherwise, no temporal smoothing is applied.</value>
+        public bool environmentDepthTemporalSmoothingRequested
+        {
+            get => provider.environmentDepthTemporalSmoothingRequested;
+            set => provider.environmentDepthTemporalSmoothingRequested = value;
+        }
+
+        /// <summary>
+        /// Whether temporal smoothing is applied to the environment depth image. Query for support with
+        /// <see cref="XROcclusionSubsystemDescriptor.environmentDepthTemporalSmoothingSupported"/>.
+        /// </summary>
+        /// <value>Read Only.</value>
+        public bool environmentDepthTemporalSmoothingEnabled => provider.environmentDepthTemporalSmoothingEnabled;
+
+        /// <summary>
         /// Specifies the requested occlusion preference mode.
         /// </summary>
         /// <value>
@@ -334,6 +352,22 @@ namespace UnityEngine.XR.ARSubsystems
             /// Property to be implemented by the provider to get the environment depth mode currently in use.
             /// </summary>
             public virtual EnvironmentDepthMode currentEnvironmentDepthMode => EnvironmentDepthMode.Disabled;
+
+            /// <summary>
+            /// Property to be implemented by the provider to get whether temporal smoothing has been requested for the
+            /// environment depth image.
+            /// </summary>
+            public virtual bool environmentDepthTemporalSmoothingRequested
+            {
+                get => false;
+                set { }
+            }
+
+            /// <summary>
+            /// Property to be implemented by the provider to get whether temporal smoothing is currently applied to the
+            /// environment depth image.
+            /// </summary>
+            public virtual bool environmentDepthTemporalSmoothingEnabled => false;
 
             /// <summary>
             /// Specifies the requested occlusion preference mode.

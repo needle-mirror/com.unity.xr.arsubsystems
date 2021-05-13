@@ -8,7 +8,25 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.0-pre.7] - 2021-05-13
+
+### Added
+
+- Added an [API to request temporal smoothing of the environment depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.environmentDepthTemporalSmoothingRequested) for providers that support this feature.
+- Added an [ARBuildProcessor utility class](xref:UnityEditor.XR.ARSubsystems.ARBuildProcessor) to prepare AR assets, such as image and object tracking libraries, for use in asset bundles. This should be used before invoking [BuildPipeline.BuildAssetBundles](xref:UnityEditor.BuildPipeline.BuildAssetBundles(System.String,UnityEditor.BuildAssetBundleOptions,UnityEditor.BuildTarget).
+- Added a new [TrackableType.Depth](xref:UnityEngine.XR.ARSubsystems.TrackableType) enum flag to report raycast hits against the depth map.
+
+### Deprecated
+
+- Deprecated [TrackableType.All](xref:UnityEngine.XR.ARSubsystems.TrackableType) enum as it does not include all types. Changing the value of this enum would be a breaking change, so a new value TrackableType.AllTypes has been introduced.
+
+### Removed
+
+- Removed exception from [XREnvironmentProbeSubsystem.RemoveEnvironmentProbe](xref:UnityEngine.XR.ARSubsystems.XREnvironmentProbeSubsystem.RemoveEnvironmentProbe(UnityEngine.XR.ARSubsystems.TrackableId)) with the message "cannot remove environment probes when environment probe system is not running". The exception would be thrown when the method was called and the subsystem was not running. Now, the method returns `false` if the subsystem is not running. It was common to see this exception when unloading a scene, since the subsystems might have been destroyed before the environment probes were removed.
+
 ## [4.2.0-pre.5] - 2021-04-07
+
+No changes
 
 ## [4.2.0-pre.4] - 2021-03-19
 
@@ -52,6 +70,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Released package for Unity 2021.1
 
 ## [4.1.0-preview.13] - 2020-11-09
+
+No changes
 
 ## [4.1.0-preview.12] - 2020-11-02
 
@@ -172,7 +192,11 @@ UnityEngine.XR.ARSubsystems.TrackableChanges`1[T]..ctor (System.Void* addedPtr, 
 
 ## [3.1.0-preview.8] - 2020-03-12
 
+No changes
+
 ## [3.1.0-preview.7] - 2020-02-27
+
+No changes
 
 ## [3.1.0-preview.6] - 2020-02-18
 
@@ -200,6 +224,8 @@ UnityEngine.XR.ARSubsystems.TrackableChanges`1[T]..ctor (System.Void* addedPtr, 
 - Updated documentation links to point to the 3.1 version of the documentation.
 
 ## [3.1.0-preview.1] - 2019-11-21
+
+No changes
 
 ## [3.0.2] - 2020-03-18
 

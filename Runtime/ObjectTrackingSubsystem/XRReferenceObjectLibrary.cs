@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,7 +16,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// <seealso cref="XRReferenceObjectEntry"/>
     [CreateAssetMenu(fileName = "ReferenceObjectLibrary" , menuName = "XR/Reference Object Library", order = 3)]
     [HelpURL(HelpUrls.Manual + "object-tracking.html")]
-    public class XRReferenceObjectLibrary : ScriptableObject
+    public class XRReferenceObjectLibrary : ScriptableObject, IEnumerable<XRReferenceObject>
     {
         /// <summary>
         /// The number of reference objects in the library.
@@ -35,6 +36,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// </example>
         /// <returns>An <c>IEnumerator</c> which can be used to iterate over the reference objects in the library.</returns>
         public List<XRReferenceObject>.Enumerator GetEnumerator() => m_ReferenceObjects.GetEnumerator();
+
+        /// <inheritdoc />
+        IEnumerator<XRReferenceObject> IEnumerable<XRReferenceObject>.GetEnumerator() => GetEnumerator();
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Get a reference object by index.

@@ -9,6 +9,7 @@ The main updates in this release include:
 
 **Added**
 
+- Added an [API to request temporal smoothing of the environment depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.environmentDepthTemporalSmoothingRequested) for providers that support this feature.
 - The runtime image data associated with an [XRReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) is now stored directly in the asset. This allows novel reference image libraries to be downloaded by an app that was not originally built with that library, for example, as an [asset bundle](xref:AssetBundlesIntro).
 - A new [reference object](xref:UnityEngine.XR.ARSubsystems.XRReferenceObject) can be [added](xref:UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary.Add(UnityEngine.XR.ARSubsystems.XRReferenceObject)) to a [reference object library](xref:UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary) at runtime.
 

@@ -72,6 +72,12 @@ namespace UnityEngine.XR.ARSubsystems
         public Func<Supported> humanSegmentationDepthImageSupportedDelegate { get; set; }
 
         /// <summary>
+        /// Specifies whether a subsystem supports temporal smoothing of the environment depth image.
+        /// </summary>
+        /// <value>A method delegate indicating support for temporal smoothing of the environment depth image.</value>
+        public Func<Supported> environmentDepthTemporalSmoothingSupportedDelegate { get; set; }
+
+        /// <summary>
         /// Query for whether the current subsystem supports environment depth image. This property is deprecated. Use
         /// <see cref="environmentDepthImageSupportedDelegate"/> instead.
         /// </summary>
@@ -121,6 +127,7 @@ namespace UnityEngine.XR.ARSubsystems
                 && humanSegmentationDepthImageSupportedDelegate == other.humanSegmentationDepthImageSupportedDelegate
                 && humanSegmentationStencilImageSupportedDelegate == other.humanSegmentationStencilImageSupportedDelegate
                 && environmentDepthImageSupportedDelegate == other.environmentDepthImageSupportedDelegate
+                && environmentDepthTemporalSmoothingSupportedDelegate == other.environmentDepthTemporalSmoothingSupportedDelegate
                 && environmentDepthConfidenceImageSupportedDelegate == other.environmentDepthConfidenceImageSupportedDelegate;
         }
 
@@ -170,6 +177,7 @@ namespace UnityEngine.XR.ARSubsystems
                     HashCode.ReferenceHash(humanSegmentationStencilImageSupportedDelegate),
                     HashCode.ReferenceHash(humanSegmentationDepthImageSupportedDelegate),
                     HashCode.ReferenceHash(environmentDepthImageSupportedDelegate),
+                    HashCode.ReferenceHash(environmentDepthTemporalSmoothingSupportedDelegate),
                     HashCode.ReferenceHash(environmentDepthConfidenceImageSupportedDelegate));
             }
             return hashCode;
@@ -197,6 +205,7 @@ namespace UnityEngine.XR.ARSubsystems
             m_EnvironmentDepthConfidenceImageSupportedDelegate = occlusionSubsystemCinfo.environmentDepthConfidenceImageSupportedDelegate;
             m_HumanSegmentationStencilImageSupportedDelegate = occlusionSubsystemCinfo.humanSegmentationStencilImageSupportedDelegate;
             m_HumanSegmentationDepthImageSupportedDelegate = occlusionSubsystemCinfo.humanSegmentationDepthImageSupportedDelegate;
+            m_EnvironmentDepthTemporalSmoothingSupportedDelegate = occlusionSubsystemCinfo.environmentDepthTemporalSmoothingSupportedDelegate;
         }
 
         /// <summary>
@@ -338,6 +347,15 @@ namespace UnityEngine.XR.ARSubsystems
 #pragma warning restore CS0618
             }
         }
+
+        Func<Supported> m_EnvironmentDepthTemporalSmoothingSupportedDelegate;
+
+        /// <summary>
+        /// Whether temporal smoothing of the environment image is supported.
+        /// </summary>
+        /// <value>Read Only.</value>
+        public Supported environmentDepthTemporalSmoothingSupported =>
+            m_EnvironmentDepthTemporalSmoothingSupportedDelegate?.Invoke() ?? Supported.Unsupported;
 
         /// <summary>
         /// Specifies if the current subsystem supports environment depth confidence image. This property is deprecated.

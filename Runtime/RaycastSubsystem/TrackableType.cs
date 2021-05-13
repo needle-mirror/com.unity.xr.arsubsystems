@@ -94,8 +94,20 @@ namespace UnityEngine.XR.ARSubsystems
         Face = 1 << 6,
 
         /// <summary>
+        /// Refers to a point in the depth map.
+        /// </summary>
+        Depth = 1 << 7,
+
+        /// <summary>
+        /// Deprecated in favor of <see cref="TrackableType.AllTypes"/>. Refers to all trackable types except
+        /// <see cref="TrackableType.Depth"/>.
+        /// </summary>
+        [Obsolete("Use TrackableType.AllTypes instead. (2021-05-02)")]
+        All = Planes | FeaturePoint | Image | Face,
+
+        /// <summary>
         /// Refers to all trackable types.
         /// </summary>
-        All = Planes | FeaturePoint | Image | Face
+        AllTypes = -1,
     }
 }
