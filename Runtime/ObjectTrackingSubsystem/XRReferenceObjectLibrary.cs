@@ -31,16 +31,24 @@ namespace UnityEngine.XR.ARSubsystems
         /// <code>
         /// XRReferenceObjectLibrary library = ...
         /// foreach (var referenceObject in library)
+        /// {
         ///     Debug.LogFormat("Reference object guid: {0}", referenceObject.guid);
+        /// }
         /// </code>
         /// </example>
-        /// <returns>An <c>IEnumerator</c> which can be used to iterate over the reference objects in the library.</returns>
+        /// <returns>Returns an enumerator which can be used to iterate over the reference objects in this library.</returns>
         public List<XRReferenceObject>.Enumerator GetEnumerator() => m_ReferenceObjects.GetEnumerator();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets an enumerator which can be used to iterate over the reference objects in this library.
+        /// </summary>
+        /// <returns>Returns an object which can be used to iterate over the reference objects in this library.</returns>
         IEnumerator<XRReferenceObject> IEnumerable<XRReferenceObject>.GetEnumerator() => GetEnumerator();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets an enumerator which can be used to iterate over the reference objects in this library.
+        /// </summary>
+        /// <returns>Returns an object which can be used to iterate over the reference objects in this library.</returns>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>

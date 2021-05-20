@@ -8,12 +8,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.0-pre.8] - 2021-05-20
+
+No changes
+
 ## [4.2.0-pre.7] - 2021-05-13
 
 ### Added
 
 - Added an [API to request temporal smoothing of the environment depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.environmentDepthTemporalSmoothingRequested) for providers that support this feature.
-- Added an [ARBuildProcessor utility class](xref:UnityEditor.XR.ARSubsystems.ARBuildProcessor) to prepare AR assets, such as image and object tracking libraries, for use in asset bundles. This should be used before invoking [BuildPipeline.BuildAssetBundles](xref:UnityEditor.BuildPipeline.BuildAssetBundles(System.String,UnityEditor.BuildAssetBundleOptions,UnityEditor.BuildTarget).
+- Added an [ARBuildProcessor utility class](xref:UnityEditor.XR.ARSubsystems.ARBuildProcessor) to prepare AR assets, such as image and object tracking libraries, for use in asset bundles. This should be used before invoking [BuildPipeline.BuildAssetBundles](xref:UnityEditor.BuildPipeline.BuildAssetBundles(System.String,UnityEditor.BuildAssetBundleOptions,UnityEditor.BuildTarget)).
 - Added a new [TrackableType.Depth](xref:UnityEngine.XR.ARSubsystems.TrackableType) enum flag to report raycast hits against the depth map.
 
 ### Deprecated

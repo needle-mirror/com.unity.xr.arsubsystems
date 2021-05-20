@@ -47,23 +47,31 @@ namespace UnityEngine.XR.ARSubsystems
         public IReadOnlyDictionary<string, byte[]> dataStore => m_DataStore.dictionary;
 
         /// <summary>
-        /// Gets an enumerator which can be used to iterate over the images in this library.
+        /// Gets an enumerator which can be used to iterate over the reference images in this library.
         /// </summary>
         /// <example>
         /// This examples iterates over the reference images contained in the library.
         /// <code>
         /// XRReferenceImageLibrary imageLibrary = ...
         /// foreach (var referenceImage in imageLibrary)
+        /// {
         ///     Debug.LogFormat("Image guid: {0}", referenceImage.guid);
+        /// }
         /// </code>
         /// </example>
-        /// <returns>An <c>IEnumerator</c> which can be used to iterate over the images in the library.</returns>
+        /// <returns>Returns an enumerator which can be used to iterate over the reference images in the library.</returns>
         public List<XRReferenceImage>.Enumerator GetEnumerator() => m_Images.GetEnumerator();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets an enumerator which can be used to iterate over the reference images in this library.
+        /// </summary>
+        /// <returns>Returns an object which can be used to iterate over the reference images in this library.</returns>
         IEnumerator<XRReferenceImage> IEnumerable<XRReferenceImage>.GetEnumerator() => GetEnumerator();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets an enumerator which can be used to iterate over the reference images in this library.
+        /// </summary>
+        /// <returns>Returns an object which can be used to iterate over the reference images in this library.</returns>
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
