@@ -58,9 +58,9 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
         /// </summary>
         /// <returns>Returns a hash code for this <see cref="AddReferenceImageJobState"/>.</returns>
-        public override int GetHashCode() => HashCode.Combine(
+        public override int GetHashCode() => HashCodeUtil.Combine(
             m_Handle.GetHashCode(),
-            HashCode.ReferenceHash(m_Library));
+            HashCodeUtil.ReferenceHash(m_Library));
 
         /// <summary>
         /// Tests for equality.

@@ -96,8 +96,8 @@ namespace UnityEngine.XR.ARSubsystems
             /// <returns>A hash code generated from this object's fields.</returns>
             public override int GetHashCode()
             {
-                var hash = HashCode.Combine(inputRect.width.GetHashCode(), inputRect.height.GetHashCode(), inputRect.x.GetHashCode(), inputRect.y.GetHashCode());
-                return HashCode.Combine(hash, outputDimensions.GetHashCode(), ((int)outputFormat).GetHashCode(), ((int)transformation).GetHashCode());
+                var hash = HashCodeUtil.Combine(inputRect.width.GetHashCode(), inputRect.height.GetHashCode(), inputRect.x.GetHashCode(), inputRect.y.GetHashCode());
+                return HashCodeUtil.Combine(hash, outputDimensions.GetHashCode(), ((int)outputFormat).GetHashCode(), ((int)transformation).GetHashCode());
             }
 
             /// <summary>

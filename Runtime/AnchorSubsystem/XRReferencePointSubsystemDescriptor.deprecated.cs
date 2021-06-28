@@ -60,9 +60,9 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    int hash = HashCode.ReferenceHash(id);
-                    hash = hash * 486187739 + HashCode.ReferenceHash(providerType);
-                    hash = hash * 486187739 + HashCode.ReferenceHash(subsystemTypeOverride);
+                    int hash = HashCodeUtil.ReferenceHash(id);
+                    hash = hash * 486187739 + HashCodeUtil.ReferenceHash(providerType);
+                    hash = hash * 486187739 + HashCodeUtil.ReferenceHash(subsystemTypeOverride);
                     return hash;
                 }
             }

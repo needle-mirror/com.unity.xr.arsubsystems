@@ -37,7 +37,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
         /// </summary>
         /// <returns>A hash code generated from this object's fields.</returns>
-        public override int GetHashCode() => HashCode.Combine(m_GuidLow.GetHashCode(), m_GuidHigh.GetHashCode());
+        public override int GetHashCode() => HashCodeUtil.Combine(m_GuidLow.GetHashCode(), m_GuidHigh.GetHashCode());
 
         /// <summary>
         /// Tests for equality.

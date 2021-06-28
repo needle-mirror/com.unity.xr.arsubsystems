@@ -115,8 +115,8 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 var hash = m_GuidLow.GetHashCode();
                 hash = hash * 486187739 + m_GuidHigh.GetHashCode();
-                hash = hash * 486187739 + HashCode.ReferenceHash(m_Name);
-                hash = hash * 486187739 + HashCode.ReferenceHash(m_Entries);
+                hash = hash * 486187739 + HashCodeUtil.ReferenceHash(m_Name);
+                hash = hash * 486187739 + HashCodeUtil.ReferenceHash(m_Entries);
                 return hash;
             }
         }

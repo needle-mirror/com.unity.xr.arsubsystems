@@ -168,9 +168,9 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    int hashCode = HashCode.ReferenceHash(id);
-                    hashCode = 486187739 * hashCode + HashCode.ReferenceHash(providerType);
-                    hashCode = 486187739 * hashCode + HashCode.ReferenceHash(subsystemTypeOverride);
+                    int hashCode = HashCodeUtil.ReferenceHash(id);
+                    hashCode = 486187739 * hashCode + HashCodeUtil.ReferenceHash(providerType);
+                    hashCode = 486187739 * hashCode + HashCodeUtil.ReferenceHash(subsystemTypeOverride);
                     hashCode = 486187739 * hashCode + ((int)capabilities).GetHashCode();
                     return hashCode;
                 }

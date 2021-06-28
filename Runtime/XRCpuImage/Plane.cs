@@ -109,7 +109,7 @@ namespace UnityEngine.XR.ARSubsystems
                 /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
                 /// </summary>
                 /// <returns>A hash code generated from this object's fields.</returns>
-                public override int GetHashCode() => HashCode.Combine(
+                public override int GetHashCode() => HashCodeUtil.Combine(
                     dataPtr.GetHashCode(),
                     dataLength.GetHashCode(),
                     rowStride.GetHashCode(),
@@ -165,7 +165,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
             /// </summary>
             /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode() => HashCode.Combine(
+            public override int GetHashCode() => HashCodeUtil.Combine(
                 data.GetHashCode(),
                 rowStride.GetHashCode(),
                 pixelStride.GetHashCode());

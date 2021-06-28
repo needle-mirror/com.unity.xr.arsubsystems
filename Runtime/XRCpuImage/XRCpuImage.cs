@@ -135,7 +135,7 @@ namespace UnityEngine.XR.ARSubsystems
             /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
             /// </summary>
             /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode() => HashCode.Combine(
+            public override int GetHashCode() => HashCodeUtil.Combine(
                 nativeHandle.GetHashCode(),
                 dimensions.GetHashCode(),
                 planeCount.GetHashCode(),
@@ -524,12 +524,12 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
         /// </summary>
         /// <returns>A hash code generated from this object's fields.</returns>
-        public override int GetHashCode() => HashCode.Combine(
+        public override int GetHashCode() => HashCodeUtil.Combine(
             dimensions.GetHashCode(),
             planeCount.GetHashCode(),
             m_NativeHandle.GetHashCode(),
             ((int)format).GetHashCode(),
-            HashCode.ReferenceHash(m_Api));
+            HashCodeUtil.ReferenceHash(m_Api));
 
         /// <summary>
         /// Tests for equality.

@@ -65,7 +65,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash code suitable for use in a Dictionary or HashSet.
         /// </summary>
         /// <returns>A hash code of this <see cref="Configuration"/>.</returns>
-        public override int GetHashCode() => HashCode.Combine(descriptor.GetHashCode(), features.GetHashCode());
+        public override int GetHashCode() => HashCodeUtil.Combine(descriptor.GetHashCode(), features.GetHashCode());
 
         /// <summary>
         /// Compares for equality.

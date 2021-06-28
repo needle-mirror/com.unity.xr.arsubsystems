@@ -56,7 +56,7 @@ namespace UnityEditor.XR.ARSubsystems
         /// </summary>
         /// <returns>Returns a hashcode of this object.</returns>
         public override int GetHashCode() =>
-            HashCode.Combine(((int)buildTarget).GetHashCode(), HashCode.ReferenceHash(activeLoadersForBuildTarget));
+            HashCodeUtil.Combine(((int)buildTarget).GetHashCode(), HashCodeUtil.ReferenceHash(activeLoadersForBuildTarget));
 
         /// <summary>
         /// Tests for equality. Same as <see cref="Equals(UnityEditor.XR.ARSubsystems.PreprocessBuildEventArgs)"/>.

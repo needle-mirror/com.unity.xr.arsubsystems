@@ -21,7 +21,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash code suitable for use in a `Dictionary` or `HashSet`.
         /// </summary>
         /// <returns>A hash code of this <see cref="XRSessionUpdateParams"/>.</returns>
-        public override int GetHashCode() => HashCode.Combine(((int)screenOrientation).GetHashCode(), screenDimensions.GetHashCode());
+        public override int GetHashCode() => HashCodeUtil.Combine(((int)screenOrientation).GetHashCode(), screenDimensions.GetHashCode());
 
         /// <summary>
         /// Compares for equality.

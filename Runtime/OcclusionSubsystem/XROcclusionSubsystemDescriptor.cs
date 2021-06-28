@@ -164,21 +164,21 @@ namespace UnityEngine.XR.ARSubsystems
             int hashCode = 486187739;
             unchecked
             {
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
-                hashCode = HashCode.Combine(hashCode,
+                hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(id);
+                hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(providerType);
+                hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(subsystemTypeOverride);
+                hashCode = HashCodeUtil.Combine(hashCode,
 #pragma warning disable CS0618 // obsolete
                     supportsHumanSegmentationStencilImage.GetHashCode(),
                     supportsHumanSegmentationDepthImage.GetHashCode(),
-                    HashCode.ReferenceHash(queryForSupportsEnvironmentDepthImage),
-                    HashCode.ReferenceHash(queryForSupportsEnvironmentDepthConfidenceImage),
+                    HashCodeUtil.ReferenceHash(queryForSupportsEnvironmentDepthImage),
+                    HashCodeUtil.ReferenceHash(queryForSupportsEnvironmentDepthConfidenceImage),
 #pragma warning restore CS0618
-                    HashCode.ReferenceHash(humanSegmentationStencilImageSupportedDelegate),
-                    HashCode.ReferenceHash(humanSegmentationDepthImageSupportedDelegate),
-                    HashCode.ReferenceHash(environmentDepthImageSupportedDelegate),
-                    HashCode.ReferenceHash(environmentDepthTemporalSmoothingSupportedDelegate),
-                    HashCode.ReferenceHash(environmentDepthConfidenceImageSupportedDelegate));
+                    HashCodeUtil.ReferenceHash(humanSegmentationStencilImageSupportedDelegate),
+                    HashCodeUtil.ReferenceHash(humanSegmentationDepthImageSupportedDelegate),
+                    HashCodeUtil.ReferenceHash(environmentDepthImageSupportedDelegate),
+                    HashCodeUtil.ReferenceHash(environmentDepthTemporalSmoothingSupportedDelegate),
+                    HashCodeUtil.ReferenceHash(environmentDepthConfidenceImageSupportedDelegate));
             }
             return hashCode;
         }

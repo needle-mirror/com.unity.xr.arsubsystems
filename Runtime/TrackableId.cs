@@ -97,7 +97,7 @@ namespace UnityEngine.XR.ARSubsystems
         /// Generates a hash code suitable for use in a <c>Dictionary</c> or <c>Set</c>.
         /// </summary>
         /// <returns>A hash code for participation in certain collections.</returns>
-        public override int GetHashCode() => HashCode.Combine(m_SubId1.GetHashCode(), m_SubId2.GetHashCode());
+        public override int GetHashCode() => HashCodeUtil.Combine(m_SubId1.GetHashCode(), m_SubId2.GetHashCode());
 
         /// <summary>
         /// Tests for equality.

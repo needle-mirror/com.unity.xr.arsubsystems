@@ -107,10 +107,10 @@ namespace UnityEngine.XR.ARSubsystems
             /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
             /// </summary>
             /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode() => HashCode.Combine(
+            public override int GetHashCode() => HashCodeUtil.Combine(
                 conversionParams.GetHashCode(),
                 m_RequestId.GetHashCode(),
-                HashCode.ReferenceHash(m_Api));
+                HashCodeUtil.ReferenceHash(m_Api));
 
             /// <summary>
             /// Tests for equality.

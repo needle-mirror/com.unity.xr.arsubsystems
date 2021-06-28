@@ -66,10 +66,10 @@ namespace UnityEngine.XR.ARSubsystems
             /// Generates a hash suitable for use with containers like `HashSet` and `Dictionary`.
             /// </summary>
             /// <returns>A hash code generated from this object's fields.</returns>
-            public override int GetHashCode() => HashCode.Combine(
-                HashCode.ReferenceHash(id),
-                HashCode.ReferenceHash(providerType),
-                HashCode.ReferenceHash(subsystemTypeOverride),
+            public override int GetHashCode() => HashCodeUtil.Combine(
+                HashCodeUtil.ReferenceHash(id),
+                HashCodeUtil.ReferenceHash(providerType),
+                HashCodeUtil.ReferenceHash(subsystemTypeOverride),
                 supportsViewportBasedRaycast.GetHashCode(),
                 supportsWorldBasedRaycast.GetHashCode(),
                 ((int)supportedTrackableTypes).GetHashCode(),

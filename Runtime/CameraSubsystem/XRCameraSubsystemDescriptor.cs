@@ -204,9 +204,9 @@ namespace UnityEngine.XR.ARSubsystems
             int hashCode = 486187739;
             unchecked
             {
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(id);
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
-                hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
+                hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(id);
+                hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(providerType);
+                hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(subsystemTypeOverride);
                 hashCode = (hashCode * 486187739) + supportsAverageBrightness.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsAverageColorTemperature.GetHashCode();
                 hashCode = (hashCode * 486187739) + supportsColorCorrection.GetHashCode();

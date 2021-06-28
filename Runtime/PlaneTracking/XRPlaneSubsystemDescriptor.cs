@@ -131,9 +131,9 @@ namespace UnityEngine.XR.ARSubsystems
             {
                 unchecked
                 {
-                    int hashCode = HashCode.ReferenceHash(id);
-                    hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(providerType);
-                    hashCode = (hashCode * 486187739) + HashCode.ReferenceHash(subsystemTypeOverride);
+                    int hashCode = HashCodeUtil.ReferenceHash(id);
+                    hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(providerType);
+                    hashCode = (hashCode * 486187739) + HashCodeUtil.ReferenceHash(subsystemTypeOverride);
                     hashCode = (hashCode * 486187739) + supportsHorizontalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsVerticalPlaneDetection.GetHashCode();
                     hashCode = (hashCode * 486187739) + supportsArbitraryPlaneDetection.GetHashCode();
