@@ -178,6 +178,10 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Gets the environment depth texture descriptor.
         /// </summary>
+        /// <remarks>
+        /// Whether the depth image is smoothed or raw depends on the value of
+        /// <see cref="environmentDepthTemporalSmoothingEnabled"/>.
+        /// </remarks>
         /// <param name="environmentDepthDescriptor">The environment depth texture descriptor to be populated, if
         /// available from the provider.</param>
         /// <returns>
@@ -192,10 +196,16 @@ namespace UnityEngine.XR.ARSubsystems
         /// <summary>
         /// Tries to acquire the latest environment depth CPU image.
         /// </summary>
+        /// <remarks>
+        /// Whether the depth image is smoothed or raw depends on the value of
+        /// <see cref="environmentDepthTemporalSmoothingEnabled"/>.
+        /// </remarks>
         /// <param name="cpuImage">If this method returns `true`, an acquired <see cref="XRCpuImage"/>. The CPU image
         /// must be disposed by the caller.</param>
         /// <returns>Returns `true` if an <see cref="XRCpuImage"/> was successfully acquired.
         /// Returns `false` otherwise.</returns>
+        /// <seealso cref="environmentDepthTemporalSmoothingEnabled"/>
+        /// <seealso cref="environmentDepthTemporalSmoothingRequested"/>
         public bool TryAcquireEnvironmentDepthCpuImage(out XRCpuImage cpuImage)
         {
             if (provider.environmentDepthCpuImageApi != null && provider.TryAcquireEnvironmentDepthCpuImage(out var cinfo))
@@ -208,6 +218,56 @@ namespace UnityEngine.XR.ARSubsystems
                 cpuImage = default;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Tries to acquire the latest raw environment depth CPU image.
+        /// </summary>
+        /// <remarks>
+        /// This method differs from <see cref="TryAcquireEnvironmentDepthCpuImage"/> in that it always tries to
+        /// acquire the raw depth image, whereas the image provided by <see cref="TryAcquireEnvironmentDepthCpuImage"/>
+        /// depends on the value of <see cref="environmentDepthTemporalSmoothingEnabled"/>.
+        /// </remarks>
+        /// <param name="cpuImage">If this method returns `true`, an acquired <see cref="XRCpuImage"/>. The CPU image
+        /// must be disposed by the caller.</param>
+        /// <returns>Returns `true` if the raw environment depth CPU image was acquired. Returns `false` otherwise.</returns>
+        public bool TryAcquireRawEnvironmentDepthCpuImage(out XRCpuImage cpuImage)
+        {
+            if (provider.TryAcquireRawEnvironmentDepthCpuImage(out var cinfo))
+            {
+                cpuImage = new XRCpuImage(provider.environmentDepthCpuImageApi, cinfo);
+                return true;
+            }
+
+            cpuImage = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to acquire the latest smoothed environment depth CPU image.
+        /// </summary>
+        /// <remarks>
+        /// This method differs from <see cref="TryAcquireEnvironmentDepthCpuImage"/> in that it always tries to
+        /// acquire the temporally smoothed depth image, whereas the image provided by
+        /// <see cref="TryAcquireEnvironmentDepthCpuImage"/> depends on the value of
+        /// <see cref="environmentDepthTemporalSmoothingEnabled"/>.
+        ///
+        /// The type of smoothing applied is implementation dependent; refer to the documentation for the specific
+        /// provider in use.
+        /// </remarks>
+        /// <param name="cpuImage">If this method returns `true`, an acquired <see cref="XRCpuImage"/>. The CPU image
+        /// must be disposed by the caller.</param>
+        /// <returns>Returns `true` if the smoothed environment depth CPU image was acquired. Returns `false` otherwise.</returns>
+        public bool TryAcquireSmoothedEnvironmentDepthCpuImage(out XRCpuImage cpuImage)
+        {
+            if (provider.TryAcquireSmoothedEnvironmentDepthCpuImage(out var cinfo))
+            {
+                cpuImage = new XRCpuImage(provider.environmentDepthCpuImageApi, cinfo);
+                return true;
+            }
+
+            cpuImage = default;
+            return false;
         }
 
         /// <summary>
@@ -473,6 +533,43 @@ namespace UnityEngine.XR.ARSubsystems
             /// CPU images.</exception>
             public virtual bool TryAcquireEnvironmentDepthCpuImage(out XRCpuImage.Cinfo cinfo)
                 => throw new NotSupportedException("Environment depth CPU images are not supported by this implementation.");
+
+            /// <summary>
+            /// Tries to acquire the latest environment depth CPU image.
+            /// </summary>
+            /// <remarks>
+            /// This method differs from <see cref="TryAcquireEnvironmentDepthCpuImage"/> in that it always tries to
+            /// acquire the raw depth image, whereas the image provided by <see cref="TryAcquireEnvironmentDepthCpuImage"/>
+            /// depends on the value of <see cref="environmentDepthTemporalSmoothingEnabled"/>.
+            /// </remarks>
+            /// <param name="cinfo">If this method returns `true`, this should be populated with construction
+            /// information for an <see cref="XRCpuImage"/>.</param>
+            /// <returns>Returns `true` if the raw environment depth CPU image was acquired.
+            /// Returns `false` otherwise.</returns>
+            public virtual bool TryAcquireRawEnvironmentDepthCpuImage(out XRCpuImage.Cinfo cinfo)
+            {
+                cinfo = default;
+                return false;
+            }
+
+            /// <summary>
+            /// Tries to acquire the latest smoothed environment depth CPU image.
+            /// </summary>
+            /// <remarks>
+            /// This method differs from <see cref="TryAcquireEnvironmentDepthCpuImage"/> in that it always tries to
+            /// acquire the smoothed depth image, whereas the image provided by
+            /// <see cref="TryAcquireEnvironmentDepthCpuImage"/> depends on the value of
+            /// <see cref="environmentDepthTemporalSmoothingEnabled"/>.
+            /// </remarks>
+            /// <param name="cinfo">If this method returns `true`, this should be populated with construction
+            /// information for an <see cref="XRCpuImage"/>.</param>
+            /// <returns>Returns `true` if the smoothed environment depth CPU image was acquired.
+            /// Returns `false` otherwise.</returns>
+            public virtual bool TryAcquireSmoothedEnvironmentDepthCpuImage(out XRCpuImage.Cinfo cinfo)
+            {
+                cinfo = default;
+                return false;
+            }
 
             /// <summary>
             /// The <see cref="XRCpuImage.Api"/> for interacting with an <see cref="XRCpuImage"/> acquired with
