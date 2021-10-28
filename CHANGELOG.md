@@ -8,9 +8,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [4.2.1] - 2021-10-06
+## [5.0.0-pre.5] - 2021-10-28
 
-No changes
+### Changed
+
+- `com.unity.xr.arsubsystems` has been merged into `com.unity.xr.arfoundation`. This will be an empty package acting as a placeholder to provide back compatibility. See the [AR Foundation changelog](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@5.0/changelog/CHANGELOG.html) for more details.
+- The minimum Unity version for this package is now 2021.2.
+- The user preference for "Don't warn me again" in the deprecation warning dialog, is saved on a per-project basis.
+
+### Fixed
+
+- Fixed the deprecation warning dialog where an alternate blank dialog will appear alongside the main message dialog.
 
 ## [4.2.0] - 2021-08-11
 
@@ -38,17 +46,17 @@ No changes
 
 ### Added
 
-- Added an [API to request temporal smoothing of the environment depth image](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.environmentDepthTemporalSmoothingRequested) for providers that support this feature.
-- Added an [ARBuildProcessor utility class](xref:UnityEditor.XR.ARSubsystems.ARBuildProcessor) to prepare AR assets, such as image and object tracking libraries, for use in asset bundles. This should be used before invoking [BuildPipeline.BuildAssetBundles](xref:UnityEditor.BuildPipeline.BuildAssetBundles(System.String,UnityEditor.BuildAssetBundleOptions,UnityEditor.BuildTarget)).
-- Added a new [TrackableType.Depth](xref:UnityEngine.XR.ARSubsystems.TrackableType) enum flag to report raycast hits against the depth map.
+- Added an [API to request temporal smoothing of the environment depth image](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XROcclusionSubsystem.environmentDepthTemporalSmoothingRequested) for providers that support this feature.
+- Added an [ARBuildProcessor utility class](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEditor.XR.ARSubsystems.ARBuildProcessor) to prepare AR assets, such as image and object tracking libraries, for use in asset bundles. This should be used before invoking [BuildPipeline.BuildAssetBundles](xref:UnityEditor.BuildPipeline.BuildAssetBundles(System.String,UnityEditor.BuildAssetBundleOptions,UnityEditor.BuildTarget)).
+- Added a new [TrackableType.Depth](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.TrackableType) enum flag to report raycast hits against the depth map.
 
 ### Deprecated
 
-- Deprecated [TrackableType.All](xref:UnityEngine.XR.ARSubsystems.TrackableType) enum as it does not include all types. Changing the value of this enum would be a breaking change, so a new value TrackableType.AllTypes has been introduced.
+- Deprecated [TrackableType.All](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.TrackableType) enum as it does not include all types. Changing the value of this enum would be a breaking change, so a new value TrackableType.AllTypes has been introduced.
 
 ### Removed
 
-- Removed exception from [XREnvironmentProbeSubsystem.RemoveEnvironmentProbe](xref:UnityEngine.XR.ARSubsystems.XREnvironmentProbeSubsystem.RemoveEnvironmentProbe(UnityEngine.XR.ARSubsystems.TrackableId)) with the message "cannot remove environment probes when environment probe system is not running". The exception would be thrown when the method was called and the subsystem was not running. Now, the method returns `false` if the subsystem is not running. It was common to see this exception when unloading a scene, since the subsystems might have been destroyed before the environment probes were removed.
+- Removed exception from [XREnvironmentProbeSubsystem.RemoveEnvironmentProbe](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XREnvironmentProbeSubsystem.html#UnityEngine_XR_ARSubsystems_XREnvironmentProbeSubsystem_RemoveEnvironmentProbe_UnityEngine_XR_ARSubsystems_TrackableId_) with the message "cannot remove environment probes when environment probe system is not running". The exception would be thrown when the method was called and the subsystem was not running. Now, the method returns `false` if the subsystem is not running. It was common to see this exception when unloading a scene, since the subsystems might have been destroyed before the environment probes were removed.
 
 ## [4.2.0-pre.5] - 2021-04-07
 
@@ -58,13 +66,13 @@ No changes
 
 ### Fixed
 
-- Clarified documentation for [XRCameraSubsystem.TryGetInstrincis](xref:UnityEngine.XR.ARSubsystems.XRCameraSubsystem.TryGetIntrinsics(UnityEngine.XR.ARSubsystems.XRCameraIntrinsics@)).
+- Clarified documentation for [XRCameraSubsystem.TryGetInstrincis](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRCameraSubsystem.html#UnityEngine_XR_ARSubsystems_XRCameraSubsystem_TryGetIntrinsics_UnityEngine_XR_ARSubsystems_XRCameraIntrinsics__).
 
 ## [4.2.0-pre.3] - 2021-03-15
 
 ### Changed
 
-- Deprecated the [TextureImporterInternals](xref:UnityEditor.XR.ARSubsystems.InternalBridge.TextureImporterInternals) in 2021.2. This provided access to an internal method `GetSourceTextureWidthAndHeight` to get the source texture dimensions. The internal method is public in 2021.2 and should be used instead of the `TextureImporterInternals` helper.
+- Deprecated the [TextureImporterInternals](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEditor.XR.ARSubsystems.InternalBridge.TextureImporterInternals) in 2021.2. This provided access to an internal method `GetSourceTextureWidthAndHeight` to get the source texture dimensions. The internal method is public in 2021.2 and should be used instead of the `TextureImporterInternals` helper.
 
 ### Fixed
 
@@ -74,13 +82,13 @@ No changes
 
 ### Added
 
-- The runtime image data associated with an [XRReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) is now stored directly in the asset. This allows novel reference image libraries to be downloaded by an app that was not originally built with that library, e.g., as an [asset bundle](xref:AssetBundlesIntro).
-- A new [reference object](xref:UnityEngine.XR.ARSubsystems.XRReferenceObject) can be [added](xref:UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary.Add(UnityEngine.XR.ARSubsystems.XRReferenceObject)) to a [reference object library](xref:UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary) at runtime.
+- The runtime image data associated with an [XRReferenceImageLibrary](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) is now stored directly in the asset. This allows novel reference image libraries to be downloaded by an app that was not originally built with that library, e.g., as an [asset bundle](xref:UnityEngine.AssetBundle).
+- A new [reference object](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceObject) can be [added](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary.html#UnityEngine_XR_ARSubsystems_XRReferenceObjectLibrary_Add_UnityEngine_XR_ARSubsystems_XRReferenceObject_) to a [reference object library](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary) at runtime.
 
 ### Changed
 
-- The [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) provides a means to query for the capabilities of an [XROcclusionSubsystem](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystem). Previously, these capabilities were booleans, but some platforms may take a few frames to determine a capability. Those `bool` properties have been deprecated in favor of properties that return a [Supported](xref:UnityEngine.XR.ARSubsystems.Supported) state, which includes a `Supported.Unknown` state to indicate support for the feature or capability is not yet known.
-- Updated documentation for [XROcclusionSubsystemDescriptor](xref:UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) with notes describing the limitations of feature support detection.
+- The [XROcclusionSubsystemDescriptor](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) provides a means to query for the capabilities of an [XROcclusionSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XROcclusionSubsystem). Previously, these capabilities were booleans, but some platforms may take a few frames to determine a capability. Those `bool` properties have been deprecated in favor of properties that return a [Supported](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.Supported) state, which includes a `Supported.Unknown` state to indicate support for the feature or capability is not yet known.
+- Updated documentation for [XROcclusionSubsystemDescriptor](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XROcclusionSubsystemDescriptor) with notes describing the limitations of feature support detection.
 - The minimum Unity version for this package is now 2020.3.
 
 ## [4.1.3] - 2021-01-05
@@ -103,13 +111,13 @@ No changes
 
 ### Added
 
-- Added a new [NotTrackingReason](xref:UnityEngine.XR.ARSubsystems.NotTrackingReason): [CameraUnavailable](xref:UnityEngine.XR.ARSubsystems.NotTrackingReason.CameraUnavailable).
+- Added a new [NotTrackingReason](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.NotTrackingReason): [CameraUnavailable](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.NotTrackingReason.CameraUnavailable).
 
 ## [4.1.0-preview.11] - 2020-10-22
 
 ### Added
 
-- Added a new method [ScheduleAddImageWithValidationJob](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary.ScheduleAddImageWithValidationJob(Unity.Collections.NativeSlice{System.Byte},UnityEngine.Vector2Int,UnityEngine.TextureFormat,UnityEngine.XR.ARSubsystems.XRReferenceImage,Unity.Jobs.JobHandle)) to the [MutableRuntimeReferenceImageLibrary](xref:UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary) which adds new reference images to a reference library only after validating that the new reference image is suitable for image tracking. The new method returns a new type [AddReferenceImageJobState](xref:UnityEngine.XR.ARSubsystems.AddReferenceImageJobState) which you can use to determine whether the image was successfully added.
+- Added a new method [ScheduleAddImageWithValidationJob](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary.html#UnityEngine_XR_ARSubsystems_MutableRuntimeReferenceImageLibrary_ScheduleAddImageWithValidationJob_Unity_Collections_NativeSlice_System_Byte__UnityEngine_Vector2Int_UnityEngine_TextureFormat_UnityEngine_XR_ARSubsystems_XRReferenceImage_Unity_Jobs_JobHandle_) to the [MutableRuntimeReferenceImageLibrary](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.MutableRuntimeReferenceImageLibrary) which adds new reference images to a reference library only after validating that the new reference image is suitable for image tracking. The new method returns a new type [AddReferenceImageJobState](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.AddReferenceImageJobState) which you can use to determine whether the image was successfully added.
 
 ## [4.1.0-preview.10] - 2020-10-12
 
@@ -126,7 +134,7 @@ No changes
 ### Fixed
 
 - Fix documentation links.
-- Fix [XRReferenceImageLibraries](xref:UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case.
+- Fix [XRReferenceImageLibraries](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.1/api/UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) when duplicated from an existing reference image library. Reference image libraries are assigned unique GUIDs on creation, so if you created one by duplicating an existing library, they would have identical GUIDs. The actual reference image library used at runtime was not well defined in this case.
 
 ## [4.1.0-preview.7] - 2020-08-26
 
@@ -200,7 +208,7 @@ UnityEngine.XR.ARSubsystems.TrackableChanges`1[T]..ctor (System.Void* addedPtr, 
 
 ### Added
 
-- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](xref:UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider.TryAddRaycast(UnityEngine.Ray,System.Single,UnityEngine.XR.ARSubsystems.XRRaycast@)).
+- Add support for tracked raycasts. A tracked raycast is repeated and updated automatically. See [XRRaycastSubsystem.TryAddRaycast](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.0/api/UnityEngine.XR.ARSubsystems.XRRaycastSubsystem.Provider.html#UnityEngine_XR_ARSubsystems_XRRaycastSubsystem_Provider_TryAddRaycast_UnityEngine_Ray_System_Single_UnityEngine_XR_ARSubsystems_XRRaycast__).
 - Added a constructor to create a TrackableId from parsing a string.
 
 ## [4.0.0-preview.1] - 2020-02-26
@@ -310,7 +318,7 @@ contextual information such as `Floor`, `Wall`, `Ceiling`.
 ### Added
 
 - Add support for eye tracking.
-- Added an [XRParticipantSubsystem](xref:arsubsystems-participant-subsystem) which can track users in a multi-user collaborative session.
+- Added an [XRParticipantSubsystem](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@2.2/manual/participant-subsystem) which can track users in a multi-user collaborative session.
 - Add support for exposure duration
 - Add support for exposure offset
 - Add support for Lightweight Render Pipeline and Universal Render Pipeline.
