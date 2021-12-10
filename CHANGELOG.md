@@ -8,6 +8,10 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.0-pre.7] - 2021-12-10
+
+No changes
+
 ## [5.0.0-pre.6] - 2021-11-17
 
 No changes
@@ -86,7 +90,7 @@ No changes
 
 ### Added
 
-- The runtime image data associated with an [XRReferenceImageLibrary](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) is now stored directly in the asset. This allows novel reference image libraries to be downloaded by an app that was not originally built with that library, e.g., as an [asset bundle](xref:UnityEngine.AssetBundle).
+- The runtime image data associated with an [XRReferenceImageLibrary](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary) is now stored directly in the asset. This allows novel reference image libraries to be downloaded by an app that was not originally built with that library, e.g., as an [asset bundle](xref:AssetBundlesIntro).
 - A new [reference object](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceObject) can be [added](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary.html#UnityEngine_XR_ARSubsystems_XRReferenceObjectLibrary_Add_UnityEngine_XR_ARSubsystems_XRReferenceObject_) to a [reference object library](https://docs.unity3d.com/Packages/com.unity.xr.arsubsystems@4.2/api/UnityEngine.XR.ARSubsystems.XRReferenceObjectLibrary) at runtime.
 
 ### Changed
