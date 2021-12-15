@@ -11,3 +11,10 @@ The camera subsystem is responsible for managing a hardware camera on the AR dev
 - Camera focus mode (i.e., autofocus vs fixed)
 
 See the [Script API Reference](../api/UnityEngine.XR.ARSubsystems.XRCameraSubsystem.html) for API details.
+
+> [!NOTE]
+> Starting November 2022, the camera image will not be available on Android platforms due to API deprecation 
+> in ARCore SDK. Update to package version 4.x or higher to use supported version of the API. 
+> See https://developers.google.com/ar/develop/unity-arf/ndk-camera-deprecation.
+> 
+> The camera image APIs will not be affected on iOS platforms and will continue to work same as before.
