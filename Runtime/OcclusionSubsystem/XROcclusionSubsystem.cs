@@ -257,7 +257,7 @@ namespace UnityEngine.XR.ARSubsystems
         {
             if (provider.environmentDepthConfidenceCpuImageApi != null && provider.TryAcquireEnvironmentDepthConfidenceCpuImage(out var cinfo))
             {
-                cpuImage = new XRCpuImage(provider.environmentDepthCpuImageApi, cinfo);
+                cpuImage = new XRCpuImage(provider.environmentDepthConfidenceCpuImageApi, cinfo);
                 return true;
             }
             else
