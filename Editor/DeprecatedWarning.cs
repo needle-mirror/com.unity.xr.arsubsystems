@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace UnityEditor.XR.ARSubsystems
 {
     /// <summary>
@@ -12,6 +14,11 @@ namespace UnityEditor.XR.ARSubsystems
         [InitializeOnLoadMethod]
         static void ShowWarning()
         {
+            if (Application.isBatchMode)
+            {
+                return;
+            }
+
             if (EditorUserSettings.GetConfigValue(k_HideWarningKey)?.Equals("true") ?? false)
             {
                 return;
