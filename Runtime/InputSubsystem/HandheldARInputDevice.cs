@@ -9,7 +9,7 @@ namespace UnityEngine.XR.ARSubsystems
     /// A Handheld AR device layout, for use with the Input System, representing a mobile AR device.
     /// </summary>
     [Preserve]
-    [InputControlLayout]
+    [InputControlLayout(displayName = "AR Handheld Device", isGenericTypeOfDevice = true)]
     public class HandheldARInputDevice : UnityEngine.InputSystem.InputDevice
     {
         /// <summary>
