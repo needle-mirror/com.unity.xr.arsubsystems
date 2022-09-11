@@ -1,7 +1,7 @@
 {
   "name": "com.unity.xr.arsubsystems",
   "displayName": "AR Subsystems",
-  "version": "5.0.0-pre.13",
+  "version": "5.0.2",
   "unity": "2021.2",
   "description": "The AR subsystems from this package has been migrated to AR Foundation package. It will be an empty package depending on AR Foundation to provide back compatibility.",
   "keywords": [
@@ -10,17 +10,14 @@
     "AR"
   ],
   "dependencies": {
-    "com.unity.xr.arfoundation": "5.0.0-pre.13"
-  },
-  "_upm": {
-    "changelog": "No changes"
+    "com.unity.xr.arfoundation": "5.0.2"
   },
   "upmCi": {
-    "footprint": "a123c8923666442ef0fd038196d05106327a52ab"
+    "footprint": "3009471492841478bf67d57dd5d8b04da73ad489"
   },
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/arfoundation.git",
     "type": "git",
-    "revision": "3a1b3b7b0713aa242ec7d951f519b8b5e99e975b"
+    "revision": "14592dfeeb9ecce202f640c8b661b72b3a763f72"
   }
 }
